@@ -40,6 +40,16 @@ var p = new DelegatingComponent(null!, null!);
 p.ExecuteCore<int, int>(state => default, default);
 p.ExecuteCore<int, int>(state => default, default);
 
+var p1 = Polly.Utils.Pipeline.PipelineComponent.Empty;
+var p2 = Polly.Utils.Pipeline.PipelineComponent.Empty;
+var p3 = Polly.Utils.Pipeline.CompositeComponent.Create([p1, p2], null!, null!);
+var p4 = new Polly.Utils.Pipeline.BridgeComponent(null!);
+
+await p1.ExecuteCore<int, int>((state, context) => default, default!, default);
+await p2.ExecuteCore<int, int>((state, context) => default, default!, default);
+await p3.ExecuteCore<int, int>((state, context) => default, default!, default);
+await p4.ExecuteCore<int, int>((state, context) => default, default!, default);
+
 var app = builder.Build();
 
 var sampleTodos = new Todo[] {

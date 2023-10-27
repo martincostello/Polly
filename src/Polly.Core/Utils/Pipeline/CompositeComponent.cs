@@ -133,20 +133,33 @@ internal sealed class CompositeComponent : PipelineComponent
             ResilienceContext context,
             TState state)
         {
+            // Custom state object is used to cast the callback and state to prevent infinite
+            // generic type recursion warning IL3054 when referenced in a native AoT application.
+            // See https://github.com/App-vNext/Polly/issues/1732 for further context.
             return _component.ExecuteCore(
-                static (context, state) =>
+                static (context, wrapper) =>
                 {
+                    var callback = (Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>>)wrapper.Callback;
+                    var state = (TState)wrapper.State;
+
                     if (context.CancellationToken.IsCancellationRequested)
                     {
                         return Outcome.FromExceptionAsValueTask<TResult>(new OperationCanceledException(context.CancellationToken).TrySetStackTrace());
                     }
 
-                    return state.Next!.ExecuteCore(state.callback, context, state.state);
+                    return wrapper.Next.ExecuteCore(callback, context, state);
                 },
                 context,
-                (Next, callback, state));
+                new StateWrapper(Next!, callback, state!));
         }
 
         public override ValueTask DisposeAsync() => default;
+
+        private struct StateWrapper(PipelineComponent next, object callback, object state)
+        {
+            public PipelineComponent Next = next;
+            public object Callback = callback;
+            public object State = state;
+        }
     }
 }

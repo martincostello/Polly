@@ -14,10 +14,24 @@ internal static class PipelineComponentFactory
 
     public static PipelineComponent WithDisposableCallbacks(PipelineComponent component, IEnumerable<Action> callbacks)
     {
+#if NET6_0_OR_GREATER
+        if (callbacks.TryGetNonEnumeratedCount(out var count))
+        {
+            if (count == 0)
+            {
+                return component;
+            }
+        }
+        else if (!callbacks.Any())
+        {
+            return component;
+        }
+#else
         if (!callbacks.Any())
         {
             return component;
         }
+#endif
 
         return new ComponentWithDisposeCallbacks(component, callbacks.ToList());
     }
