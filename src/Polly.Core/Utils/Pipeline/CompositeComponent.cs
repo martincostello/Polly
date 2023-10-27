@@ -30,7 +30,8 @@ internal sealed class CompositeComponent : PipelineComponent
     public static PipelineComponent Create(
         IReadOnlyList<PipelineComponent> components,
         ResilienceStrategyTelemetry telemetry,
-        TimeProvider timeProvider)
+        TimeProvider timeProvider,
+        bool aotFriendly = false)
     {
         if (components.Count == 1)
         {
@@ -40,7 +41,7 @@ internal sealed class CompositeComponent : PipelineComponent
         // convert all components to delegating ones (except the last one as it's not required)
         var delegatingComponents = components
             .Take(components.Count - 1)
-            .Select(strategy => new DelegatingComponent(strategy))
+            .Select(strategy => (DelegatingComponentBase)(aotFriendly ? new DelegatingComponentAot(strategy) : new DelegatingComponent(strategy)))
             .ToList();
 
 #if NET6_0_OR_GREATER
@@ -117,16 +118,21 @@ internal sealed class CompositeComponent : PipelineComponent
         return outcome;
     }
 
+    private abstract class DelegatingComponentBase : PipelineComponent
+    {
+        public abstract PipelineComponent? Next { get; set; }
+    }
+
     /// <summary>
     /// A component that delegates the execution to the next component in the chain.
     /// </summary>
-    private sealed class DelegatingComponent : PipelineComponent
+    private sealed class DelegatingComponent : DelegatingComponentBase
     {
         private readonly PipelineComponent _component;
 
         public DelegatingComponent(PipelineComponent component) => _component = component;
 
-        public PipelineComponent? Next { get; set; }
+        public override PipelineComponent? Next { get; set; }
 
         internal override ValueTask<Outcome<TResult>> ExecuteCore<TResult, TState>(
             Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>> callback,
@@ -148,5 +154,79 @@ internal sealed class CompositeComponent : PipelineComponent
         }
 
         public override ValueTask DisposeAsync() => default;
+    }
+
+    private sealed class DelegatingComponentAot : DelegatingComponentBase
+    {
+        private readonly PipelineComponent _component;
+
+        public DelegatingComponentAot(PipelineComponent component) => _component = component;
+
+        public override PipelineComponent? Next { get; set; }
+
+        public override ValueTask DisposeAsync() => default;
+
+        internal override ValueTask<Outcome<TResult>> ExecuteCore<TResult, TState>(
+            Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>> callback,
+            ResilienceContext context,
+            TState state)
+        {
+#if NET6_0_OR_GREATER
+            if (System.Runtime.CompilerServices.RuntimeFeature.IsDynamicCodeSupported)
+            {
+#endif
+                return _component.ExecuteCore(
+                    static (context, state) =>
+                    {
+                        if (context.CancellationToken.IsCancellationRequested)
+                        {
+                            return Outcome.FromExceptionAsValueTask<TResult>(new OperationCanceledException(context.CancellationToken).TrySetStackTrace());
+                        }
+
+                        return state.Next!.ExecuteCore(state.callback, context, state.state);
+                    },
+                    context,
+                    (Next, callback, state));
+#if NET6_0_OR_GREATER
+            }
+            else
+            {
+                // Custom state object is used to cast the callback and state to prevent infinite
+                // generic type recursion warning IL3054 when referenced in a native AoT application.
+                // See https://github.com/App-vNext/Polly/issues/1732 for further context.
+                return _component.ExecuteCore(
+                    static (context, wrapper) =>
+                    {
+                        var callback = (Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>>)wrapper.Callback;
+                        var state = (TState)wrapper.State;
+
+                        if (context.CancellationToken.IsCancellationRequested)
+                        {
+                            return Outcome.FromExceptionAsValueTask<TResult>(new OperationCanceledException(context.CancellationToken).TrySetStackTrace());
+                        }
+
+                        return wrapper.Next.ExecuteCore(callback, context, state);
+                    },
+                    context,
+                    new StateWrapper(Next!, callback, state!));
+            }
+#endif
+        }
+
+#if NET6_0_OR_GREATER
+        private struct StateWrapper
+        {
+            public StateWrapper(PipelineComponent next, object callback, object state)
+            {
+                Next = next;
+                Callback = callback;
+                State = state;
+            }
+
+            public PipelineComponent Next;
+            public object Callback;
+            public object State;
+        }
+#endif
     }
 }
