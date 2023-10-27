@@ -87,27 +87,19 @@ internal class DelegatingComponent(PipelineComponent component, PipelineComponen
 {
     public override TResult ExecuteCore<TResult, TState>(Func<TState, TResult> callback, TState state)
     {
-        if (RuntimeFeature.IsDynamicCodeSupported)
-        {
-            return component.ExecuteCore(
-                static (state) => state.next.ExecuteCore(state.callback, state.state),
-                (next, callback, state));
-        }
-        else
-        {
-            return component.ExecuteCore(static (executeState) =>
-            {
-                var callback = (Func<TState, TResult>)executeState.Callback;
-                var state = (TState)executeState.State;
-                return executeState.Next.ExecuteCore(callback, state);
-            }, new ExecuteState(next, callback, state!));
-        }
+        return new Executor<TState, TResult>(component, next, callback, state).Execute();
     }
 
-    private struct ExecuteState(PipelineComponent next, object callback, object state)
+    private struct Executor<TState, TResult>(PipelineComponent outer, PipelineComponent inner, Func<TState, TResult> callback, TState state)
     {
-        public PipelineComponent Next = next;
-        public object Callback = callback;
-        public object State = state;
+        public TResult Execute()
+        {
+            return outer.ExecuteCore(Inner, state);
+        }
+
+        private TResult Inner(TState state)
+        {
+            return inner.ExecuteCore(callback, state);
+        }
     }
 }
