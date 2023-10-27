@@ -33,6 +33,7 @@ var httpResiliencePipeline = new ResiliencePipelineBuilder<HttpResponseMessage>(
     .AddHedging(new HedgingStrategyOptions<HttpResponseMessage>());
 
 builder.Services.AddSingleton(resiliencePipeline.Build());
+builder.Services.AddSingleton(httpResiliencePipeline.Build());
 
 var app = builder.Build();
 
