@@ -35,6 +35,11 @@ var httpResiliencePipeline = new ResiliencePipelineBuilder<HttpResponseMessage>(
 builder.Services.AddSingleton(resiliencePipeline.Build());
 builder.Services.AddSingleton(httpResiliencePipeline.Build());
 
+// See https://github.com/App-vNext/Polly/issues/1732#issuecomment-1782466692
+var p = new DelegatingComponent(null!, null!);
+p.ExecuteCore<int, int>(state => default, default);
+p.ExecuteCore<int, int>(state => default, default);
+
 var app = builder.Build();
 
 var sampleTodos = new Todo[] {
@@ -59,4 +64,24 @@ public record Todo(int Id, string? Title, DateOnly? DueBy = null, bool IsComplet
 [JsonSerializable(typeof(Todo[]))]
 internal partial class AppJsonSerializerContext : JsonSerializerContext
 {
+}
+
+internal class PipelineComponent
+{
+    public virtual TResult ExecuteCore<TResult, TState>(Func<TState, TResult> callback, TState state) => default!;
+}
+
+internal class DelegatingComponent : PipelineComponent
+{
+    PipelineComponent _component;
+    PipelineComponent _next;
+
+    public DelegatingComponent(PipelineComponent component, PipelineComponent next)
+    {
+        _component = component;
+        _next = next;
+    }
+
+    public override TResult ExecuteCore<TResult, TState>(Func<TState, TResult> callback, TState state)
+        => _component.ExecuteCore(static (state) => state._next.ExecuteCore(state.callback, state.state), (_next, callback, state));
 }
