@@ -135,59 +135,28 @@ internal sealed class CompositeComponent : PipelineComponent
             ResilienceContext context,
             TState state)
         {
-#if NET6_0_OR_GREATER
-            if (System.Runtime.CompilerServices.RuntimeFeature.IsDynamicCodeSupported)
-            {
-#endif
-                return _component.ExecuteCore(
-                    static (context, state) =>
-                    {
-                        if (context.CancellationToken.IsCancellationRequested)
-                        {
-                            return Outcome.FromExceptionAsValueTask<TResult>(new OperationCanceledException(context.CancellationToken).TrySetStackTrace());
-                        }
-                        return state.Next!.ExecuteCore(state.callback, context, state.state);
-                    },
-                    context,
-                    (Next, callback, state));
-#if NET6_0_OR_GREATER
-            }
-            else
-            {
-                // Custom state object is used to cast the callback and state to prevent infinite
-                // generic type recursion warning IL3054 when referenced in a native AoT application.
-                // See https://github.com/App-vNext/Polly/issues/1732 for further context.
-                return _component.ExecuteCore(
-                    static (context, wrapper) =>
-                    {
-                        var callback = (Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>>)wrapper.Callback;
-                        var state = (TState)wrapper.State;
-                        if (context.CancellationToken.IsCancellationRequested)
-                        {
-                            return Outcome.FromExceptionAsValueTask<TResult>(new OperationCanceledException(context.CancellationToken).TrySetStackTrace());
-                        }
-                        return wrapper.Next.ExecuteCore(callback, context, state);
-                    },
-                    context,
-                    new StateWrapper(Next!, callback, state!));
-            }
-#endif
+            // Custom state struct is used to hold the callback and next component to prevent infinite
+            // generic type recursion warning IL3054 when referenced in a native AoT application.
+            // See https://github.com/App-vNext/Polly/issues/1732 for further context.
+            return new Executor<TState, TResult>(Next!, callback).Execute(_component, context, state);
         }
 
-#if NET6_0_OR_GREATER
-        private struct StateWrapper
+        private struct Executor<TState, TResult>(
+            PipelineComponent inner,
+            Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>> callback)
         {
-            public StateWrapper(PipelineComponent next, object callback, object state)
-            {
-                Next = next;
-                Callback = callback;
-                State = state;
-            }
+            public readonly ValueTask<Outcome<TResult>> Execute(PipelineComponent outer, ResilienceContext context, TState state)
+                => outer.ExecuteCore(ExecuteInner, context, state);
 
-            public PipelineComponent Next;
-            public object Callback;
-            public object State;
+            private readonly ValueTask<Outcome<TResult>> ExecuteInner(ResilienceContext context, TState state)
+            {
+                if (context.CancellationToken.IsCancellationRequested)
+                {
+                    return Outcome.FromExceptionAsValueTask<TResult>(new OperationCanceledException(context.CancellationToken).TrySetStackTrace());
+                }
+
+                return inner.ExecuteCore(callback, context, state);
+            }
         }
-#endif
     }
 }

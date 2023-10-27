@@ -22,6 +22,7 @@
   <ItemGroup>
     <Using Include="Polly.Utils" />
     <InternalsVisibleToTest Include="Polly.AotTest" />
+    <InternalsVisibleToTest Include="Polly.Core.Benchmarks" />
     <InternalsVisibleToTest Include="Polly.Core.Tests" />
     <InternalsVisibleToTest Include="Polly.Testing" />
     <InternalsVisibleToTest Include="Polly.TestUtils" />
