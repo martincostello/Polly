@@ -71,17 +71,15 @@ internal class PipelineComponent
     public virtual TResult ExecuteCore<TResult, TState>(Func<TState, TResult> callback, TState state) => default!;
 }
 
-internal class DelegatingComponent : PipelineComponent
+#pragma warning disable IDE0022
+internal class DelegatingComponent(PipelineComponent component, PipelineComponent next) : PipelineComponent
 {
-    PipelineComponent _component;
-    PipelineComponent _next;
-
-    public DelegatingComponent(PipelineComponent component, PipelineComponent next)
-    {
-        _component = component;
-        _next = next;
-    }
-
     public override TResult ExecuteCore<TResult, TState>(Func<TState, TResult> callback, TState state)
-        => _component.ExecuteCore(static (state) => state._next.ExecuteCore(state.callback, state.state), (_next, callback, state));
+    {
+        // This way allocates a closure but doesn't cause IL3054
+        return component.ExecuteCore((state) => next.ExecuteCore(callback, state), state);
+
+        // This way doesn't allocate a closure but causes IL3054
+        //return component.ExecuteCore(static (state) => state.next.ExecuteCore(state.callback, state.state), (next, callback, state));
+    }
 }
