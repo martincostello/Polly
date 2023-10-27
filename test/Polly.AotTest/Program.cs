@@ -76,10 +76,26 @@ internal class DelegatingComponent(PipelineComponent component, PipelineComponen
 {
     public override TResult ExecuteCore<TResult, TState>(Func<TState, TResult> callback, TState state)
     {
+        // This way doesn't allocate a closure and doesn't cause IL3054,
+        // but does require casting to and from the original generic types.
+        return component.ExecuteCore(static (executeState) =>
+        {
+            var callback = (Func<TState, TResult>)executeState.Callback;
+            var state = (TState)executeState.State;
+            return executeState.Next.ExecuteCore(callback, state);
+        }, new ExecuteState(next, callback, state!));
+
         // This way allocates a closure but doesn't cause IL3054
-        return component.ExecuteCore((state) => next.ExecuteCore(callback, state), state);
+        //return component.ExecuteCore((state) => next.ExecuteCore(callback, state), state);
 
         // This way doesn't allocate a closure but causes IL3054
         //return component.ExecuteCore(static (state) => state.next.ExecuteCore(state.callback, state.state), (next, callback, state));
+    }
+
+    private struct ExecuteState(PipelineComponent next, object callback, object state)
+    {
+        public PipelineComponent Next = next;
+        public object Callback = callback;
+        public object State = state;
     }
 }
