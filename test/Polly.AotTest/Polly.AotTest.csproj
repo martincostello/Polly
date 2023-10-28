@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <EnableAotAnalyzer>true</EnableAotAnalyzer>
     <EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
@@ -8,6 +8,7 @@
     <IsAotCompatible>true</IsAotCompatible>
     <IsTrimmable>true</IsTrimmable>
     <Nullable>enable</Nullable>
+    <OutputType>Exe</OutputType>
     <PublishAot>true</PublishAot>
     <SKIP_POLLY_ANALYZERS>true</SKIP_POLLY_ANALYZERS>
     <TargetFramework>net8.0</TargetFramework>
@@ -19,5 +20,10 @@
     <ProjectReference Include="..\..\src\Polly.Core\Polly.Core.csproj" />
     <ProjectReference Include="..\..\src\Polly.Extensions\Polly.Extensions.csproj" />
     <ProjectReference Include="..\..\src\Polly.RateLimiting\Polly.RateLimiting.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <TrimmerRootAssembly Include="Polly.Core" />
+    <TrimmerRootAssembly Include="Polly.Extensions" />
+    <TrimmerRootAssembly Include="Polly.RateLimiting" />
   </ItemGroup>
 </Project>
