@@ -11,5 +11,5 @@ LaunchCount=2  WarmupCount=10
 ```
 | Method                 | Mean     | Error    | StdDev   | Allocated |
 |----------------------- |---------:|---------:|---------:|----------:|
-| GetPipeline_Ok         | 14.70 ns | 0.378 ns | 0.553 ns |         - |
-| GetPipeline_Generic_Ok | 39.27 ns | 0.722 ns | 1.080 ns |         - |
+| GetPipeline_Ok         | 17.08 ns | 0.471 ns | 0.675 ns |         - |
+| GetPipeline_Generic_Ok | 42.88 ns | 0.881 ns | 1.263 ns |         - |

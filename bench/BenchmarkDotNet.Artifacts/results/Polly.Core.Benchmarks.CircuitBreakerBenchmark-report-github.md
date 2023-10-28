@@ -9,7 +9,7 @@ Job=MediumRun  Toolchain=InProcessEmitToolchain  IterationCount=15
 LaunchCount=2  WarmupCount=10  
 
 ```
-| Method                   | Mean     | Error    | StdDev   | Median   | Ratio | RatioSD | Gen0   | Allocated | Alloc Ratio |
-|------------------------- |---------:|---------:|---------:|---------:|------:|--------:|-------:|----------:|------------:|
-| ExecuteCircuitBreaker_V7 | 230.7 ns | 18.49 ns | 27.10 ns | 225.2 ns |  1.00 |    0.00 | 0.0534 |     504 B |        1.00 |
-| ExecuteCircuitBreaker_V8 | 423.3 ns | 42.91 ns | 60.16 ns | 383.5 ns |  1.89 |    0.44 |      - |         - |        0.00 |
+| Method                   | Mean     | Error   | StdDev   | Ratio | RatioSD | Gen0   | Allocated | Alloc Ratio |
+|------------------------- |---------:|--------:|---------:|------:|--------:|-------:|----------:|------------:|
+| ExecuteCircuitBreaker_V7 | 212.6 ns | 5.33 ns |  7.82 ns |  1.00 |    0.00 | 0.0534 |     504 B |        1.00 |
+| ExecuteCircuitBreaker_V8 | 429.2 ns | 7.25 ns | 10.85 ns |  2.02 |    0.07 |      - |         - |        0.00 |

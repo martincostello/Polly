@@ -11,5 +11,5 @@ LaunchCount=2  WarmupCount=10
 ```
 | Method                 | Mean      | Error    | StdDev   | Ratio | RatioSD | Gen0   | Allocated | Alloc Ratio |
 |----------------------- |----------:|---------:|---------:|------:|--------:|-------:|----------:|------------:|
-| NoOpAsync              |  56.09 ns | 0.861 ns | 1.206 ns |  1.00 |    0.00 | 0.0323 |     304 B |        1.00 |
-| NullResiliencePipeline | 284.82 ns | 5.836 ns | 8.735 ns |  5.05 |    0.15 | 0.0396 |     376 B |        1.24 |
+| NoOpAsync              |  56.50 ns | 3.252 ns | 4.341 ns |  1.00 |    0.00 | 0.0323 |     304 B |        1.00 |
+| NullResiliencePipeline | 288.01 ns | 4.569 ns | 6.839 ns |  5.11 |    0.37 | 0.0396 |     376 B |        1.24 |

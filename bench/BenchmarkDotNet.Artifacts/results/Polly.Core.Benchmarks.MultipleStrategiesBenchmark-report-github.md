@@ -9,10 +9,10 @@ Job=MediumRun  Toolchain=InProcessEmitToolchain  IterationCount=15
 LaunchCount=2  WarmupCount=10  
 
 ```
-| Method                                         | Mean     | Error     | StdDev    | Median   | Ratio | RatioSD | Gen0   | Allocated | Alloc Ratio |
-|----------------------------------------------- |---------:|----------:|----------:|---------:|------:|--------:|-------:|----------:|------------:|
-| ExecuteStrategyPipeline_Generic_V7             | 1.654 μs | 0.0246 μs | 0.0344 μs | 1.648 μs |  1.00 |    0.00 | 0.2975 |    2824 B |        1.00 |
-| ExecuteStrategyPipeline_Generic_V8             | 1.572 μs | 0.0103 μs | 0.0148 μs | 1.574 μs |  0.95 |    0.02 | 0.0038 |      40 B |        0.01 |
-| ExecuteStrategyPipeline_GenericTelemetry_V8    | 2.597 μs | 0.1356 μs | 0.1987 μs | 2.487 μs |  1.58 |    0.13 | 0.0038 |      40 B |        0.01 |
-| ExecuteStrategyPipeline_NonGeneric_V8          | 1.542 μs | 0.1612 μs | 0.2312 μs | 1.405 μs |  0.94 |    0.14 | 0.0038 |      40 B |        0.01 |
-| ExecuteStrategyPipeline_NonGenericTelemetry_V8 | 2.186 μs | 0.2143 μs | 0.3208 μs | 1.973 μs |  1.31 |    0.20 | 0.0038 |      40 B |        0.01 |
+| Method                                         | Mean     | Error     | StdDev    | Ratio | RatioSD | Gen0   | Allocated | Alloc Ratio |
+|----------------------------------------------- |---------:|----------:|----------:|------:|--------:|-------:|----------:|------------:|
+| ExecuteStrategyPipeline_Generic_V7             | 1.313 μs | 0.0237 μs | 0.0354 μs |  1.00 |    0.00 | 0.2995 |    2824 B |        1.00 |
+| ExecuteStrategyPipeline_Generic_V8             | 1.403 μs | 0.0255 μs | 0.0358 μs |  1.07 |    0.04 | 0.0038 |      40 B |        0.01 |
+| ExecuteStrategyPipeline_GenericTelemetry_V8    | 2.372 μs | 0.0496 μs | 0.0742 μs |  1.81 |    0.07 | 0.0038 |      40 B |        0.01 |
+| ExecuteStrategyPipeline_NonGeneric_V8          | 1.787 μs | 0.0869 μs | 0.1301 μs |  1.36 |    0.09 | 0.0038 |      40 B |        0.01 |
+| ExecuteStrategyPipeline_NonGenericTelemetry_V8 | 2.910 μs | 0.2455 μs | 0.3674 μs |  2.22 |    0.26 | 0.0038 |      40 B |        0.01 |

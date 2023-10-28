@@ -11,5 +11,5 @@ LaunchCount=2  WarmupCount=10
 ```
 | Method                     | Mean     | Error    | StdDev   | Ratio | RatioSD | Allocated | Alloc Ratio |
 |--------------------------- |---------:|---------:|---------:|------:|--------:|----------:|------------:|
-| Predicate_SwitchExpression | 16.82 ns | 0.248 ns | 0.364 ns |  1.00 |    0.00 |         - |          NA |
-| Predicate_PredicateBuilder | 37.13 ns | 1.334 ns | 1.826 ns |  2.21 |    0.09 |         - |          NA |
+| Predicate_SwitchExpression | 16.19 ns | 0.375 ns | 0.525 ns |  1.00 |    0.00 |         - |          NA |
+| Predicate_PredicateBuilder | 33.34 ns | 0.512 ns | 0.734 ns |  2.06 |    0.09 |         - |          NA |

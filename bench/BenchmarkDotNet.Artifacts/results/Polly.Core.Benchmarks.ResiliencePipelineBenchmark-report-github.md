@@ -9,12 +9,12 @@ Job=MediumRun  Toolchain=InProcessEmitToolchain  IterationCount=15
 LaunchCount=2  WarmupCount=10  
 
 ```
-| Method                                         | Mean      | Error    | StdDev   | Ratio | RatioSD | Allocated | Alloc Ratio |
-|----------------------------------------------- |----------:|---------:|---------:|------:|--------:|----------:|------------:|
-| ExecuteOutcomeAsync                            |  93.58 ns | 3.068 ns | 4.498 ns |  1.00 |    0.00 |         - |          NA |
-| ExecuteAsync_ResilienceContextAndState         | 196.37 ns | 4.536 ns | 6.648 ns |  2.10 |    0.12 |         - |          NA |
-| ExecuteAsync_CancellationToken                 | 196.35 ns | 3.584 ns | 5.365 ns |  2.10 |    0.12 |         - |          NA |
-| ExecuteAsync_GenericStrategy_CancellationToken | 191.34 ns | 3.144 ns | 4.609 ns |  2.05 |    0.10 |         - |          NA |
-| Execute_ResilienceContextAndState              |  90.39 ns | 1.589 ns | 2.378 ns |  0.97 |    0.04 |         - |          NA |
-| Execute_CancellationToken                      |  79.39 ns | 6.090 ns | 8.537 ns |  0.85 |    0.08 |         - |          NA |
-| Execute_GenericStrategy_CancellationToken      |  71.06 ns | 0.837 ns | 1.146 ns |  0.76 |    0.04 |         - |          NA |
+| Method                                         | Mean      | Error     | StdDev    | Ratio | RatioSD | Allocated | Alloc Ratio |
+|----------------------------------------------- |----------:|----------:|----------:|------:|--------:|----------:|------------:|
+| ExecuteOutcomeAsync                            |  99.22 ns |  2.351 ns |  3.372 ns |  1.00 |    0.00 |         - |          NA |
+| ExecuteAsync_ResilienceContextAndState         | 164.60 ns |  3.760 ns |  5.628 ns |  1.66 |    0.08 |         - |          NA |
+| ExecuteAsync_CancellationToken                 | 170.61 ns |  4.835 ns |  6.934 ns |  1.72 |    0.09 |         - |          NA |
+| ExecuteAsync_GenericStrategy_CancellationToken | 171.14 ns | 12.366 ns | 17.335 ns |  1.73 |    0.18 |         - |          NA |
+| Execute_ResilienceContextAndState              |  81.45 ns |  2.321 ns |  3.177 ns |  0.82 |    0.05 |         - |          NA |
+| Execute_CancellationToken                      |  80.70 ns |  1.248 ns |  1.868 ns |  0.81 |    0.03 |         - |          NA |
+| Execute_GenericStrategy_CancellationToken      |  81.57 ns |  1.336 ns |  1.916 ns |  0.82 |    0.03 |         - |          NA |

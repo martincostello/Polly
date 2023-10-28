@@ -11,5 +11,5 @@ LaunchCount=2  WarmupCount=10
 ```
 | Method      | Mean       | Error     | StdDev    | Gen0   | Allocated |
 |------------ |-----------:|----------:|----------:|-------:|----------:|
-| Fallback_V7 |   111.4 ns |   8.03 ns |  12.02 ns | 0.0509 |     480 B |
-| Fallback_V8 | 6,426.2 ns | 639.95 ns | 938.03 ns | 0.5798 |    5472 B |
+| Fallback_V7 |   135.6 ns |   8.87 ns |  13.27 ns | 0.0508 |     480 B |
+| Fallback_V8 | 4,247.5 ns | 198.85 ns | 278.76 ns | 0.5798 |    5472 B |

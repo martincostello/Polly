@@ -9,6 +9,6 @@ Job=MediumRun  Toolchain=InProcessEmitToolchain  IterationCount=15
 LaunchCount=2  WarmupCount=10  
 
 ```
-| Method                         | Mean     | Error    | StdDev   | Allocated |
-|------------------------------- |---------:|---------:|---------:|----------:|
-| CompositeComponent_ExecuteCore | 42.95 ns | 2.914 ns | 4.362 ns |         - |
+| Method                         | Mean     | Error    | StdDev   | Gen0   | Allocated |
+|------------------------------- |---------:|---------:|---------:|-------:|----------:|
+| CompositeComponent_ExecuteCore | 48.02 ns | 1.492 ns | 2.233 ns | 0.0025 |      24 B |

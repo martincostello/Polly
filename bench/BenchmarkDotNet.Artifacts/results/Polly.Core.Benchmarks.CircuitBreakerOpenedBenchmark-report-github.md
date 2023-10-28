@@ -11,6 +11,6 @@ LaunchCount=2  WarmupCount=10
 ```
 | Method                    | Mean        | Error       | StdDev      | Ratio | RatioSD | Gen0   | Allocated | Alloc Ratio |
 |-------------------------- |------------:|------------:|------------:|------:|--------:|-------:|----------:|------------:|
-| ExecuteAsync_Exception_V7 | 28,006.2 ns | 3,296.96 ns | 4,934.74 ns | 50.77 |    8.12 | 0.3052 |    2888 B |       15.04 |
-| ExecuteAsync_Exception_V8 | 21,172.9 ns | 1,745.06 ns | 2,611.92 ns | 38.65 |    5.76 | 0.1831 |    1816 B |        9.46 |
-| ExecuteAsync_Outcome_V8   |    550.5 ns |    20.81 ns |    31.15 ns |  1.00 |    0.00 | 0.0200 |     192 B |        1.00 |
+| ExecuteAsync_Exception_V7 | 20,211.1 ns | 1,314.78 ns | 1,927.18 ns | 36.51 |    4.48 | 0.3052 |    2888 B |       15.04 |
+| ExecuteAsync_Exception_V8 | 15,024.9 ns |   332.65 ns |   497.89 ns | 26.92 |    0.85 | 0.1831 |    1816 B |        9.46 |
+| ExecuteAsync_Outcome_V8   |    557.6 ns |    13.57 ns |    19.46 ns |  1.00 |    0.00 | 0.0200 |     192 B |        1.00 |

@@ -9,7 +9,7 @@ Job=MediumRun  Toolchain=InProcessEmitToolchain  IterationCount=15
 LaunchCount=2  WarmupCount=10  
 
 ```
-| Method          | Mean     | Error   | StdDev   | Ratio | RatioSD | Gen0   | Allocated | Alloc Ratio |
-|---------------- |---------:|--------:|---------:|------:|--------:|-------:|----------:|------------:|
-| ExecuteRetry_V7 | 165.7 ns | 2.10 ns |  2.94 ns |  1.00 |    0.00 | 0.0587 |     552 B |        1.00 |
-| ExecuteRetry_V8 | 262.8 ns | 7.84 ns | 11.25 ns |  1.59 |    0.07 |      - |         - |        0.00 |
+| Method          | Mean     | Error    | StdDev   | Ratio | RatioSD | Gen0   | Allocated | Alloc Ratio |
+|---------------- |---------:|---------:|---------:|------:|--------:|-------:|----------:|------------:|
+| ExecuteRetry_V7 | 177.1 ns |  2.85 ns |  4.18 ns |  1.00 |    0.00 | 0.0587 |     552 B |        1.00 |
+| ExecuteRetry_V8 | 280.2 ns | 13.63 ns | 19.98 ns |  1.58 |    0.10 |      - |         - |        0.00 |
