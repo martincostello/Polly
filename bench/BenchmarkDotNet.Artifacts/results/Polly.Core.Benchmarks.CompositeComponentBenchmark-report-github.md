@@ -11,4 +11,4 @@ LaunchCount=2  WarmupCount=10
 ```
 | Method                         | Mean     | Error    | StdDev   | Allocated |
 |------------------------------- |---------:|---------:|---------:|----------:|
-| CompositeComponent_ExecuteCore | 44.37 ns | 1.994 ns | 2.923 ns |         - |
+| CompositeComponent_ExecuteCore | 42.95 ns | 2.914 ns | 4.362 ns |         - |

@@ -1,15 +1,15 @@
 ```
 
-BenchmarkDotNet v0.13.7, Windows 11 (10.0.22621.2283/22H2/2022Update/SunValley2) (Hyper-V)
-Intel Xeon Platinum 8370C CPU 2.80GHz, 1 CPU, 16 logical and 8 physical cores
-.NET SDK 7.0.401
-  [Host] : .NET 7.0.11 (7.0.1123.42427), X64 RyuJIT AVX2
+BenchmarkDotNet v0.13.9+228a464e8be6c580ad9408e98f18813f6407fb5a, Windows 11 (10.0.22621.2428/22H2/2022Update/SunValley2)
+12th Gen Intel Core i7-1270P, 1 CPU, 16 logical and 12 physical cores
+.NET SDK 7.0.403
+  [Host] : .NET 7.0.13 (7.0.1323.51816), X64 RyuJIT AVX2
 
 Job=MediumRun  Toolchain=InProcessEmitToolchain  IterationCount=15  
 LaunchCount=2  WarmupCount=10  
 
 ```
-|                 Method |      Mean |    Error |   StdDev | Ratio | RatioSD |   Gen0 | Allocated | Alloc Ratio |
+| Method                 | Mean      | Error    | StdDev   | Ratio | RatioSD | Gen0   | Allocated | Alloc Ratio |
 |----------------------- |----------:|---------:|---------:|------:|--------:|-------:|----------:|------------:|
-|              NoOpAsync |  94.51 ns | 1.617 ns | 2.370 ns |  1.00 |    0.00 | 0.0120 |     304 B |        1.00 |
-| NullResiliencePipeline | 504.23 ns | 1.305 ns | 1.954 ns |  5.34 |    0.13 | 0.0143 |     376 B |        1.24 |
+| NoOpAsync              |  56.09 ns | 0.861 ns | 1.206 ns |  1.00 |    0.00 | 0.0323 |     304 B |        1.00 |
+| NullResiliencePipeline | 284.82 ns | 5.836 ns | 8.735 ns |  5.05 |    0.15 | 0.0396 |     376 B |        1.24 |
