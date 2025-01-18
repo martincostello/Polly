@@ -7,7 +7,7 @@ public class SlidingTtlSpecs
     {
         Action configure = () => _ = new SlidingTtl(TimeSpan.FromMilliseconds(-1));
 
-        configure.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("slidingTtl");
+        configure.Should.Throw<ArgumentOutOfRangeException>().And.ParamName.ShouldBe("slidingTtl");
     }
 
     [Fact]
@@ -15,7 +15,7 @@ public class SlidingTtlSpecs
     {
         Action configure = () => _ = new SlidingTtl(TimeSpan.Zero);
 
-        configure.Should().NotThrow();
+        configure.Should.NotThrow();
     }
 
     [Fact]
@@ -23,7 +23,7 @@ public class SlidingTtlSpecs
     {
         Action configure = () => _ = new SlidingTtl(TimeSpan.MaxValue);
 
-        configure.Should().NotThrow();
+        configure.Should.NotThrow();
     }
 
     [Fact]
@@ -34,7 +34,7 @@ public class SlidingTtlSpecs
         SlidingTtl ttlStrategy = new SlidingTtl(ttl);
 
         Ttl retrieved = ttlStrategy.GetTtl(new Context("someOperationKey"), null);
-        retrieved.Timespan.Should().Be(ttl);
-        retrieved.SlidingExpiration.Should().BeTrue();
+        retrieved.Timespan.ShouldBe(ttl);
+        retrieved.SlidingExpiration.ShouldBeTrue();
     }
 }

@@ -13,8 +13,7 @@ public class PolicyTResultAsyncSpecs
 
         var result = await policy.ExecuteAsync(() => Task.FromResult(ResultPrimitive.Good));
 
-        result.Should()
-            .Be(ResultPrimitive.Good);
+        result.ShouldBe(ResultPrimitive.Good);
     }
 
     #endregion
@@ -29,7 +28,7 @@ public class PolicyTResultAsyncSpecs
             .RetryAsync((_, _) => { })
             .ExecuteAndCaptureAsync(() => Task.FromResult(ResultPrimitive.Good));
 
-        result.Should().BeEquivalentTo(new
+        result.ShouldBeEquivalentTo(new
         {
             Outcome = OutcomeType.Successful,
             FinalException = (Exception?)null,
@@ -50,7 +49,7 @@ public class PolicyTResultAsyncSpecs
             .RetryAsync((_, _) => { })
             .ExecuteAndCaptureAsync(() => Task.FromResult(handledResult));
 
-        result.Should().BeEquivalentTo(new
+        result.ShouldBeEquivalentTo(new
         {
             Outcome = OutcomeType.Failure,
             FinalException = (Exception?)null,
@@ -72,7 +71,7 @@ public class PolicyTResultAsyncSpecs
             .RetryAsync((_, _) => { })
             .ExecuteAndCaptureAsync(() => Task.FromResult(unhandledResult));
 
-        result.Should().BeEquivalentTo(new
+        result.ShouldBeEquivalentTo(new
         {
             Outcome = OutcomeType.Successful,
             FinalException = (Exception?)null,
@@ -94,8 +93,7 @@ public class PolicyTResultAsyncSpecs
             .HandleResult(ResultPrimitive.Fault)
             .RetryAsync((_, _, _) => { });
 
-        await policy.Awaiting(p => p.ExecuteAsync(_ => Task.FromResult(ResultPrimitive.Good), (IDictionary<string, object>)null!))
-              .Should().ThrowAsync<ArgumentNullException>();
+        await Should.ThrowAsync<ArgumentNullException>(() => policy.ExecuteAsync(_ => Task.FromResult(ResultPrimitive.Good), (IDictionary<string, object>)null!));
     }
 
     [Fact]
@@ -105,9 +103,8 @@ public class PolicyTResultAsyncSpecs
             .HandleResult(ResultPrimitive.Fault)
             .RetryAsync((_, _, _) => { });
 
-        var ex = await policy.Awaiting(p => p.ExecuteAsync(_ => Task.FromResult(ResultPrimitive.Good), null!))
-              .Should().ThrowAsync<ArgumentNullException>();
-        ex.And.ParamName.Should().Be("context");
+        var ex = await Should.ThrowAsync<ArgumentNullException>(() => policy.ExecuteAsync(_ => Task.FromResult(ResultPrimitive.Good), null!));
+        ex.ParamName.ShouldBe("context");
     }
 
     [Fact]
@@ -121,7 +118,7 @@ public class PolicyTResultAsyncSpecs
 
         await policy.ExecuteAsync(context => { capturedContext = context; return Task.FromResult(ResultPrimitive.Good); }, executionContext);
 
-        capturedContext.Should().BeSameAs(executionContext);
+        capturedContext.ShouldBeSameAs(executionContext);
     }
 
     [Fact]
@@ -131,9 +128,8 @@ public class PolicyTResultAsyncSpecs
             .HandleResult(ResultPrimitive.Fault)
             .RetryAsync((_, _, _) => { });
 
-        var ex = await policy.Awaiting(p => p.ExecuteAndCaptureAsync(_ => Task.FromResult(ResultPrimitive.Good), null!))
-              .Should().ThrowAsync<ArgumentNullException>();
-        ex.And.ParamName.Should().Be("context");
+        var ex = await Should.ThrowAsync<ArgumentNullException>()(() => policy.ExecuteAndCaptureAsync(_ => Task.FromResult(ResultPrimitive.Good), null!));
+        ex.ParamName.ShouldBe("context");
     }
 
     [Fact]
@@ -147,7 +143,7 @@ public class PolicyTResultAsyncSpecs
 
         await policy.ExecuteAndCaptureAsync(context => { capturedContext = context; return Task.FromResult(ResultPrimitive.Good); }, executionContext);
 
-        capturedContext.Should().BeSameAs(executionContext);
+        capturedContext.ShouldBeSameAs(executionContext);
     }
 
     [Fact]
@@ -159,7 +155,7 @@ public class PolicyTResultAsyncSpecs
         var policy = Policy.NoOpAsync<ResultPrimitive>();
 
         (await policy.ExecuteAndCaptureAsync(_ => Task.FromResult(ResultPrimitive.Good), executionContext))
-            .Context.Should().BeSameAs(executionContext);
+            .Context.ShouldBeSameAs(executionContext);
     }
 
     #endregion

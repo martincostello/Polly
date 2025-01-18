@@ -30,7 +30,7 @@ public class WaitAndRetryForeverTResultSpecs : IDisposable
                 : ResultPrimitive.Undefined);
         }
 
-        actualRetryWaits.Should().ContainInOrder(expectedRetryWaits.Values);
+        actualRetryWaits.ShouldContainInOrder(expectedRetryWaits.Values);
     }
 
     public void Dispose() =>

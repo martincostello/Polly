@@ -32,10 +32,10 @@ public class BulkheadSpecs : BulkheadSpecsBase
 
         var func = () => generic.Invoke(instance, [action, new Context(), CancellationToken]);
 
-        var exceptionAssertions = func.Should().Throw<TargetInvocationException>();
-        exceptionAssertions.And.Message.Should().Be("Exception has been thrown by the target of an invocation.");
-        exceptionAssertions.And.InnerException.Should().BeOfType<ArgumentNullException>()
-            .Which.ParamName.Should().Be("action");
+        var exceptionAssertions = func.Should.Throw<TargetInvocationException>();
+        exceptionAssertions.And.Message.ShouldBe("Exception has been thrown by the target of an invocation.");
+        exceptionAssertions.And.InnerException.ShouldBeOfType<ArgumentNullException>()
+            .Which.ParamName.ShouldBe("action");
     }
 
     [Fact]
@@ -44,8 +44,8 @@ public class BulkheadSpecs : BulkheadSpecsBase
         Action policy = () => Policy
             .Bulkhead(0);
 
-        policy.Should().Throw<ArgumentOutOfRangeException>().And
-            .ParamName.Should().Be("maxParallelization");
+        policy.Should.Throw<ArgumentOutOfRangeException>().And
+            .ParamName.ShouldBe("maxParallelization");
     }
 
     [Fact]
@@ -54,8 +54,8 @@ public class BulkheadSpecs : BulkheadSpecsBase
         Action policy = () => Policy
             .Bulkhead(0, 1);
 
-        policy.Should().Throw<ArgumentOutOfRangeException>().And
-            .ParamName.Should().Be("maxParallelization");
+        policy.Should.Throw<ArgumentOutOfRangeException>().And
+            .ParamName.ShouldBe("maxParallelization");
     }
 
     [Fact]
@@ -64,8 +64,8 @@ public class BulkheadSpecs : BulkheadSpecsBase
         Action policy = () => Policy
             .Bulkhead(1, -1);
 
-        policy.Should().Throw<ArgumentOutOfRangeException>().And
-            .ParamName.Should().Be("maxQueuingActions");
+        policy.Should.Throw<ArgumentOutOfRangeException>().And
+            .ParamName.ShouldBe("maxQueuingActions");
     }
 
     [Fact]
@@ -74,8 +74,8 @@ public class BulkheadSpecs : BulkheadSpecsBase
         Action policy = () => Policy
             .Bulkhead(1, 0, null!);
 
-        policy.Should().Throw<ArgumentNullException>().And
-            .ParamName.Should().Be("onBulkheadRejected");
+        policy.Should.Throw<ArgumentNullException>().And
+            .ParamName.ShouldBe("onBulkheadRejected");
     }
 
     #endregion
@@ -108,9 +108,9 @@ public class BulkheadSpecs : BulkheadSpecsBase
         tcs.SetCanceled();
 #endif
 
-        contextPassedToOnRejected!.Should().NotBeNull();
-        contextPassedToOnRejected!.OperationKey.Should().Be(operationKey);
-        contextPassedToOnRejected!.Should().BeSameAs(contextPassedToExecute);
+        contextPassedToOnRejected!.ShouldNotBeNull();
+        contextPassedToOnRejected!.OperationKey.ShouldBe(operationKey);
+        contextPassedToOnRejected!.ShouldBeSameAs(contextPassedToExecute);
     }
 
     #endregion

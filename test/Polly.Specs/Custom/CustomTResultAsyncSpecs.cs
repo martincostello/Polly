@@ -15,7 +15,7 @@ public class CustomTResultAsyncSpecs
             });
         };
 
-        construct.Should().NotThrow();
+        construct.Should.NotThrow();
     }
 
     [Fact]
@@ -26,10 +26,10 @@ public class CustomTResultAsyncSpecs
 
         bool executed = false;
         await policy.Awaiting(x => x.ExecuteAsync(async () => { executed = true; await Task.CompletedTask; return ResultPrimitive.Undefined; }))
-            .Should().NotThrowAsync();
+            .Should.NotThrowAsync();
 
-        executed.Should().BeTrue();
-        preExecuted.Should().BeTrue();
+        executed.ShouldBeTrue();
+        preExecuted.ShouldBeTrue();
     }
 
     [Fact]
@@ -45,7 +45,7 @@ public class CustomTResultAsyncSpecs
             });
         };
 
-        construct.Should().NotThrow();
+        construct.Should.NotThrow();
     }
 
     [Fact]
@@ -65,10 +65,10 @@ public class CustomTResultAsyncSpecs
                 await Task.CompletedTask;
                 return toReturn;
             }))
-            .Should().Be(toReturn);
+            .ShouldBe(toReturn);
 
-        executed.Should().BeTrue();
-        handled.Should().Be(toReturn);
+        executed.ShouldBeTrue();
+        handled.ShouldBe(toReturn);
     }
 
     [Fact]
@@ -88,9 +88,9 @@ public class CustomTResultAsyncSpecs
                 await Task.CompletedTask;
                 return toReturn;
             }))
-            .Should().Be(toReturn);
+            .ShouldBe(toReturn);
 
-        executed.Should().BeTrue();
-        handled.Should().Be(null);
+        executed.ShouldBeTrue();
+        handled.ShouldBe(null);
     }
 }

@@ -38,7 +38,7 @@ public class WaitAndRetryForeverTResultAsyncSpecs : IDisposable
             });
         }
 
-        actualRetryWaits.Should().ContainInOrder(expectedRetryWaits.Values);
+        actualRetryWaits.ShouldContainInOrder(expectedRetryWaits.Values);
     }
 
     public void Dispose() =>

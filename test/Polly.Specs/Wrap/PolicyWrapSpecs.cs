@@ -1,4 +1,6 @@
-﻿namespace Polly.Specs.Wrap;
+﻿using Shouldly;
+
+namespace Polly.Specs.Wrap;
 
 [Collection(Constants.SystemClockDependentTestCollection)]
 public class PolicyWrapSpecs
@@ -12,7 +14,7 @@ public class PolicyWrapSpecs
 
         Action config = () => retry.Wrap(null!);
 
-        config.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("innerPolicy");
+        Should.Throw<ArgumentNullException>(config).ParamName.ShouldBe("innerPolicy");
     }
 
     [Fact]
@@ -22,7 +24,7 @@ public class PolicyWrapSpecs
 
         Action config = () => retry.Wrap<int>(null!);
 
-        config.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("innerPolicy");
+        Should.Throw<ArgumentNullException>(config).ParamName.ShouldBe("innerPolicy");
     }
 
     [Fact]
@@ -33,8 +35,8 @@ public class PolicyWrapSpecs
 
         PolicyWrap wrap = policyA.Wrap(policyB);
 
-        wrap.Outer.Should().BeSameAs(policyA);
-        wrap.Inner.Should().BeSameAs(policyB);
+        wrap.Outer.ShouldBeSameAs(policyA);
+        wrap.Inner.ShouldBeSameAs(policyB);
     }
 
     [Fact]
@@ -45,8 +47,8 @@ public class PolicyWrapSpecs
 
         PolicyWrap<int> wrap = policyA.Wrap(policyB);
 
-        wrap.Outer.Should().BeSameAs(policyA);
-        wrap.Inner.Should().BeSameAs(policyB);
+        wrap.Outer.ShouldBeSameAs(policyA);
+        wrap.Inner.ShouldBeSameAs(policyB);
     }
 
     #endregion
@@ -56,21 +58,21 @@ public class PolicyWrapSpecs
     [Fact]
     public void Generic_wraps_nongeneric_instance_syntax_wrapping_null_should_throw()
     {
-        RetryPolicy<int> retry = Policy.HandleResult<int>(0).Retry(1);
+        RetryPolicy<int> retry = Policy.HandleResult(0).Retry(1);
 
         Action config = () => retry.Wrap((Policy)null!);
 
-        config.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("innerPolicy");
+        Should.Throw<ArgumentNullException>(config).ParamName.ShouldBe("innerPolicy");
     }
 
     [Fact]
     public void Generic_wraps_generic_instance_syntax_wrapping_null_should_throw()
     {
-        RetryPolicy<int> retry = Policy.HandleResult<int>(0).Retry(1);
+        RetryPolicy<int> retry = Policy.HandleResult(0).Retry(1);
 
         Action config = () => retry.Wrap((Policy<int>)null!);
 
-        config.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("innerPolicy");
+        Should.Throw<ArgumentNullException>(config).ParamName.ShouldBe("innerPolicy");
     }
 
     [Fact]
@@ -81,8 +83,8 @@ public class PolicyWrapSpecs
 
         PolicyWrap<int> wrap = policyA.Wrap(policyB);
 
-        wrap.Outer.Should().BeSameAs(policyA);
-        wrap.Inner.Should().BeSameAs(policyB);
+        wrap.Outer.ShouldBeSameAs(policyA);
+        wrap.Inner.ShouldBeSameAs(policyB);
     }
 
     [Fact]
@@ -93,8 +95,8 @@ public class PolicyWrapSpecs
 
         PolicyWrap<int> wrap = policyA.Wrap(policyB);
 
-        wrap.Outer.Should().BeSameAs(policyA);
-        wrap.Inner.Should().BeSameAs(policyB);
+        wrap.Outer.ShouldBeSameAs(policyA);
+        wrap.Inner.ShouldBeSameAs(policyB);
     }
 
     #endregion
@@ -109,18 +111,18 @@ public class PolicyWrapSpecs
 
         Action config = () => outerNull.Wrap(retry);
 
-        config.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("outerPolicy");
+        Should.Throw<ArgumentNullException>(config).ParamName.ShouldBe("outerPolicy");
     }
 
     [Fact]
     public void Nongeneric_interface_wraps_generic_instance_syntax_null_wrapping_should_throw()
     {
         ISyncPolicy outerNull = null!;
-        ISyncPolicy<int> retry = Policy.HandleResult<int>(0).Retry(1);
+        ISyncPolicy<int> retry = Policy.HandleResult(0).Retry(1);
 
-        Action config = () => outerNull.Wrap<int>(retry);
+        Action config = () => outerNull.Wrap(retry);
 
-        config.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("outerPolicy");
+        Should.Throw<ArgumentNullException>(config).ParamName.ShouldBe("outerPolicy");
     }
 
     [Fact]
@@ -130,7 +132,7 @@ public class PolicyWrapSpecs
 
         Action config = () => retry.Wrap(null!);
 
-        config.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("innerPolicy");
+        Should.Throw<ArgumentNullException>(config).ParamName.ShouldBe("innerPolicy");
     }
 
     [Fact]
@@ -140,7 +142,7 @@ public class PolicyWrapSpecs
 
         Action config = () => retry.Wrap<int>(null!);
 
-        config.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("innerPolicy");
+        Should.Throw<ArgumentNullException>(config).ParamName.ShouldBe("innerPolicy");
     }
 
     [Fact]
@@ -149,10 +151,10 @@ public class PolicyWrapSpecs
         ISyncPolicy policyA = Policy.NoOp();
         ISyncPolicy policyB = Policy.NoOp();
 
-        IPolicyWrap wrap = policyA.Wrap(policyB);
+        var wrap = policyA.Wrap(policyB);
 
-        wrap.Outer.Should().BeSameAs(policyA);
-        wrap.Inner.Should().BeSameAs(policyB);
+        wrap.Outer.ShouldBeSameAs(policyA);
+        wrap.Inner.ShouldBeSameAs(policyB);
     }
 
     [Fact]
@@ -161,10 +163,10 @@ public class PolicyWrapSpecs
         ISyncPolicy policyA = Policy.NoOp();
         ISyncPolicy<int> policyB = Policy.NoOp<int>();
 
-        IPolicyWrap<int> wrap = policyA.Wrap(policyB);
+        var wrap = policyA.Wrap(policyB);
 
-        wrap.Outer.Should().BeSameAs(policyA);
-        wrap.Inner.Should().BeSameAs(policyB);
+        wrap.Outer.ShouldBeSameAs(policyA);
+        wrap.Inner.ShouldBeSameAs(policyB);
     }
 
     #endregion
@@ -179,38 +181,38 @@ public class PolicyWrapSpecs
 
         Action config = () => outerNull.Wrap(retry);
 
-        config.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("outerPolicy");
+        Should.Throw<ArgumentNullException>(config).ParamName.ShouldBe("outerPolicy");
     }
 
     [Fact]
     public void Generic_interface_wraps_generic_instance_syntax_null_wrapping_should_throw()
     {
         ISyncPolicy<int> outerNull = null!;
-        ISyncPolicy<int> retry = Policy.HandleResult<int>(0).Retry(1);
+        ISyncPolicy<int> retry = Policy.HandleResult(0).Retry(1);
 
-        Action config = () => outerNull.Wrap<int>(retry);
+        Action config = () => outerNull.Wrap(retry);
 
-        config.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("outerPolicy");
+        Should.Throw<ArgumentNullException>(config).ParamName.ShouldBe("outerPolicy");
     }
 
     [Fact]
     public void Generic_interface_wraps_nongeneric_instance_syntax_wrapping_null_should_throw()
     {
-        ISyncPolicy<int> retry = Policy.HandleResult<int>(0).Retry(1);
+        ISyncPolicy<int> retry = Policy.HandleResult(0).Retry(1);
 
         Action config = () => retry.Wrap((Policy)null!);
 
-        config.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("innerPolicy");
+        Should.Throw<ArgumentNullException>(config).ParamName.ShouldBe("innerPolicy");
     }
 
     [Fact]
     public void Generic_interface_wraps_generic_instance_syntax_wrapping_null_should_throw()
     {
-        ISyncPolicy<int> retry = Policy.HandleResult<int>(0).Retry(1);
+        ISyncPolicy<int> retry = Policy.HandleResult(0).Retry(1);
 
         Action config = () => retry.Wrap((Policy<int>)null!);
 
-        config.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("innerPolicy");
+        Should.Throw<ArgumentNullException>(config).ParamName.ShouldBe("innerPolicy");
     }
 
     [Fact]
@@ -219,10 +221,10 @@ public class PolicyWrapSpecs
         ISyncPolicy<int> policyA = Policy.NoOp<int>();
         ISyncPolicy policyB = Policy.NoOp();
 
-        IPolicyWrap<int> wrap = policyA.Wrap(policyB);
+        var wrap = policyA.Wrap(policyB);
 
-        wrap.Outer.Should().BeSameAs(policyA);
-        wrap.Inner.Should().BeSameAs(policyB);
+        wrap.Outer.ShouldBeSameAs(policyA);
+        wrap.Inner.ShouldBeSameAs(policyB);
     }
 
     [Fact]
@@ -231,10 +233,10 @@ public class PolicyWrapSpecs
         ISyncPolicy<int> policyA = Policy.NoOp<int>();
         ISyncPolicy<int> policyB = Policy.NoOp<int>();
 
-        IPolicyWrap<int> wrap = policyA.Wrap(policyB);
+        var wrap = policyA.Wrap(policyB);
 
-        wrap.Outer.Should().BeSameAs(policyA);
-        wrap.Inner.Should().BeSameAs(policyB);
+        wrap.Outer.ShouldBeSameAs(policyA);
+        wrap.Inner.ShouldBeSameAs(policyB);
     }
 
     #endregion
@@ -246,7 +248,7 @@ public class PolicyWrapSpecs
     {
         Action config = () => Policy.Wrap();
 
-        config.Should().Throw<ArgumentException>().And.ParamName.Should().Be("policies");
+        Should.Throw<ArgumentException>(config).ParamName.ShouldBe("policies");
     }
 
     [Fact]
@@ -257,7 +259,7 @@ public class PolicyWrapSpecs
 
         Action config = () => Policy.Wrap(policies);
 
-        config.Should().Throw<ArgumentException>().And.ParamName.Should().Be("policies");
+        Should.Throw<ArgumentException>(config).ParamName.ShouldBe("policies");
     }
 
     [Fact]
@@ -267,7 +269,7 @@ public class PolicyWrapSpecs
         Policy breaker = Policy.Handle<Exception>().CircuitBreaker(1, TimeSpan.FromSeconds(10));
         Action config = () => Policy.Wrap(retry, breaker);
 
-        config.Should().NotThrow();
+        Should.NotThrow(config);
     }
 
     [Fact]
@@ -279,7 +281,7 @@ public class PolicyWrapSpecs
 
         Action config = () => Policy.Wrap(divideByZeroRetry, retry, breaker);
 
-        config.Should().NotThrow();
+        Should.NotThrow(config);
     }
 
     [Fact]
@@ -290,8 +292,8 @@ public class PolicyWrapSpecs
 
         PolicyWrap wrap = Policy.Wrap(policyA, policyB);
 
-        wrap.Outer.Should().BeSameAs(policyA);
-        wrap.Inner.Should().BeSameAs(policyB);
+        wrap.Outer.ShouldBeSameAs(policyA);
+        wrap.Inner.ShouldBeSameAs(policyB);
     }
 
     #endregion
@@ -303,16 +305,16 @@ public class PolicyWrapSpecs
     {
         Action config = () => Policy.Wrap<int>();
 
-        config.Should().Throw<ArgumentException>().And.ParamName.Should().Be("policies");
+        Should.Throw<ArgumentException>(config).ParamName.ShouldBe("policies");
     }
 
     [Fact]
     public void Wrapping_only_one_policy_using_static_wrap_strongly_typed_syntax_should_throw()
     {
         Policy<int> singlePolicy = Policy<int>.Handle<Exception>().Retry();
-        Action config = () => Policy.Wrap<int>(singlePolicy);
+        Action config = () => Policy.Wrap(singlePolicy);
 
-        config.Should().Throw<ArgumentException>().And.ParamName.Should().Be("policies");
+        Should.Throw<ArgumentException>(config).ParamName.ShouldBe("policies");
     }
 
     [Fact]
@@ -322,7 +324,7 @@ public class PolicyWrapSpecs
         Policy<int> breaker = Policy<int>.Handle<Exception>().CircuitBreaker(1, TimeSpan.FromSeconds(10));
         Action config = () => Policy.Wrap<int>(retry, breaker);
 
-        config.Should().NotThrow();
+        Should.NotThrow(config);
     }
 
     [Fact]
@@ -332,9 +334,9 @@ public class PolicyWrapSpecs
         Policy<int> divideByZeroRetry = Policy<int>.Handle<DivideByZeroException>().Retry(2);
         Policy<int> breaker = Policy<int>.Handle<Exception>().CircuitBreaker(1, TimeSpan.FromSeconds(10));
 
-        Action config = () => Policy.Wrap<int>(divideByZeroRetry, retry, breaker);
+        Action config = () => Policy.Wrap(divideByZeroRetry, retry, breaker);
 
-        config.Should().NotThrow();
+        Should.NotThrow(config);
     }
 
     [Fact]
@@ -345,8 +347,8 @@ public class PolicyWrapSpecs
 
         PolicyWrap<int> wrap = Policy.Wrap(policyA, policyB);
 
-        wrap.Outer.Should().BeSameAs(policyA);
-        wrap.Inner.Should().BeSameAs(policyB);
+        wrap.Outer.ShouldBeSameAs(policyA);
+        wrap.Inner.ShouldBeSameAs(policyB);
     }
 
     #endregion
@@ -364,15 +366,13 @@ public class PolicyWrapSpecs
 
         // When the retry wraps the breaker, the retry (being outer) should cause the call to be put through the breaker twice - causing the breaker to break.
         breaker.Reset();
-        retryWrappingBreaker.Invoking(x => x.RaiseException<DivideByZeroException>(2))
-            .Should().Throw<DivideByZeroException>();
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+        Should.Throw<DivideByZeroException>(() => retryWrappingBreaker.RaiseException<DivideByZeroException>(2));
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         // When the breaker wraps the retry, the retry (being inner) should retry twice before throwing the exception back on the breaker - the exception only hits the breaker once - so the breaker should not break.
         breaker.Reset();
-        breakerWrappingRetry.Invoking(x => x.RaiseException<DivideByZeroException>(2))
-            .Should().Throw<DivideByZeroException>();
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+        Should.Throw<DivideByZeroException>(() => breakerWrappingRetry.RaiseException<DivideByZeroException>(2));
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
     }
 
     [Fact]
@@ -387,14 +387,14 @@ public class PolicyWrapSpecs
         // When the retry wraps the breaker, the retry (being outer) should cause the call to be put through the breaker twice - causing the breaker to break.
         breaker.Reset();
         retryWrappingBreaker.RaiseResultSequence(ResultPrimitive.Fault, ResultPrimitive.Fault)
-            .Should().Be(ResultPrimitive.Fault);
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+            .ShouldBe(ResultPrimitive.Fault);
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         // When the breaker wraps the retry, the retry (being inner) should retry twice before throwing the exception back on the breaker - the exception only hits the breaker once - so the breaker should not break.
         breaker.Reset();
         breakerWrappingRetry.RaiseResultSequence(ResultPrimitive.Fault, ResultPrimitive.Fault)
-            .Should().Be(ResultPrimitive.Fault);
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+            .ShouldBe(ResultPrimitive.Fault);
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
     }
 
     #endregion
@@ -412,15 +412,13 @@ public class PolicyWrapSpecs
 
         // When the retry wraps the breaker, the retry (being outer) should cause the call to be put through the breaker twice - causing the breaker to break.
         breaker.Reset();
-        retryWrappingBreaker.Invoking(x => x.RaiseException<DivideByZeroException>(2))
-            .Should().Throw<DivideByZeroException>();
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+        Should.Throw<DivideByZeroException>(() => retryWrappingBreaker.RaiseException<DivideByZeroException>(2));
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         // When the breaker wraps the retry, the retry (being inner) should retry twice before throwing the exception back on the breaker - the exception only hits the breaker once - so the breaker should not break.
         breaker.Reset();
-        breakerWrappingRetry.Invoking(x => x.RaiseException<DivideByZeroException>(2))
-            .Should().Throw<DivideByZeroException>();
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+        Should.Throw<DivideByZeroException>(() => breakerWrappingRetry.RaiseException<DivideByZeroException>(2));
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
     }
 
     [Fact]
@@ -435,14 +433,14 @@ public class PolicyWrapSpecs
         // When the retry wraps the breaker, the retry (being outer) should cause the call to be put through the breaker twice - causing the breaker to break.
         breaker.Reset();
         retryWrappingBreaker.RaiseResultSequence(ResultPrimitive.Fault, ResultPrimitive.Fault)
-              .Should().Be(ResultPrimitive.Fault);
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+              .ShouldBe(ResultPrimitive.Fault);
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         // When the breaker wraps the retry, the retry (being inner) should retry twice before throwing the exception back on the breaker - the exception only hits the breaker once - so the breaker should not break.
         breaker.Reset();
         breakerWrappingRetry.RaiseResultSequence(ResultPrimitive.Fault, ResultPrimitive.Fault)
-              .Should().Be(ResultPrimitive.Fault);
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+              .ShouldBe(ResultPrimitive.Fault);
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
     }
 
     #endregion
@@ -462,9 +460,9 @@ public class PolicyWrapSpecs
 
         PolicyResult executeAndCaptureResultOnPolicyWrap = wrap.ExecuteAndCapture(() => { throw new ArgumentNullException(); });
 
-        executeAndCaptureResultOnPolicyWrap.Outcome.Should().Be(OutcomeType.Failure);
-        executeAndCaptureResultOnPolicyWrap.FinalException.Should().BeOfType<ArgumentNullException>();
-        executeAndCaptureResultOnPolicyWrap.ExceptionType.Should().Be(ExceptionType.HandledByThisPolicy);
+        executeAndCaptureResultOnPolicyWrap.Outcome.ShouldBe(OutcomeType.Failure);
+        executeAndCaptureResultOnPolicyWrap.FinalException.ShouldBeOfType<ArgumentNullException>();
+        executeAndCaptureResultOnPolicyWrap.ExceptionType.ShouldBe(ExceptionType.HandledByThisPolicy);
     }
 
     [Fact]
@@ -480,9 +478,9 @@ public class PolicyWrapSpecs
 
         PolicyResult executeAndCaptureResultOnPolicyWrap = wrap.ExecuteAndCapture(() => { throw new DivideByZeroException(); });
 
-        executeAndCaptureResultOnPolicyWrap.Outcome.Should().Be(OutcomeType.Failure);
-        executeAndCaptureResultOnPolicyWrap.FinalException.Should().BeOfType<DivideByZeroException>();
-        executeAndCaptureResultOnPolicyWrap.ExceptionType.Should().Be(ExceptionType.Unhandled);
+        executeAndCaptureResultOnPolicyWrap.Outcome.ShouldBe(OutcomeType.Failure);
+        executeAndCaptureResultOnPolicyWrap.FinalException.ShouldBeOfType<DivideByZeroException>();
+        executeAndCaptureResultOnPolicyWrap.ExceptionType.ShouldBe(ExceptionType.Unhandled);
     }
 
     [Fact]
@@ -498,10 +496,10 @@ public class PolicyWrapSpecs
 
         PolicyResult<ResultPrimitive> executeAndCaptureResultOnPolicyWrap = wrap.ExecuteAndCapture(() => { throw new ArgumentNullException(); });
 
-        executeAndCaptureResultOnPolicyWrap.Outcome.Should().Be(OutcomeType.Failure);
-        executeAndCaptureResultOnPolicyWrap.FinalException.Should().BeOfType<ArgumentNullException>();
-        executeAndCaptureResultOnPolicyWrap.ExceptionType.Should().Be(ExceptionType.HandledByThisPolicy);
-        executeAndCaptureResultOnPolicyWrap.FaultType.Should().Be(FaultType.ExceptionHandledByThisPolicy);
+        executeAndCaptureResultOnPolicyWrap.Outcome.ShouldBe(OutcomeType.Failure);
+        executeAndCaptureResultOnPolicyWrap.FinalException.ShouldBeOfType<ArgumentNullException>();
+        executeAndCaptureResultOnPolicyWrap.ExceptionType.ShouldBe(ExceptionType.HandledByThisPolicy);
+        executeAndCaptureResultOnPolicyWrap.FaultType.ShouldBe(FaultType.ExceptionHandledByThisPolicy);
     }
 
     [Fact]
@@ -517,10 +515,10 @@ public class PolicyWrapSpecs
 
         PolicyResult<ResultPrimitive> executeAndCaptureResultOnPolicyWrap = wrap.ExecuteAndCapture(() => { throw new DivideByZeroException(); });
 
-        executeAndCaptureResultOnPolicyWrap.Outcome.Should().Be(OutcomeType.Failure);
-        executeAndCaptureResultOnPolicyWrap.FinalException.Should().BeOfType<DivideByZeroException>();
-        executeAndCaptureResultOnPolicyWrap.ExceptionType.Should().Be(ExceptionType.Unhandled);
-        executeAndCaptureResultOnPolicyWrap.FaultType.Should().Be(FaultType.UnhandledException);
+        executeAndCaptureResultOnPolicyWrap.Outcome.ShouldBe(OutcomeType.Failure);
+        executeAndCaptureResultOnPolicyWrap.FinalException.ShouldBeOfType<DivideByZeroException>();
+        executeAndCaptureResultOnPolicyWrap.ExceptionType.ShouldBe(ExceptionType.Unhandled);
+        executeAndCaptureResultOnPolicyWrap.FaultType.ShouldBe(FaultType.UnhandledException);
     }
 
     [Fact]
@@ -536,11 +534,11 @@ public class PolicyWrapSpecs
 
         PolicyResult<ResultPrimitive> executeAndCaptureResultOnPolicyWrap = wrap.ExecuteAndCapture(() => ResultPrimitive.Fault);
 
-        executeAndCaptureResultOnPolicyWrap.Outcome.Should().Be(OutcomeType.Failure);
-        executeAndCaptureResultOnPolicyWrap.FaultType.Should().Be(FaultType.ResultHandledByThisPolicy);
-        executeAndCaptureResultOnPolicyWrap.FinalHandledResult.Should().Be(ResultPrimitive.Fault);
-        executeAndCaptureResultOnPolicyWrap.FinalException.Should().BeNull();
-        executeAndCaptureResultOnPolicyWrap.ExceptionType.Should().BeNull();
+        executeAndCaptureResultOnPolicyWrap.Outcome.ShouldBe(OutcomeType.Failure);
+        executeAndCaptureResultOnPolicyWrap.FaultType.ShouldBe(FaultType.ResultHandledByThisPolicy);
+        executeAndCaptureResultOnPolicyWrap.FinalHandledResult.ShouldBe(ResultPrimitive.Fault);
+        executeAndCaptureResultOnPolicyWrap.FinalException.ShouldBeNull();
+        executeAndCaptureResultOnPolicyWrap.ExceptionType.ShouldBeNull();
     }
 
     [Fact]
@@ -556,11 +554,11 @@ public class PolicyWrapSpecs
 
         PolicyResult<ResultPrimitive> executeAndCaptureResultOnPolicyWrap = wrap.ExecuteAndCapture(() => ResultPrimitive.FaultAgain);
 
-        executeAndCaptureResultOnPolicyWrap.Outcome.Should().Be(OutcomeType.Successful);
-        executeAndCaptureResultOnPolicyWrap.FinalHandledResult.Should().Be(default);
-        executeAndCaptureResultOnPolicyWrap.FaultType.Should().BeNull();
-        executeAndCaptureResultOnPolicyWrap.FinalException.Should().BeNull();
-        executeAndCaptureResultOnPolicyWrap.ExceptionType.Should().BeNull();
+        executeAndCaptureResultOnPolicyWrap.Outcome.ShouldBe(OutcomeType.Successful);
+        executeAndCaptureResultOnPolicyWrap.FinalHandledResult.ShouldBe(default);
+        executeAndCaptureResultOnPolicyWrap.FaultType.ShouldBeNull();
+        executeAndCaptureResultOnPolicyWrap.FinalException.ShouldBeNull();
+        executeAndCaptureResultOnPolicyWrap.ExceptionType.ShouldBeNull();
     }
 
     #endregion

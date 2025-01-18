@@ -13,19 +13,19 @@ public class CircuitBreakerTResultMixedResultExceptionSpecs : IDisposable
                         .CircuitBreaker(2, TimeSpan.FromMinutes(1));
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new DivideByZeroException()))
-            .Should().Throw<DivideByZeroException>();
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+            .Should.Throw<DivideByZeroException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new DivideByZeroException()))
-            .Should().Throw<DivideByZeroException>();
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+            .Should.Throw<DivideByZeroException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         breaker.Invoking(b => b.RaiseResultSequence(ResultPrimitive.Good))
-            .Should().Throw<BrokenCircuitException>()
+            .Should.Throw<BrokenCircuitException>()
             .WithMessage("The circuit is now open and is not allowing calls.")
             .WithInnerException<DivideByZeroException>();
 
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
     }
 
     [Fact]
@@ -37,20 +37,20 @@ public class CircuitBreakerTResultMixedResultExceptionSpecs : IDisposable
                         .CircuitBreaker(2, TimeSpan.FromMinutes(1));
 
         breaker.RaiseResultSequence(ResultPrimitive.Fault)
-              .Should().Be(ResultPrimitive.Fault);
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+              .ShouldBe(ResultPrimitive.Fault);
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new DivideByZeroException()))
-            .Should().Throw<DivideByZeroException>();
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+            .Should.Throw<DivideByZeroException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         // 2 exception raised, circuit is now open
         breaker.Invoking(b => b.RaiseResultSequence(ResultPrimitive.Good))
-            .Should().Throw<BrokenCircuitException>()
+            .Should.Throw<BrokenCircuitException>()
             .WithMessage("The circuit is now open and is not allowing calls.")
             .WithInnerException<DivideByZeroException>();
 
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
     }
 
     [Fact]
@@ -62,20 +62,20 @@ public class CircuitBreakerTResultMixedResultExceptionSpecs : IDisposable
                         .CircuitBreaker(2, TimeSpan.FromMinutes(1));
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new DivideByZeroException()))
-            .Should().Throw<DivideByZeroException>();
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+            .Should.Throw<DivideByZeroException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.RaiseResultSequence(ResultPrimitive.Fault)
-              .Should().Be(ResultPrimitive.Fault);
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+              .ShouldBe(ResultPrimitive.Fault);
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         // 2 exception raised, circuit is now open
         breaker.Invoking(b => b.RaiseResultSequence(ResultPrimitive.Good))
-            .Should().Throw<BrokenCircuitException<ResultPrimitive>>()
+            .Should.Throw<BrokenCircuitException<ResultPrimitive>>()
             .WithMessage("The circuit is now open and is not allowing calls.")
             .Where(e => e.Result == ResultPrimitive.Fault);
 
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
     }
 
     [Fact]
@@ -87,20 +87,20 @@ public class CircuitBreakerTResultMixedResultExceptionSpecs : IDisposable
             .CircuitBreaker(2, TimeSpan.FromMinutes(1));
 
         breaker.RaiseResultSequence(ResultPrimitive.Fault)
-              .Should().Be(ResultPrimitive.Fault);
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+              .ShouldBe(ResultPrimitive.Fault);
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new DivideByZeroException()))
-            .Should().Throw<DivideByZeroException>();
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+            .Should.Throw<DivideByZeroException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         // 2 exception raised, circuit is now open
         breaker.Invoking(b => b.RaiseResultSequence(ResultPrimitive.Good))
-            .Should().Throw<BrokenCircuitException>()
+            .Should.Throw<BrokenCircuitException>()
             .WithMessage("The circuit is now open and is not allowing calls.")
             .WithInnerException<DivideByZeroException>();
 
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
     }
 
     [Fact]
@@ -112,20 +112,20 @@ public class CircuitBreakerTResultMixedResultExceptionSpecs : IDisposable
             .CircuitBreaker(2, TimeSpan.FromMinutes(1));
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new DivideByZeroException()))
-            .Should().Throw<DivideByZeroException>();
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+            .Should.Throw<DivideByZeroException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.RaiseResultSequence(ResultPrimitive.Fault)
-              .Should().Be(ResultPrimitive.Fault);
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+              .ShouldBe(ResultPrimitive.Fault);
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         // 2 exception raised, circuit is now open
         breaker.Invoking(b => b.RaiseResultSequence(ResultPrimitive.Good))
-            .Should().Throw<BrokenCircuitException<ResultPrimitive>>()
+            .Should.Throw<BrokenCircuitException<ResultPrimitive>>()
             .WithMessage("The circuit is now open and is not allowing calls.")
             .Where(e => e.Result == ResultPrimitive.Fault);
 
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
     }
 
     [Fact]
@@ -137,20 +137,20 @@ public class CircuitBreakerTResultMixedResultExceptionSpecs : IDisposable
             .CircuitBreaker(2, TimeSpan.FromMinutes(1));
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new ArgumentException("message", "key")))
-            .Should().Throw<ArgumentException>();
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+            .Should.Throw<ArgumentException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.RaiseResultSequence(new ResultClass(ResultPrimitive.Fault))
-              .ResultCode.Should().Be(ResultPrimitive.Fault);
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+              .ResultCode.ShouldBe(ResultPrimitive.Fault);
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         // 2 exception raised, circuit is now open
         breaker.Invoking(b => b.RaiseResultSequence(new ResultClass(ResultPrimitive.Good)))
-            .Should().Throw<BrokenCircuitException<ResultClass>>()
+            .Should.Throw<BrokenCircuitException<ResultClass>>()
             .WithMessage("The circuit is now open and is not allowing calls.")
             .Where(e => e.Result.ResultCode == ResultPrimitive.Fault);
 
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
     }
 
     [Fact]
@@ -162,16 +162,16 @@ public class CircuitBreakerTResultMixedResultExceptionSpecs : IDisposable
             .CircuitBreaker(2, TimeSpan.FromMinutes(1));
 
         breaker.RaiseResultSequence(ResultPrimitive.FaultAgain)
-              .Should().Be(ResultPrimitive.FaultAgain);
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+              .ShouldBe(ResultPrimitive.FaultAgain);
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.RaiseResultSequence(ResultPrimitive.FaultAgain)
-              .Should().Be(ResultPrimitive.FaultAgain);
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+              .ShouldBe(ResultPrimitive.FaultAgain);
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.RaiseResultSequence(ResultPrimitive.FaultAgain)
-              .Should().Be(ResultPrimitive.FaultAgain);
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+              .ShouldBe(ResultPrimitive.FaultAgain);
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
     }
 
     [Fact]
@@ -183,16 +183,16 @@ public class CircuitBreakerTResultMixedResultExceptionSpecs : IDisposable
             .CircuitBreaker(2, TimeSpan.FromMinutes(1));
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new ArgumentException()))
-            .Should().Throw<ArgumentException>();
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+            .Should.Throw<ArgumentException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new ArgumentException()))
-            .Should().Throw<ArgumentException>();
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+            .Should.Throw<ArgumentException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new ArgumentException()))
-            .Should().Throw<ArgumentException>();
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+            .Should.Throw<ArgumentException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
     }
 
     [Fact]
@@ -205,29 +205,29 @@ public class CircuitBreakerTResultMixedResultExceptionSpecs : IDisposable
 
         // non-matched result predicate
         breaker.RaiseResultSequence(new ResultClass(ResultPrimitive.FaultAgain))
-              .ResultCode.Should().Be(ResultPrimitive.FaultAgain);
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+              .ResultCode.ShouldBe(ResultPrimitive.FaultAgain);
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.RaiseResultSequence(new ResultClass(ResultPrimitive.FaultAgain))
-              .ResultCode.Should().Be(ResultPrimitive.FaultAgain);
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+              .ResultCode.ShouldBe(ResultPrimitive.FaultAgain);
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.RaiseResultSequence(new ResultClass(ResultPrimitive.FaultAgain))
-              .ResultCode.Should().Be(ResultPrimitive.FaultAgain);
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+              .ResultCode.ShouldBe(ResultPrimitive.FaultAgain);
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // non-matched exception predicate
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new ArgumentException("message", "value")))
-            .Should().Throw<ArgumentException>();
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+            .Should.Throw<ArgumentException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new ArgumentException("message", "value")))
-            .Should().Throw<ArgumentException>();
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+            .Should.Throw<ArgumentException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new ArgumentException("message", "value")))
-            .Should().Throw<ArgumentException>();
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+            .Should.Throw<ArgumentException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
     }
 
     [Fact]
@@ -241,28 +241,28 @@ public class CircuitBreakerTResultMixedResultExceptionSpecs : IDisposable
             .CircuitBreaker(4, TimeSpan.FromMinutes(1));
 
         breaker.RaiseResultSequence(ResultPrimitive.Fault)
-              .Should().Be(ResultPrimitive.Fault);
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+              .ShouldBe(ResultPrimitive.Fault);
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new DivideByZeroException()))
-            .Should().Throw<DivideByZeroException>();
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+            .Should.Throw<DivideByZeroException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.RaiseResultSequence(ResultPrimitive.FaultAgain)
-              .Should().Be(ResultPrimitive.FaultAgain);
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+              .ShouldBe(ResultPrimitive.FaultAgain);
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new ArgumentException()))
-            .Should().Throw<ArgumentException>();
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+            .Should.Throw<ArgumentException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         // 4 exception raised, circuit is now open
         breaker.Invoking(b => b.RaiseResultSequence(ResultPrimitive.Good))
-            .Should().Throw<BrokenCircuitException>()
+            .Should.Throw<BrokenCircuitException>()
             .WithMessage("The circuit is now open and is not allowing calls.")
             .WithInnerException<ArgumentException>();
 
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
     }
 
     [Fact]
@@ -276,28 +276,28 @@ public class CircuitBreakerTResultMixedResultExceptionSpecs : IDisposable
             .CircuitBreaker(4, TimeSpan.FromMinutes(1));
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new DivideByZeroException()))
-            .Should().Throw<DivideByZeroException>();
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+            .Should.Throw<DivideByZeroException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.RaiseResultSequence(ResultPrimitive.Fault)
-              .Should().Be(ResultPrimitive.Fault);
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+              .ShouldBe(ResultPrimitive.Fault);
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new ArgumentException()))
-            .Should().Throw<ArgumentException>();
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+            .Should.Throw<ArgumentException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.RaiseResultSequence(ResultPrimitive.FaultAgain)
-              .Should().Be(ResultPrimitive.FaultAgain);
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+              .ShouldBe(ResultPrimitive.FaultAgain);
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         // 4 exception raised, circuit is now open
         breaker.Invoking(b => b.RaiseResultSequence(ResultPrimitive.Good))
-            .Should().Throw<BrokenCircuitException<ResultPrimitive>>()
+            .Should.Throw<BrokenCircuitException<ResultPrimitive>>()
             .WithMessage("The circuit is now open and is not allowing calls.")
             .Where(e => e.Result == ResultPrimitive.FaultAgain);
 
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
     }
 
     [Fact]
@@ -309,20 +309,20 @@ public class CircuitBreakerTResultMixedResultExceptionSpecs : IDisposable
                         .CircuitBreaker(2, TimeSpan.FromMinutes(1));
 
         breaker.RaiseResultSequence(ResultPrimitive.FaultAgain)
-              .Should().Be(ResultPrimitive.FaultAgain);
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+              .ShouldBe(ResultPrimitive.FaultAgain);
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new ArgumentException()))
-            .Should().Throw<ArgumentException>();
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+            .Should.Throw<ArgumentException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.RaiseResultSequence(ResultPrimitive.FaultAgain)
-              .Should().Be(ResultPrimitive.FaultAgain);
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+              .ShouldBe(ResultPrimitive.FaultAgain);
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new ArgumentException()))
-            .Should().Throw<ArgumentException>();
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+            .Should.Throw<ArgumentException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
     }
 
     #endregion
@@ -343,29 +343,29 @@ public class CircuitBreakerTResultMixedResultExceptionSpecs : IDisposable
                         .CircuitBreaker(2, TimeSpan.FromMinutes(1));
 
         breaker.RaiseResultSequence(ResultPrimitive.Fault)
-              .Should().Be(ResultPrimitive.Fault);
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+              .ShouldBe(ResultPrimitive.Fault);
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new DivideByZeroException()))
-            .Should().Throw<DivideByZeroException>();
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+            .Should.Throw<DivideByZeroException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         // 2 exception raised, circuit is now open
         breaker.Invoking(b => b.RaiseResultSequence(ResultPrimitive.Fault))
-              .Should().Throw<BrokenCircuitException>();
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+              .Should.Throw<BrokenCircuitException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         SystemClock.UtcNow = () => time.Add(durationOfBreak);
 
         // duration has passed, circuit now half open
-        breaker.CircuitState.Should().Be(CircuitState.HalfOpen);
+        breaker.CircuitState.ShouldBe(CircuitState.HalfOpen);
 
         // first call after duration returns a fault, so circuit should break again
         breaker.RaiseResultSequence(ResultPrimitive.Fault)
-              .Should().Be(ResultPrimitive.Fault);
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+              .ShouldBe(ResultPrimitive.Fault);
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
         breaker.Invoking(b => b.RaiseResultSequence(ResultPrimitive.Fault))
-              .Should().Throw<BrokenCircuitException>();
+              .Should.Throw<BrokenCircuitException>();
 
     }
 
@@ -383,29 +383,29 @@ public class CircuitBreakerTResultMixedResultExceptionSpecs : IDisposable
                         .CircuitBreaker(2, TimeSpan.FromMinutes(1));
 
         breaker.RaiseResultSequence(ResultPrimitive.Fault)
-              .Should().Be(ResultPrimitive.Fault);
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+              .ShouldBe(ResultPrimitive.Fault);
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new DivideByZeroException()))
-            .Should().Throw<DivideByZeroException>();
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+            .Should.Throw<DivideByZeroException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         // 2 exception raised, circuit is now open
         breaker.Invoking(b => b.RaiseResultSequence(ResultPrimitive.Fault))
-              .Should().Throw<BrokenCircuitException>();
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+              .Should.Throw<BrokenCircuitException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         SystemClock.UtcNow = () => time.Add(durationOfBreak);
 
         // duration has passed, circuit now half open
-        breaker.CircuitState.Should().Be(CircuitState.HalfOpen);
+        breaker.CircuitState.ShouldBe(CircuitState.HalfOpen);
 
         // first call after duration returns a fault, so circuit should break again
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new DivideByZeroException()))
-            .Should().Throw<DivideByZeroException>();
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+            .Should.Throw<DivideByZeroException>();
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
         breaker.Invoking(b => b.RaiseResultSequence(ResultPrimitive.Fault))
-              .Should().Throw<BrokenCircuitException>();
+              .Should.Throw<BrokenCircuitException>();
 
     }
 
@@ -431,14 +431,14 @@ public class CircuitBreakerTResultMixedResultExceptionSpecs : IDisposable
             .CircuitBreaker(2, durationOfBreak, onBreak, onReset);
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new DivideByZeroException()))
-            .Should().Throw<DivideByZeroException>();
+            .Should.Throw<DivideByZeroException>();
 
         breaker.RaiseResultSequence(ResultPrimitive.Fault)
-            .Should().Be(ResultPrimitive.Fault);
+            .ShouldBe(ResultPrimitive.Fault);
 
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
 
-        handledResult?.Should().Be(ResultPrimitive.Fault);
+        handledResult?.ShouldBe(ResultPrimitive.Fault);
     }
 
     [Fact]
@@ -457,14 +457,14 @@ public class CircuitBreakerTResultMixedResultExceptionSpecs : IDisposable
             .CircuitBreaker(2, durationOfBreak, onBreak, onReset);
 
         breaker.RaiseResultSequence(ResultPrimitive.Fault)
-            .Should().Be(ResultPrimitive.Fault);
+            .ShouldBe(ResultPrimitive.Fault);
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new DivideByZeroException()))
-            .Should().Throw<DivideByZeroException>();
+            .Should.Throw<DivideByZeroException>();
 
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
 
-        lastException.Should().BeOfType<DivideByZeroException>();
+        lastException.ShouldBeOfType<DivideByZeroException>();
     }
 
     #endregion
@@ -481,8 +481,8 @@ public class CircuitBreakerTResultMixedResultExceptionSpecs : IDisposable
             .OrResult(ResultPrimitive.Fault)
             .CircuitBreaker(2, TimeSpan.FromMinutes(1));
 
-        breaker.LastHandledResult.Should().Be(default);
-        breaker.LastException.Should().BeNull();
+        breaker.LastHandledResult.ShouldBe(default);
+        breaker.LastException.ShouldBeNull();
     }
 
     [Fact]
@@ -494,12 +494,12 @@ public class CircuitBreakerTResultMixedResultExceptionSpecs : IDisposable
             .CircuitBreaker(2, TimeSpan.FromMinutes(1));
 
         breaker.RaiseResultSequence(ResultPrimitive.Fault)
-            .Should().Be(ResultPrimitive.Fault);
+            .ShouldBe(ResultPrimitive.Fault);
 
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.LastHandledResult.Should().Be(ResultPrimitive.Fault);
-        breaker.LastException.Should().BeNull();
+        breaker.LastHandledResult.ShouldBe(ResultPrimitive.Fault);
+        breaker.LastException.ShouldBeNull();
     }
 
     [Fact]
@@ -511,12 +511,12 @@ public class CircuitBreakerTResultMixedResultExceptionSpecs : IDisposable
             .CircuitBreaker(2, TimeSpan.FromMinutes(1));
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new DivideByZeroException()))
-            .Should().Throw<DivideByZeroException>();
+            .Should.Throw<DivideByZeroException>();
 
-        breaker.CircuitState.Should().Be(CircuitState.Closed);
+        breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.LastHandledResult.Should().Be(default);
-        breaker.LastException.Should().BeOfType<DivideByZeroException>();
+        breaker.LastHandledResult.ShouldBe(default);
+        breaker.LastException.ShouldBeOfType<DivideByZeroException>();
     }
 
     [Fact]
@@ -528,15 +528,15 @@ public class CircuitBreakerTResultMixedResultExceptionSpecs : IDisposable
             .CircuitBreaker(2, TimeSpan.FromMinutes(1));
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new DivideByZeroException()))
-            .Should().Throw<DivideByZeroException>();
+            .Should.Throw<DivideByZeroException>();
 
         breaker.RaiseResultSequence(ResultPrimitive.Fault)
-            .Should().Be(ResultPrimitive.Fault);
+            .ShouldBe(ResultPrimitive.Fault);
 
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
 
-        breaker.LastHandledResult.Should().Be(ResultPrimitive.Fault);
-        breaker.LastException.Should().BeNull();
+        breaker.LastHandledResult.ShouldBe(ResultPrimitive.Fault);
+        breaker.LastException.ShouldBeNull();
     }
 
     [Fact]
@@ -548,15 +548,15 @@ public class CircuitBreakerTResultMixedResultExceptionSpecs : IDisposable
             .CircuitBreaker(2, TimeSpan.FromMinutes(1));
 
         breaker.RaiseResultSequence(ResultPrimitive.Fault)
-            .Should().Be(ResultPrimitive.Fault);
+            .ShouldBe(ResultPrimitive.Fault);
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new DivideByZeroException()))
-            .Should().Throw<DivideByZeroException>();
+            .Should.Throw<DivideByZeroException>();
 
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
 
-        breaker.LastHandledResult.Should().Be(default);
-        breaker.LastException.Should().BeOfType<DivideByZeroException>();
+        breaker.LastHandledResult.ShouldBe(default);
+        breaker.LastException.ShouldBeOfType<DivideByZeroException>();
     }
 
     [Fact]
@@ -568,20 +568,20 @@ public class CircuitBreakerTResultMixedResultExceptionSpecs : IDisposable
             .CircuitBreaker(2, TimeSpan.FromMinutes(1));
 
         breaker.Invoking(b => b.RaiseResultAndOrExceptionSequence(new DivideByZeroException()))
-            .Should().Throw<DivideByZeroException>();
+            .Should.Throw<DivideByZeroException>();
 
         breaker.RaiseResultSequence(ResultPrimitive.Fault)
-            .Should().Be(ResultPrimitive.Fault);
+            .ShouldBe(ResultPrimitive.Fault);
 
-        breaker.CircuitState.Should().Be(CircuitState.Open);
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
 
-        breaker.LastHandledResult.Should().Be(ResultPrimitive.Fault);
-        breaker.LastException.Should().BeNull();
+        breaker.LastHandledResult.ShouldBe(ResultPrimitive.Fault);
+        breaker.LastException.ShouldBeNull();
 
         breaker.Reset();
 
-        breaker.LastHandledResult.Should().Be(default);
-        breaker.LastException.Should().BeNull();
+        breaker.LastHandledResult.ShouldBe(default);
+        breaker.LastException.ShouldBeNull();
     }
 
     #endregion

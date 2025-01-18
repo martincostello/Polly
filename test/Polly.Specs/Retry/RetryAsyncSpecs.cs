@@ -28,10 +28,10 @@ public class RetryAsyncSpecs
 
         var func = () => generic.Invoke(instance, [action, new Context(), CancellationToken.None, false]);
 
-        var exceptionAssertions = func.Should().Throw<TargetInvocationException>();
-        exceptionAssertions.And.Message.Should().Be("Exception has been thrown by the target of an invocation.");
-        exceptionAssertions.And.InnerException.Should().BeOfType<ArgumentNullException>()
-            .Which.ParamName.Should().Be("action");
+        var exceptionAssertions = func.Should.Throw<TargetInvocationException>();
+        exceptionAssertions.And.Message.ShouldBe("Exception has been thrown by the target of an invocation.");
+        exceptionAssertions.And.InnerException.ShouldBeOfType<ArgumentNullException>()
+            .Which.ParamName.ShouldBe("action");
     }
 
     [Fact]
@@ -43,8 +43,8 @@ public class RetryAsyncSpecs
                                   .Handle<DivideByZeroException>()
                                   .RetryAsync(-1, onRetry);
 
-        policy.Should().Throw<ArgumentOutOfRangeException>().And
-              .ParamName.Should().Be("retryCount");
+        policy.Should.Throw<ArgumentOutOfRangeException>().And
+              .ParamName.ShouldBe("retryCount");
     }
 
     [Fact]
@@ -55,7 +55,7 @@ public class RetryAsyncSpecs
             .RetryAsync(3);
 
         await policy.Awaiting(x => x.RaiseExceptionAsync<DivideByZeroException>(3))
-              .Should().NotThrowAsync();
+              .Should.NotThrowAsync();
     }
 
     [Fact]
@@ -67,7 +67,7 @@ public class RetryAsyncSpecs
             .RetryAsync(3);
 
         await policy.Awaiting(x => x.RaiseExceptionAsync<ArgumentException>(3))
-              .Should().NotThrowAsync();
+              .Should.NotThrowAsync();
     }
 
     [Fact]
@@ -78,7 +78,7 @@ public class RetryAsyncSpecs
             .RetryAsync(3);
 
         await policy.Awaiting(x => x.RaiseExceptionAsync<DivideByZeroException>())
-              .Should().NotThrowAsync();
+              .Should.NotThrowAsync();
     }
 
     [Fact]
@@ -90,7 +90,7 @@ public class RetryAsyncSpecs
             .RetryAsync(3);
 
         await policy.Awaiting(x => x.RaiseExceptionAsync<ArgumentException>())
-              .Should().NotThrowAsync();
+              .Should.NotThrowAsync();
     }
 
     [Fact]
@@ -101,7 +101,7 @@ public class RetryAsyncSpecs
             .RetryAsync(3);
 
         await policy.Awaiting(x => x.RaiseExceptionAsync<DivideByZeroException>(3 + 1))
-              .Should().ThrowAsync<DivideByZeroException>();
+              .Should.ThrowAsync<DivideByZeroException>();
     }
 
     [Fact]
@@ -113,7 +113,7 @@ public class RetryAsyncSpecs
             .RetryAsync(3);
 
         await policy.Awaiting(x => x.RaiseExceptionAsync<ArgumentException>(3 + 1))
-              .Should().ThrowAsync<ArgumentException>();
+              .Should.ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -124,7 +124,7 @@ public class RetryAsyncSpecs
             .RetryAsync();
 
         await policy.Awaiting(x => x.RaiseExceptionAsync<NullReferenceException>())
-              .Should().ThrowAsync<NullReferenceException>();
+              .Should.ThrowAsync<NullReferenceException>();
     }
 
     [Fact]
@@ -136,7 +136,7 @@ public class RetryAsyncSpecs
             .RetryAsync();
 
         await policy.Awaiting(x => x.RaiseExceptionAsync<NullReferenceException>())
-              .Should().ThrowAsync<NullReferenceException>();
+              .Should.ThrowAsync<NullReferenceException>();
     }
 
     [Fact]
@@ -147,7 +147,7 @@ public class RetryAsyncSpecs
             .RetryAsync();
 
         await policy.Awaiting(x => x.RaiseExceptionAsync<DivideByZeroException>())
-              .Should().ThrowAsync<DivideByZeroException>();
+              .Should.ThrowAsync<DivideByZeroException>();
     }
 
     [Fact]
@@ -159,7 +159,7 @@ public class RetryAsyncSpecs
             .RetryAsync();
 
         await policy.Awaiting(x => x.RaiseExceptionAsync<ArgumentException>())
-              .Should().ThrowAsync<ArgumentException>();
+              .Should.ThrowAsync<ArgumentException>();
     }
 
     [Fact]
@@ -170,7 +170,7 @@ public class RetryAsyncSpecs
             .RetryAsync();
 
         await policy.Awaiting(x => x.RaiseExceptionAsync<DivideByZeroException>())
-              .Should().NotThrowAsync();
+              .Should.NotThrowAsync();
     }
 
     [Fact]
@@ -182,7 +182,7 @@ public class RetryAsyncSpecs
             .RetryAsync();
 
         await policy.Awaiting(x => x.RaiseExceptionAsync<ArgumentException>())
-              .Should().NotThrowAsync();
+              .Should.NotThrowAsync();
     }
 
     [Fact]
@@ -192,7 +192,7 @@ public class RetryAsyncSpecs
             .Handle<DivideByZeroException>()
             .RetryAsync(3, (Action<Exception, int>)null!);
 
-        action.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("onRetry");
+        action.Should.Throw<ArgumentNullException>().And.ParamName.ShouldBe("onRetry");
     }
 
     [Fact]
@@ -202,7 +202,7 @@ public class RetryAsyncSpecs
             .Handle<DivideByZeroException>()
             .RetryAsync(3, (Func<Exception, int, Task>)null!);
 
-        action.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("onRetryAsync");
+        action.Should.Throw<ArgumentNullException>().And.ParamName.ShouldBe("onRetryAsync");
     }
 
     [Fact]
@@ -253,7 +253,7 @@ public class RetryAsyncSpecs
 
         await policy.RaiseExceptionAsync(withInner);
 
-        passedToOnRetry.Should().BeSameAs(toRaiseAsInner);
+        passedToOnRetry.ShouldBeSameAs(toRaiseAsInner);
     }
 
     [Fact]
@@ -266,7 +266,7 @@ public class RetryAsyncSpecs
             .RetryAsync((_, retryCount) => retryCounts.Add(retryCount));
 
         await policy.Awaiting(x => x.RaiseExceptionAsync<ArgumentException>())
-              .Should().ThrowAsync<ArgumentException>();
+              .Should.ThrowAsync<ArgumentException>();
 
         retryCounts.Should()
                    .BeEmpty();
@@ -280,10 +280,10 @@ public class RetryAsyncSpecs
             .RetryAsync();
 
         await policy.Awaiting(x => x.RaiseExceptionAsync<DivideByZeroException>())
-              .Should().NotThrowAsync();
+              .Should.NotThrowAsync();
 
         await policy.Awaiting(x => x.RaiseExceptionAsync<DivideByZeroException>())
-              .Should().NotThrowAsync();
+              .Should.NotThrowAsync();
     }
 
     [Fact]
@@ -314,7 +314,7 @@ public class RetryAsyncSpecs
 
         await policy.Awaiting(p => p.ExecuteAndCaptureAsync(_ => { throw new DivideByZeroException(); },
             CreateDictionary("key1", "value1", "key2", "value2")))
-            .Should().NotThrowAsync();
+            .Should.NotThrowAsync();
 
         contextData.Should()
             .ContainKeys("key1", "key2").And
@@ -330,7 +330,7 @@ public class RetryAsyncSpecs
             .Handle<DivideByZeroException>()
             .RetryAsync((_, _, context) => capturedContext = context);
 
-        await policy.Awaiting(x => x.RaiseExceptionAsync<DivideByZeroException>()).Should().NotThrowAsync();
+        await policy.Awaiting(x => x.RaiseExceptionAsync<DivideByZeroException>()).Should.NotThrowAsync();
 
         capturedContext.Should()
                        .BeEmpty();
@@ -348,12 +348,12 @@ public class RetryAsyncSpecs
         policy.RaiseExceptionAsync<DivideByZeroException>(
             CreateDictionary("key", "original_value"));
 
-        contextValue.Should().Be("original_value");
+        contextValue.ShouldBe("original_value");
 
         policy.RaiseExceptionAsync<DivideByZeroException>(
             CreateDictionary("key", "new_value"));
 
-        contextValue.Should().Be("new_value");
+        contextValue.ShouldBe("new_value");
     }
 
     [Fact]
@@ -367,15 +367,15 @@ public class RetryAsyncSpecs
 
         await policy.Awaiting(p => p.ExecuteAndCaptureAsync(_ => throw new DivideByZeroException(),
             CreateDictionary("key", "original_value")))
-            .Should().NotThrowAsync();
+            .Should.NotThrowAsync();
 
-        contextValue.Should().Be("original_value");
+        contextValue.ShouldBe("original_value");
 
         await policy.Awaiting(p => p.ExecuteAndCaptureAsync(_ => throw new DivideByZeroException(),
             CreateDictionary("key", "new_value")))
-            .Should().NotThrowAsync();
+            .Should.NotThrowAsync();
 
-        contextValue.Should().Be("new_value");
+        contextValue.ShouldBe("new_value");
     }
 
     [Fact]
@@ -390,9 +390,9 @@ public class RetryAsyncSpecs
             .RetryAsync(0, onRetry);
 
         await policy.Awaiting(x => x.RaiseExceptionAsync<DivideByZeroException>())
-              .Should().ThrowAsync<DivideByZeroException>();
+              .Should.ThrowAsync<DivideByZeroException>();
 
-        retryInvoked.Should().BeFalse();
+        retryInvoked.ShouldBeFalse();
     }
 
     #region Async and cancellation tests
@@ -424,15 +424,15 @@ public class RetryAsyncSpecs
             executeDelegateInvocations++;
             await TaskHelper.EmptyTask;
             throw new DivideByZeroException();
-        })).Should().ThrowAsync<DivideByZeroException>();
+        })).Should.ThrowAsync<DivideByZeroException>();
 
         while (executeDelegateInvocationsWhenOnRetryExits == 0)
         {
             // Wait for the onRetry delegate to complete.
         }
 
-        executeDelegateInvocationsWhenOnRetryExits.Should().Be(1); // If the async onRetry delegate is genuinely awaited, only one execution of the .Execute delegate should have occurred by the time onRetry completes.  If the async onRetry delegate were instead assigned to an Action<...>, then onRetry will return, and the second action execution will commence, before await Task.Delay() completes, leaving executeDelegateInvocationsWhenOnRetryExits == 2.
-        executeDelegateInvocations.Should().Be(2);
+        executeDelegateInvocationsWhenOnRetryExits.ShouldBe(1); // If the async onRetry delegate is genuinely awaited, only one execution of the .Execute delegate should have occurred by the time onRetry completes.  If the async onRetry delegate were instead assigned to an Action<...>, then onRetry will return, and the second action execution will commence, before await Task.Delay() completes, leaving executeDelegateInvocationsWhenOnRetryExits == 2.
+        executeDelegateInvocations.ShouldBe(2);
     }
 
     [Fact]
@@ -456,10 +456,10 @@ public class RetryAsyncSpecs
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             await policy.Awaiting(x => x.RaiseExceptionAndOrCancellationAsync<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-                .Should().NotThrowAsync();
+                .Should.NotThrowAsync();
         }
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
     }
 
     [Fact]
@@ -483,10 +483,10 @@ public class RetryAsyncSpecs
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             await policy.Awaiting(x => x.RaiseExceptionAndOrCancellationAsync<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-            .Should().ThrowAsync<DivideByZeroException>();
+            .Should.ThrowAsync<DivideByZeroException>();
         }
 
-        attemptsInvoked.Should().Be(1 + 3);
+        attemptsInvoked.ShouldBe(1 + 3);
     }
 
     [Fact]
@@ -511,11 +511,11 @@ public class RetryAsyncSpecs
             cancellationTokenSource.Cancel();
 
             var ex = await policy.Awaiting(x => x.RaiseExceptionAndOrCancellationAsync<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-                .Should().ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.Should().Be(cancellationToken);
+                .Should.ThrowAsync<OperationCanceledException>();
+            ex.And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(0);
+        attemptsInvoked.ShouldBe(0);
     }
 
     [Fact]
@@ -540,11 +540,11 @@ public class RetryAsyncSpecs
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             var ex = await policy.Awaiting(x => x.RaiseExceptionAndOrCancellationAsync<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-            .Should().ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.Should().Be(cancellationToken);
+            .Should.ThrowAsync<OperationCanceledException>();
+            ex.And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
     }
 
     [Fact]
@@ -569,11 +569,11 @@ public class RetryAsyncSpecs
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             var ex = await policy.Awaiting(x => x.RaiseExceptionAndOrCancellationAsync<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-            .Should().ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.Should().Be(cancellationToken);
+            .Should.ThrowAsync<OperationCanceledException>();
+            ex.And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
     }
 
     [Fact]
@@ -597,11 +597,11 @@ public class RetryAsyncSpecs
         {
             CancellationToken cancellationToken = cancellationTokenSource.Token;
             var ex = await policy.Awaiting(x => x.RaiseExceptionAndOrCancellationAsync<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-            .Should().ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.Should().Be(cancellationToken);
+            .Should.ThrowAsync<OperationCanceledException>();
+            ex.And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
     }
 
     [Fact]
@@ -626,11 +626,11 @@ public class RetryAsyncSpecs
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             var ex = await policy.Awaiting(x => x.RaiseExceptionAndOrCancellationAsync<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-            .Should().ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.Should().Be(cancellationToken);
+            .Should.ThrowAsync<OperationCanceledException>();
+            ex.And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(2);
+        attemptsInvoked.ShouldBe(2);
     }
 
     [Fact]
@@ -655,11 +655,11 @@ public class RetryAsyncSpecs
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             var ex = await policy.Awaiting(x => x.RaiseExceptionAndOrCancellationAsync<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-            .Should().ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.Should().Be(cancellationToken);
+            .Should.ThrowAsync<OperationCanceledException>();
+            ex.And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(2);
+        attemptsInvoked.ShouldBe(2);
     }
 
     [Fact]
@@ -684,11 +684,11 @@ public class RetryAsyncSpecs
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             var ex = await policy.Awaiting(x => x.RaiseExceptionAndOrCancellationAsync<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-            .Should().ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.Should().Be(cancellationToken);
+            .Should.ThrowAsync<OperationCanceledException>();
+            ex.And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(1 + 3);
+        attemptsInvoked.ShouldBe(1 + 3);
     }
 
     [Fact]
@@ -713,10 +713,10 @@ public class RetryAsyncSpecs
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             await policy.Awaiting(x => x.RaiseExceptionAndOrCancellationAsync<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-            .Should().ThrowAsync<DivideByZeroException>();
+            .Should.ThrowAsync<DivideByZeroException>();
         }
 
-        attemptsInvoked.Should().Be(1 + 3);
+        attemptsInvoked.ShouldBe(1 + 3);
     }
 
     [Fact]
@@ -744,11 +744,11 @@ public class RetryAsyncSpecs
                 });
 
             var ex = await policy.Awaiting(x => x.RaiseExceptionAndOrCancellationAsync<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-                .Should().ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.Should().Be(cancellationToken);
+                .Should.ThrowAsync<OperationCanceledException>();
+            ex.And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
     }
 
     [Fact]
@@ -775,12 +775,12 @@ public class RetryAsyncSpecs
 
             Func<AsyncRetryPolicy, Task> action = async x => result = await x.RaiseExceptionAndOrCancellationAsync<DivideByZeroException, bool>(scenario, cancellationTokenSource, onExecute, true);
             await policy.Awaiting(action)
-                .Should().NotThrowAsync();
+                .Should.NotThrowAsync();
         }
 
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
     }
 
     [Fact]
@@ -807,13 +807,13 @@ public class RetryAsyncSpecs
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             Func<AsyncRetryPolicy, Task> action = async x => result = await x.RaiseExceptionAndOrCancellationAsync<DivideByZeroException, bool>(scenario, cancellationTokenSource, onExecute, true);
-            var ex = await policy.Awaiting(action).Should().ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.Should().Be(cancellationToken);
+            var ex = await policy.Awaiting(action).Should.ThrowAsync<OperationCanceledException>();
+            ex.And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        result.Should().Be(null);
+        result.ShouldBe(null);
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
     }
 
     #endregion

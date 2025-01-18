@@ -14,8 +14,8 @@ public class WaitAndRetrySpecs : IDisposable
                                   .Handle<DivideByZeroException>()
                                   .WaitAndRetry(null, onRetry);
 
-        policy.Should().Throw<ArgumentNullException>().And
-              .ParamName.Should().Be("sleepDurations");
+        policy.Should.Throw<ArgumentNullException>().And
+              .ParamName.ShouldBe("sleepDurations");
     }
 
     [Fact]
@@ -27,8 +27,8 @@ public class WaitAndRetrySpecs : IDisposable
                                   .Handle<DivideByZeroException>()
                                   .WaitAndRetry(null, onRetry);
 
-        policy.Should().Throw<ArgumentNullException>().And
-              .ParamName.Should().Be("sleepDurations");
+        policy.Should.Throw<ArgumentNullException>().And
+              .ParamName.ShouldBe("sleepDurations");
     }
 
     [Fact]
@@ -40,8 +40,8 @@ public class WaitAndRetrySpecs : IDisposable
                                   .Handle<DivideByZeroException>()
                                   .WaitAndRetry(null, onRetry);
 
-        policy.Should().Throw<ArgumentNullException>().And
-              .ParamName.Should().Be("sleepDurations");
+        policy.Should.Throw<ArgumentNullException>().And
+              .ParamName.ShouldBe("sleepDurations");
     }
 
     [Fact]
@@ -53,8 +53,8 @@ public class WaitAndRetrySpecs : IDisposable
                                   .Handle<DivideByZeroException>()
                                   .WaitAndRetry(Enumerable.Empty<TimeSpan>(), nullOnRetry);
 
-        policy.Should().Throw<ArgumentNullException>().And
-              .ParamName.Should().Be("onRetry");
+        policy.Should.Throw<ArgumentNullException>().And
+              .ParamName.ShouldBe("onRetry");
     }
 
     [Fact]
@@ -66,8 +66,8 @@ public class WaitAndRetrySpecs : IDisposable
                                   .Handle<DivideByZeroException>()
                                   .WaitAndRetry(Enumerable.Empty<TimeSpan>(), nullOnRetry);
 
-        policy.Should().Throw<ArgumentNullException>().And
-              .ParamName.Should().Be("onRetry");
+        policy.Should.Throw<ArgumentNullException>().And
+              .ParamName.ShouldBe("onRetry");
     }
 
     [Fact]
@@ -79,8 +79,8 @@ public class WaitAndRetrySpecs : IDisposable
                                   .Handle<DivideByZeroException>()
                                   .WaitAndRetry(Enumerable.Empty<TimeSpan>(), nullOnRetry);
 
-        policy.Should().Throw<ArgumentNullException>().And
-              .ParamName.Should().Be("onRetry");
+        policy.Should.Throw<ArgumentNullException>().And
+              .ParamName.ShouldBe("onRetry");
     }
 
     [Fact]
@@ -96,7 +96,7 @@ public class WaitAndRetrySpecs : IDisposable
             });
 
         policy.Invoking(x => x.RaiseException<DivideByZeroException>(3))
-              .Should().NotThrow();
+              .Should.NotThrow();
     }
 
     [Fact]
@@ -113,7 +113,7 @@ public class WaitAndRetrySpecs : IDisposable
             });
 
         policy.Invoking(x => x.RaiseException<ArgumentException>(3))
-              .Should().NotThrow();
+              .Should.NotThrow();
     }
 
     [Fact]
@@ -129,7 +129,7 @@ public class WaitAndRetrySpecs : IDisposable
             });
 
         policy.Invoking(x => x.RaiseException<DivideByZeroException>(2))
-              .Should().NotThrow();
+              .Should.NotThrow();
     }
 
     [Fact]
@@ -146,7 +146,7 @@ public class WaitAndRetrySpecs : IDisposable
             });
 
         policy.Invoking(x => x.RaiseException<ArgumentException>(2))
-              .Should().NotThrow();
+              .Should.NotThrow();
     }
 
     [Fact]
@@ -162,7 +162,7 @@ public class WaitAndRetrySpecs : IDisposable
             });
 
         policy.Invoking(x => x.RaiseException<DivideByZeroException>(3 + 1))
-              .Should().Throw<DivideByZeroException>();
+              .Should.Throw<DivideByZeroException>();
     }
 
     [Fact]
@@ -179,7 +179,7 @@ public class WaitAndRetrySpecs : IDisposable
             });
 
         policy.Invoking(x => x.RaiseException<ArgumentException>(3 + 1))
-              .Should().Throw<ArgumentException>();
+              .Should.Throw<ArgumentException>();
     }
 
     [Fact]
@@ -190,7 +190,7 @@ public class WaitAndRetrySpecs : IDisposable
             .WaitAndRetry(Enumerable.Empty<TimeSpan>());
 
         policy.Invoking(x => x.RaiseException<NullReferenceException>())
-              .Should().Throw<NullReferenceException>();
+              .Should.Throw<NullReferenceException>();
     }
 
     [Fact]
@@ -201,7 +201,7 @@ public class WaitAndRetrySpecs : IDisposable
             .WaitAndRetryAsync(Enumerable.Empty<TimeSpan>());
 
         await policy.Awaiting(x => x.RaiseExceptionAsync<NullReferenceException>())
-              .Should().ThrowAsync<NullReferenceException>();
+              .Should.ThrowAsync<NullReferenceException>();
     }
 
     [Fact]
@@ -213,7 +213,7 @@ public class WaitAndRetrySpecs : IDisposable
             .WaitAndRetry(Enumerable.Empty<TimeSpan>());
 
         policy.Invoking(x => x.RaiseException<NullReferenceException>())
-              .Should().Throw<NullReferenceException>();
+              .Should.Throw<NullReferenceException>();
     }
 
     [Fact]
@@ -225,7 +225,7 @@ public class WaitAndRetrySpecs : IDisposable
             .WaitAndRetryAsync(Enumerable.Empty<TimeSpan>());
 
         await policy.Awaiting(x => x.RaiseExceptionAsync<NullReferenceException>())
-              .Should().ThrowAsync<NullReferenceException>();
+              .Should.ThrowAsync<NullReferenceException>();
     }
 
     [Fact]
@@ -236,7 +236,7 @@ public class WaitAndRetrySpecs : IDisposable
             .WaitAndRetry(Enumerable.Empty<TimeSpan>());
 
         policy.Invoking(x => x.RaiseException<DivideByZeroException>())
-              .Should().Throw<DivideByZeroException>();
+              .Should.Throw<DivideByZeroException>();
     }
 
     [Fact]
@@ -248,7 +248,7 @@ public class WaitAndRetrySpecs : IDisposable
             .WaitAndRetry(Enumerable.Empty<TimeSpan>());
 
         policy.Invoking(x => x.RaiseException<ArgumentException>())
-              .Should().Throw<ArgumentException>();
+              .Should.Throw<ArgumentException>();
     }
 
     [Fact]
@@ -262,7 +262,7 @@ public class WaitAndRetrySpecs : IDisposable
             });
 
         policy.Invoking(x => x.RaiseException<DivideByZeroException>())
-              .Should().NotThrow();
+              .Should.NotThrow();
     }
 
     [Fact]
@@ -276,7 +276,7 @@ public class WaitAndRetrySpecs : IDisposable
             });
 
         await policy.Awaiting(x => x.RaiseExceptionAsync<DivideByZeroException>())
-              .Should().NotThrowAsync();
+              .Should.NotThrowAsync();
     }
 
     [Fact]
@@ -291,7 +291,7 @@ public class WaitAndRetrySpecs : IDisposable
             });
 
         policy.Invoking(x => x.RaiseException<ArgumentException>())
-              .Should().NotThrow();
+              .Should.NotThrow();
     }
 
     [Fact]
@@ -306,7 +306,7 @@ public class WaitAndRetrySpecs : IDisposable
             });
 
         await policy.Awaiting(x => x.RaiseExceptionAsync<ArgumentException>())
-              .Should().NotThrowAsync();
+              .Should.NotThrowAsync();
     }
 
     [Fact]
@@ -348,7 +348,7 @@ public class WaitAndRetrySpecs : IDisposable
         SystemClock.Sleep = (span, _) => totalTimeSlept += span.Seconds;
 
         policy.Invoking(x => x.RaiseException<DivideByZeroException>(3 + 1))
-              .Should().Throw<DivideByZeroException>();
+              .Should.Throw<DivideByZeroException>();
 
         totalTimeSlept.Should()
                       .Be(1 + 2 + 3);
@@ -388,7 +388,7 @@ public class WaitAndRetrySpecs : IDisposable
         SystemClock.Sleep = (span, _) => totalTimeSlept += span.Seconds;
 
         policy.Invoking(x => x.RaiseException<NullReferenceException>())
-              .Should().Throw<NullReferenceException>();
+              .Should.Throw<NullReferenceException>();
 
         totalTimeSlept.Should()
                       .Be(0);
@@ -475,7 +475,7 @@ public class WaitAndRetrySpecs : IDisposable
             .WaitAndRetry(Enumerable.Empty<TimeSpan>(), (exception, _) => retryExceptions.Add(exception));
 
         policy.Invoking(x => x.RaiseException<ArgumentException>())
-              .Should().Throw<ArgumentException>();
+              .Should.Throw<ArgumentException>();
 
         retryExceptions.Should()
                    .BeEmpty();
@@ -492,10 +492,10 @@ public class WaitAndRetrySpecs : IDisposable
             });
 
         policy.Invoking(x => x.RaiseException<DivideByZeroException>())
-              .Should().NotThrow();
+              .Should.NotThrow();
 
         policy.Invoking(x => x.RaiseException<DivideByZeroException>())
-              .Should().NotThrow();
+              .Should.NotThrow();
     }
 
     [Fact]
@@ -536,12 +536,12 @@ public class WaitAndRetrySpecs : IDisposable
         policy.RaiseException<DivideByZeroException>(
             CreateDictionary("key", "original_value"));
 
-        contextValue.Should().Be("original_value");
+        contextValue.ShouldBe("original_value");
 
         policy.RaiseException<DivideByZeroException>(
             CreateDictionary("key", "new_value"));
 
-        contextValue.Should().Be("new_value");
+        contextValue.ShouldBe("new_value");
     }
 
     [Fact]
@@ -553,8 +553,8 @@ public class WaitAndRetrySpecs : IDisposable
                                   .Handle<DivideByZeroException>()
                                   .WaitAndRetry(-1, _ => default, onRetry);
 
-        policy.Should().Throw<ArgumentOutOfRangeException>().And
-              .ParamName.Should().Be("retryCount");
+        policy.Should.Throw<ArgumentOutOfRangeException>().And
+              .ParamName.ShouldBe("retryCount");
     }
 
     [Fact]
@@ -566,8 +566,8 @@ public class WaitAndRetrySpecs : IDisposable
                                   .Handle<DivideByZeroException>()
                                   .WaitAndRetry(-1, _ => default, onRetry);
 
-        policy.Should().Throw<ArgumentOutOfRangeException>().And
-              .ParamName.Should().Be("retryCount");
+        policy.Should.Throw<ArgumentOutOfRangeException>().And
+              .ParamName.ShouldBe("retryCount");
     }
 
     [Fact]
@@ -579,8 +579,8 @@ public class WaitAndRetrySpecs : IDisposable
                                   .Handle<DivideByZeroException>()
                                   .WaitAndRetry(-1, _ => default, onRetry);
 
-        policy.Should().Throw<ArgumentOutOfRangeException>().And
-              .ParamName.Should().Be("retryCount");
+        policy.Should.Throw<ArgumentOutOfRangeException>().And
+              .ParamName.ShouldBe("retryCount");
     }
 
     [Fact]
@@ -592,8 +592,8 @@ public class WaitAndRetrySpecs : IDisposable
                                   .Handle<DivideByZeroException>()
                                   .WaitAndRetry(1, null, onRetry);
 
-        policy.Should().Throw<ArgumentNullException>().And
-              .ParamName.Should().Be("sleepDurationProvider");
+        policy.Should.Throw<ArgumentNullException>().And
+              .ParamName.ShouldBe("sleepDurationProvider");
     }
 
     [Fact]
@@ -605,8 +605,8 @@ public class WaitAndRetrySpecs : IDisposable
                                   .Handle<DivideByZeroException>()
                                   .WaitAndRetry(1, (Func<int, TimeSpan>)null!, onRetry);
 
-        policy.Should().Throw<ArgumentNullException>().And
-              .ParamName.Should().Be("sleepDurationProvider");
+        policy.Should.Throw<ArgumentNullException>().And
+              .ParamName.ShouldBe("sleepDurationProvider");
     }
 
     [Fact]
@@ -618,8 +618,8 @@ public class WaitAndRetrySpecs : IDisposable
                                   .Handle<DivideByZeroException>()
                                   .WaitAndRetry(1, (Func<int, TimeSpan>)null!, onRetry);
 
-        policy.Should().Throw<ArgumentNullException>().And
-              .ParamName.Should().Be("sleepDurationProvider");
+        policy.Should.Throw<ArgumentNullException>().And
+              .ParamName.ShouldBe("sleepDurationProvider");
     }
 
     [Fact]
@@ -631,8 +631,8 @@ public class WaitAndRetrySpecs : IDisposable
                                   .Handle<DivideByZeroException>()
                                   .WaitAndRetry(1, _ => default, nullOnRetry);
 
-        policy.Should().Throw<ArgumentNullException>().And
-              .ParamName.Should().Be("onRetry");
+        policy.Should.Throw<ArgumentNullException>().And
+              .ParamName.ShouldBe("onRetry");
     }
 
     [Fact]
@@ -644,8 +644,8 @@ public class WaitAndRetrySpecs : IDisposable
                                   .Handle<DivideByZeroException>()
                                   .WaitAndRetry(1, _ => default, nullOnRetry);
 
-        policy.Should().Throw<ArgumentNullException>().And
-              .ParamName.Should().Be("onRetry");
+        policy.Should.Throw<ArgumentNullException>().And
+              .ParamName.ShouldBe("onRetry");
     }
 
     [Fact]
@@ -657,8 +657,8 @@ public class WaitAndRetrySpecs : IDisposable
                                   .Handle<DivideByZeroException>()
                                   .WaitAndRetry(1, _ => default, nullOnRetry);
 
-        policy.Should().Throw<ArgumentNullException>().And
-              .ParamName.Should().Be("onRetry");
+        policy.Should.Throw<ArgumentNullException>().And
+              .ParamName.ShouldBe("onRetry");
     }
 
     [Fact]
@@ -708,7 +708,7 @@ public class WaitAndRetrySpecs : IDisposable
 
         policy.RaiseException(exceptionInstance);
 
-        capturedExceptionInstance.Should().Be(exceptionInstance);
+        capturedExceptionInstance.ShouldBe(exceptionInstance);
     }
 
     [Fact]
@@ -739,7 +739,7 @@ public class WaitAndRetrySpecs : IDisposable
             });
         }
 
-        actualRetryWaits.Should().ContainInOrder(expectedRetryWaits.Values);
+        actualRetryWaits.ShouldContainInOrder(expectedRetryWaits.Values);
     }
 
     [Fact]
@@ -770,7 +770,7 @@ public class WaitAndRetrySpecs : IDisposable
         },
             CreateDictionary("RetryAfter", defaultRetryAfter)); // Can also set an initial value for RetryAfter, in the Context passed into the call.
 
-        actualRetryDuration.Should().Be(expectedRetryDuration);
+        actualRetryDuration.ShouldBe(expectedRetryDuration);
     }
 
     [Fact]
@@ -785,9 +785,9 @@ public class WaitAndRetrySpecs : IDisposable
             .WaitAndRetry(0, _ => TimeSpan.FromSeconds(1), onRetry);
 
         policy.Invoking(x => x.RaiseException<DivideByZeroException>())
-              .Should().Throw<DivideByZeroException>();
+              .Should.Throw<DivideByZeroException>();
 
-        retryInvoked.Should().BeFalse();
+        retryInvoked.ShouldBeFalse();
     }
 
     [Fact]
@@ -802,9 +802,9 @@ public class WaitAndRetrySpecs : IDisposable
             .WaitAndRetry(0, _ => TimeSpan.FromSeconds(1), onRetry);
 
         policy.Invoking(x => x.RaiseException<DivideByZeroException>())
-              .Should().Throw<DivideByZeroException>();
+              .Should.Throw<DivideByZeroException>();
 
-        retryInvoked.Should().BeFalse();
+        retryInvoked.ShouldBeFalse();
     }
 
     [Fact]
@@ -819,9 +819,9 @@ public class WaitAndRetrySpecs : IDisposable
             .WaitAndRetry(0, _ => TimeSpan.FromSeconds(1), onRetry);
 
         policy.Invoking(x => x.RaiseException<DivideByZeroException>())
-              .Should().Throw<DivideByZeroException>();
+              .Should.Throw<DivideByZeroException>();
 
-        retryInvoked.Should().BeFalse();
+        retryInvoked.ShouldBeFalse();
     }
 
     #region Sync cancellation tests
@@ -848,11 +848,11 @@ public class WaitAndRetrySpecs : IDisposable
             cancellationTokenSource.Cancel();
 
             policy.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-                .Should().Throw<OperationCanceledException>()
-                .And.CancellationToken.Should().Be(cancellationToken);
+                .Should.Throw<OperationCanceledException>()
+                .And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(0);
+        attemptsInvoked.ShouldBe(0);
     }
 
     [Fact]
@@ -877,11 +877,11 @@ public class WaitAndRetrySpecs : IDisposable
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             policy.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-            .Should().Throw<OperationCanceledException>()
-            .And.CancellationToken.Should().Be(cancellationToken);
+            .Should.Throw<OperationCanceledException>()
+            .And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
     }
 
     [Fact]
@@ -906,11 +906,11 @@ public class WaitAndRetrySpecs : IDisposable
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             policy.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-            .Should().Throw<OperationCanceledException>()
-            .And.CancellationToken.Should().Be(cancellationToken);
+            .Should.Throw<OperationCanceledException>()
+            .And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
     }
 
     [Fact]
@@ -935,11 +935,11 @@ public class WaitAndRetrySpecs : IDisposable
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             policy.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-            .Should().Throw<OperationCanceledException>()
-            .And.CancellationToken.Should().Be(cancellationToken);
+            .Should.Throw<OperationCanceledException>()
+            .And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
     }
 
     [Fact]
@@ -964,11 +964,11 @@ public class WaitAndRetrySpecs : IDisposable
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             policy.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-            .Should().Throw<OperationCanceledException>()
-            .And.CancellationToken.Should().Be(cancellationToken);
+            .Should.Throw<OperationCanceledException>()
+            .And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(2);
+        attemptsInvoked.ShouldBe(2);
     }
 
     [Fact]
@@ -993,11 +993,11 @@ public class WaitAndRetrySpecs : IDisposable
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             policy.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-            .Should().Throw<OperationCanceledException>()
-            .And.CancellationToken.Should().Be(cancellationToken);
+            .Should.Throw<OperationCanceledException>()
+            .And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(2);
+        attemptsInvoked.ShouldBe(2);
     }
 
     [Fact]
@@ -1022,11 +1022,11 @@ public class WaitAndRetrySpecs : IDisposable
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             policy.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-            .Should().Throw<OperationCanceledException>()
-            .And.CancellationToken.Should().Be(cancellationToken);
+            .Should.Throw<OperationCanceledException>()
+            .And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(1 + 3);
+        attemptsInvoked.ShouldBe(1 + 3);
     }
 
     [Fact]
@@ -1051,10 +1051,10 @@ public class WaitAndRetrySpecs : IDisposable
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             policy.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-            .Should().Throw<DivideByZeroException>();
+            .Should.Throw<DivideByZeroException>();
         }
 
-        attemptsInvoked.Should().Be(1 + 3);
+        attemptsInvoked.ShouldBe(1 + 3);
     }
 
     [Fact]
@@ -1089,16 +1089,16 @@ public class WaitAndRetrySpecs : IDisposable
             cancellationTokenSource.CancelAfter(shimTimeSpan);
 
             policy.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-                    .Should().Throw<OperationCanceledException>()
-                    .And.CancellationToken.Should().Be(cancellationToken);
+                    .Should.Throw<OperationCanceledException>()
+                    .And.CancellationToken.ShouldBe(cancellationToken);
         }
 
         watch.Stop();
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
 
-        watch.Elapsed.Should().BeLessThan(retryDelay);
-        watch.Elapsed.Should().BeCloseTo(shimTimeSpan, precision: TimeSpan.FromMilliseconds(shimTimeSpan.TotalMilliseconds / 2));  // Consider increasing shimTimeSpan, or loosening precision, if test fails transiently in different environments.
+        watch.Elapsed.ShouldBeLessThan(retryDelay);
+        watch.Elapsed.ShouldBeCloseTo(shimTimeSpan, precision: TimeSpan.FromMilliseconds(shimTimeSpan.TotalMilliseconds / 2));  // Consider increasing shimTimeSpan, or loosening precision, if test fails transiently in different environments.
     }
 
     [Fact]
@@ -1127,11 +1127,11 @@ public class WaitAndRetrySpecs : IDisposable
                 });
 
             policy.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-                .Should().Throw<OperationCanceledException>()
-                .And.CancellationToken.Should().Be(cancellationToken);
+                .Should.Throw<OperationCanceledException>()
+                .And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
     }
 
     [Fact]
@@ -1155,12 +1155,12 @@ public class WaitAndRetrySpecs : IDisposable
         using (var cancellationTokenSource = new CancellationTokenSource())
         {
             policy.Invoking(x => result = x.RaiseExceptionAndOrCancellation<DivideByZeroException, bool>(scenario, cancellationTokenSource, onExecute, true))
-            .Should().NotThrow();
+            .Should.NotThrow();
         }
 
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
     }
 
     [Fact]
@@ -1187,12 +1187,12 @@ public class WaitAndRetrySpecs : IDisposable
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             policy.Invoking(x => result = x.RaiseExceptionAndOrCancellation<DivideByZeroException, bool>(scenario, cancellationTokenSource, onExecute, true))
-            .Should().Throw<OperationCanceledException>().And.CancellationToken.Should().Be(cancellationToken);
+            .Should.Throw<OperationCanceledException>().And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        result.Should().Be(null);
+        result.ShouldBe(null);
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
     }
 
     #endregion

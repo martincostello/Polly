@@ -16,8 +16,8 @@ public class NoOpAsyncSpecs
 
         var func = () => generic.Invoke(instance, [action, new Context(), CancellationToken.None, false]);
 
-        var exceptionAssertions = func.Should().Throw<TargetInvocationException>();
-        exceptionAssertions.And.Message.Should().Be("Exception has been thrown by the target of an invocation.");
+        var exceptionAssertions = func.Should.Throw<TargetInvocationException>();
+        exceptionAssertions.And.Message.ShouldBe("Exception has been thrown by the target of an invocation.");
         exceptionAssertions.WithInnerException<ArgumentNullException>("action");
     }
 
@@ -28,9 +28,9 @@ public class NoOpAsyncSpecs
         bool executed = false;
 
         await policy.Awaiting(p => p.ExecuteAsync(() => { executed = true; return TaskHelper.EmptyTask; }))
-            .Should().NotThrowAsync();
+            .Should.NotThrowAsync();
 
-        executed.Should().BeTrue();
+        executed.ShouldBeTrue();
     }
 
     [Fact]
@@ -46,9 +46,9 @@ public class NoOpAsyncSpecs
 
             await policy.Awaiting(p => p.ExecuteAsync(
                 _ => { executed = true; return TaskHelper.EmptyTask; }, cts.Token))
-                .Should().NotThrowAsync();
+                .Should.NotThrowAsync();
         }
 
-        executed.Should().BeTrue();
+        executed.ShouldBeTrue();
     }
 }

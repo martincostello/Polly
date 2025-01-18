@@ -15,10 +15,10 @@ public class NoOpTResultAsyncSpecs
 
         var func = () => methodInfo.Invoke(instance, [action, new Context(), CancellationToken.None, false]);
 
-        var exceptionAssertions = func.Should().Throw<TargetInvocationException>();
-        exceptionAssertions.And.Message.Should().Be("Exception has been thrown by the target of an invocation.");
-        exceptionAssertions.And.InnerException.Should().BeOfType<ArgumentNullException>()
-            .Which.ParamName.Should().Be("action");
+        var exceptionAssertions = func.Should.Throw<TargetInvocationException>();
+        exceptionAssertions.And.Message.ShouldBe("Exception has been thrown by the target of an invocation.");
+        exceptionAssertions.And.InnerException.ShouldBeOfType<ArgumentNullException>()
+            .Which.ParamName.ShouldBe("action");
     }
 
     [Fact]
@@ -29,10 +29,10 @@ public class NoOpTResultAsyncSpecs
 
         Func<AsyncNoOpPolicy<int?>, Task> action = async p => result = await p.ExecuteAsync(() => Task.FromResult((int?)10));
         await policy.Awaiting(action)
-            .Should().NotThrowAsync();
+            .Should.NotThrowAsync();
 
-        result.HasValue.Should().BeTrue();
-        result.Should().Be(10);
+        result.HasValue.ShouldBeTrue();
+        result.ShouldBe(10);
     }
 
     [Fact]
@@ -47,10 +47,10 @@ public class NoOpTResultAsyncSpecs
 
             Func<AsyncNoOpPolicy<int?>, Task> action = async p => result = await p.ExecuteAsync(_ => Task.FromResult((int?)10), cts.Token);
             await policy.Awaiting(action)
-                .Should().NotThrowAsync();
+                .Should.NotThrowAsync();
         }
 
-        result.HasValue.Should().BeTrue();
-        result.Should().Be(10);
+        result.HasValue.ShouldBeTrue();
+        result.ShouldBe(10);
     }
 }

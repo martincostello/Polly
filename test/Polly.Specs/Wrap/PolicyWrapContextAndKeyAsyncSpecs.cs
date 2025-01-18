@@ -1,4 +1,6 @@
-﻿namespace Polly.Specs.Wrap;
+﻿using Shouldly;
+
+namespace Polly.Specs.Wrap;
 
 [Collection(Constants.SystemClockDependentTestCollection)]
 public class PolicyWrapContextAndKeyAsyncSpecs
@@ -24,9 +26,10 @@ public class PolicyWrapContextAndKeyAsyncSpecs
 
         await wrap.RaiseExceptionAsync<Exception>(1);
 
-        policyWrapKeySetOnExecutionContext.Should().NotBe(retryKey);
-        policyWrapKeySetOnExecutionContext.Should().NotBe(breakerKey);
-        policyWrapKeySetOnExecutionContext.Should().Be(wrapKey);
+        policyWrapKeySetOnExecutionContext.ShouldNotBeNull();
+        policyWrapKeySetOnExecutionContext.ShouldNotBe(retryKey);
+        policyWrapKeySetOnExecutionContext.ShouldNotBe(breakerKey);
+        policyWrapKeySetOnExecutionContext.ShouldBe(wrapKey);
     }
 
     [Fact]
@@ -49,9 +52,10 @@ public class PolicyWrapContextAndKeyAsyncSpecs
 
         await wrap.RaiseExceptionAsync<Exception>(1);
 
-        policyWrapKeySetOnExecutionContext.Should().NotBe(retryKey);
-        policyWrapKeySetOnExecutionContext.Should().NotBe(breakerKey);
-        policyWrapKeySetOnExecutionContext.Should().Be(wrapKey);
+        policyWrapKeySetOnExecutionContext.ShouldNotBeNull();
+        policyWrapKeySetOnExecutionContext.ShouldNotBe(retryKey);
+        policyWrapKeySetOnExecutionContext.ShouldNotBe(breakerKey);
+        policyWrapKeySetOnExecutionContext.ShouldBe(wrapKey);
     }
 
     [Fact]
@@ -61,8 +65,8 @@ public class PolicyWrapContextAndKeyAsyncSpecs
             .Handle<Exception>()
             .FallbackAsync((_, _) => TaskHelper.EmptyTask, (_, context) =>
             {
-                context.PolicyWrapKey.Should().Be("PolicyWrap");
-                context.PolicyKey.Should().Be("FallbackPolicy");
+                context.PolicyWrapKey.ShouldBe("PolicyWrap");
+                context.PolicyKey.ShouldBe("FallbackPolicy");
                 return TaskHelper.EmptyTask;
             })
             .WithPolicyKey("FallbackPolicy");
@@ -71,12 +75,12 @@ public class PolicyWrapContextAndKeyAsyncSpecs
             .Handle<Exception>()
             .RetryAsync(1, onRetry: (_, _, context) =>
             {
-                context.PolicyWrapKey.Should().Be("PolicyWrap");
-                context.PolicyKey.Should().Be("RetryPolicy");
+                context.PolicyWrapKey.ShouldBe("PolicyWrap");
+                context.PolicyKey.ShouldBe("RetryPolicy");
             })
             .WithPolicyKey("RetryPolicy");
 
-        IAsyncPolicy policyWrap = Policy.WrapAsync(fallback, retry)
+        var policyWrap = Policy.WrapAsync(fallback, retry)
             .WithPolicyKey("PolicyWrap");
 
         await policyWrap.ExecuteAsync(() => throw new Exception());
@@ -89,8 +93,8 @@ public class PolicyWrapContextAndKeyAsyncSpecs
             .Handle<Exception>()
             .FallbackAsync((_, _) => TaskHelper.EmptyTask, (_, context) =>
             {
-                context.PolicyWrapKey.Should().Be("PolicyWrap");
-                context.PolicyKey.Should().Be("FallbackPolicy");
+                context.PolicyWrapKey.ShouldBe("PolicyWrap");
+                context.PolicyKey.ShouldBe("FallbackPolicy");
                 return TaskHelper.EmptyTask;
             })
             .WithPolicyKey("FallbackPolicy");
@@ -99,12 +103,12 @@ public class PolicyWrapContextAndKeyAsyncSpecs
             .Handle<Exception>()
             .RetryAsync(1, onRetry: (_, _, context) =>
             {
-                context.PolicyWrapKey.Should().Be("PolicyWrap");
-                context.PolicyKey.Should().Be("RetryPolicy");
+                context.PolicyWrapKey.ShouldBe("PolicyWrap");
+                context.PolicyKey.ShouldBe("RetryPolicy");
             })
             .WithPolicyKey("RetryPolicy");
 
-        IAsyncPolicy policyWrap = Policy.WrapAsync(fallback, retry)
+        var policyWrap = Policy.WrapAsync(fallback, retry)
             .WithPolicyKey("PolicyWrap");
 
         await policyWrap.ExecuteAsync(async () => await Task.Run(() => throw new Exception())); // Regression test for issue 510
@@ -135,11 +139,11 @@ public class PolicyWrapContextAndKeyAsyncSpecs
 
         await outerWrap.RaiseExceptionAsync<Exception>(1);
 
-        policyWrapKeySetOnExecutionContext.Should().NotBe(retryKey);
-        policyWrapKeySetOnExecutionContext.Should().NotBe(breakerKey);
-        policyWrapKeySetOnExecutionContext.Should().NotBe(fallbackKey);
-        policyWrapKeySetOnExecutionContext.Should().NotBe(innerWrapKey);
-        policyWrapKeySetOnExecutionContext.Should().Be(outerWrapKey);
+        policyWrapKeySetOnExecutionContext.ShouldNotBe(retryKey);
+        policyWrapKeySetOnExecutionContext.ShouldNotBe(breakerKey);
+        policyWrapKeySetOnExecutionContext.ShouldNotBe(fallbackKey);
+        policyWrapKeySetOnExecutionContext.ShouldNotBe(innerWrapKey);
+        policyWrapKeySetOnExecutionContext.ShouldBe(outerWrapKey);
     }
 
     [Fact]
@@ -177,11 +181,11 @@ public class PolicyWrapContextAndKeyAsyncSpecs
             return TaskHelper.EmptyTask;
         });
 
-        policyWrapKeySetOnExecutionContext.Should().NotBe(retryKey);
-        policyWrapKeySetOnExecutionContext.Should().NotBe(breakerKey);
-        policyWrapKeySetOnExecutionContext.Should().NotBe(fallbackKey);
-        policyWrapKeySetOnExecutionContext.Should().NotBe(innerWrapKey);
-        policyWrapKeySetOnExecutionContext.Should().Be(outerWrapKey);
+        policyWrapKeySetOnExecutionContext.ShouldNotBe(retryKey);
+        policyWrapKeySetOnExecutionContext.ShouldNotBe(breakerKey);
+        policyWrapKeySetOnExecutionContext.ShouldNotBe(fallbackKey);
+        policyWrapKeySetOnExecutionContext.ShouldNotBe(innerWrapKey);
+        policyWrapKeySetOnExecutionContext.ShouldBe(outerWrapKey);
     }
 
     #endregion
@@ -213,9 +217,9 @@ public class PolicyWrapTResultContextAndKeyAsyncSpecs
 
         await wrap.RaiseResultSequenceAsync(ResultPrimitive.Fault, ResultPrimitive.Good);
 
-        policyWrapKeySetOnExecutionContext.Should().NotBe(retryKey);
-        policyWrapKeySetOnExecutionContext.Should().NotBe(breakerKey);
-        policyWrapKeySetOnExecutionContext.Should().Be(wrapKey);
+        policyWrapKeySetOnExecutionContext.ShouldNotBe(retryKey);
+        policyWrapKeySetOnExecutionContext.ShouldNotBe(breakerKey);
+        policyWrapKeySetOnExecutionContext.ShouldBe(wrapKey);
     }
 
     [Fact]
@@ -238,9 +242,9 @@ public class PolicyWrapTResultContextAndKeyAsyncSpecs
 
         await wrap.RaiseResultSequenceAsync(ResultPrimitive.Fault, ResultPrimitive.Good);
 
-        policyWrapKeySetOnExecutionContext.Should().NotBe(retryKey);
-        policyWrapKeySetOnExecutionContext.Should().NotBe(breakerKey);
-        policyWrapKeySetOnExecutionContext.Should().Be(wrapKey);
+        policyWrapKeySetOnExecutionContext.ShouldNotBe(retryKey);
+        policyWrapKeySetOnExecutionContext.ShouldNotBe(breakerKey);
+        policyWrapKeySetOnExecutionContext.ShouldBe(wrapKey);
     }
 
     [Fact]
@@ -250,8 +254,8 @@ public class PolicyWrapTResultContextAndKeyAsyncSpecs
             .Handle<Exception>()
             .FallbackAsync((_, _) => Task.FromResult(ResultPrimitive.Undefined), (_, context) =>
             {
-                context.PolicyWrapKey.Should().Be("PolicyWrap");
-                context.PolicyKey.Should().Be("FallbackPolicy");
+                context.PolicyWrapKey.ShouldBe("PolicyWrap");
+                context.PolicyKey.ShouldBe("FallbackPolicy");
                 return TaskHelper.EmptyTask;
             })
             .WithPolicyKey("FallbackPolicy");
@@ -260,12 +264,12 @@ public class PolicyWrapTResultContextAndKeyAsyncSpecs
             .Handle<Exception>()
             .RetryAsync(1, onRetry: (_, _, context) =>
             {
-                context.PolicyWrapKey.Should().Be("PolicyWrap");
-                context.PolicyKey.Should().Be("RetryPolicy");
+                context.PolicyWrapKey.ShouldBe("PolicyWrap");
+                context.PolicyKey.ShouldBe("RetryPolicy");
             })
             .WithPolicyKey("RetryPolicy");
 
-        IAsyncPolicy<ResultPrimitive> policyWrap = Policy.WrapAsync(fallback, retry)
+        var policyWrap = Policy.WrapAsync(fallback, retry)
             .WithPolicyKey("PolicyWrap");
 
         await policyWrap.ExecuteAsync(() => throw new Exception());
@@ -278,8 +282,8 @@ public class PolicyWrapTResultContextAndKeyAsyncSpecs
             .Handle<Exception>()
             .FallbackAsync((_, _) => Task.FromResult(ResultPrimitive.Undefined), (_, context) =>
             {
-                context.PolicyWrapKey.Should().Be("PolicyWrap");
-                context.PolicyKey.Should().Be("FallbackPolicy");
+                context.PolicyWrapKey.ShouldBe("PolicyWrap");
+                context.PolicyKey.ShouldBe("FallbackPolicy");
                 return TaskHelper.EmptyTask;
             })
             .WithPolicyKey("FallbackPolicy");
@@ -288,12 +292,12 @@ public class PolicyWrapTResultContextAndKeyAsyncSpecs
             .Handle<Exception>()
             .RetryAsync(1, onRetry: (_, _, context) =>
             {
-                context.PolicyWrapKey.Should().Be("PolicyWrap");
-                context.PolicyKey.Should().Be("RetryPolicy");
+                context.PolicyWrapKey.ShouldBe("PolicyWrap");
+                context.PolicyKey.ShouldBe("RetryPolicy");
             })
             .WithPolicyKey("RetryPolicy");
 
-        IAsyncPolicy<ResultPrimitive> policyWrap = Policy.WrapAsync(fallback, retry)
+        var policyWrap = Policy.WrapAsync(fallback, retry)
             .WithPolicyKey("PolicyWrap");
 
         await policyWrap.ExecuteAsync(async () => await Task.Run(() => // Regression test for issue 510
@@ -328,11 +332,11 @@ public class PolicyWrapTResultContextAndKeyAsyncSpecs
 
         await outerWrap.RaiseResultSequenceAsync(ResultPrimitive.Fault, ResultPrimitive.Good);
 
-        policyWrapKeySetOnExecutionContext.Should().NotBe(retryKey);
-        policyWrapKeySetOnExecutionContext.Should().NotBe(breakerKey);
-        policyWrapKeySetOnExecutionContext.Should().NotBe(fallbackKey);
-        policyWrapKeySetOnExecutionContext.Should().NotBe(innerWrapKey);
-        policyWrapKeySetOnExecutionContext.Should().Be(outerWrapKey);
+        policyWrapKeySetOnExecutionContext.ShouldNotBe(retryKey);
+        policyWrapKeySetOnExecutionContext.ShouldNotBe(breakerKey);
+        policyWrapKeySetOnExecutionContext.ShouldNotBe(fallbackKey);
+        policyWrapKeySetOnExecutionContext.ShouldNotBe(innerWrapKey);
+        policyWrapKeySetOnExecutionContext.ShouldBe(outerWrapKey);
     }
 
     #endregion

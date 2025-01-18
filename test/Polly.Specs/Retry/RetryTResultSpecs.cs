@@ -27,10 +27,10 @@ public class RetryTResultSpecs
 
         var func = () => methodInfo.Invoke(instance, [action, new Context(), CancellationToken.None]);
 
-        var exceptionAssertions = func.Should().Throw<TargetInvocationException>();
-        exceptionAssertions.And.Message.Should().Be("Exception has been thrown by the target of an invocation.");
-        exceptionAssertions.And.InnerException.Should().BeOfType<ArgumentNullException>()
-            .Which.ParamName.Should().Be("action");
+        var exceptionAssertions = func.Should.Throw<TargetInvocationException>();
+        exceptionAssertions.And.Message.ShouldBe("Exception has been thrown by the target of an invocation.");
+        exceptionAssertions.And.InnerException.ShouldBeOfType<ArgumentNullException>()
+            .Which.ParamName.ShouldBe("action");
     }
 
     [Fact]
@@ -42,8 +42,8 @@ public class RetryTResultSpecs
                                   .HandleResult(ResultPrimitive.Fault)
                                   .Retry(-1, onRetry);
 
-        policy.Should().Throw<ArgumentOutOfRangeException>().And
-              .ParamName.Should().Be("retryCount");
+        policy.Should.Throw<ArgumentOutOfRangeException>().And
+              .ParamName.ShouldBe("retryCount");
     }
 
     [Fact]
@@ -55,8 +55,8 @@ public class RetryTResultSpecs
                                   .HandleResult(ResultPrimitive.Fault)
                                   .Retry(1, nullOnRetry);
 
-        policy.Should().Throw<ArgumentNullException>().And
-              .ParamName.Should().Be("onRetry");
+        policy.Should.Throw<ArgumentNullException>().And
+              .ParamName.ShouldBe("onRetry");
     }
 
     [Fact]
@@ -68,8 +68,8 @@ public class RetryTResultSpecs
                                   .HandleResult(ResultPrimitive.Fault)
                                   .Retry(-1, onRetry);
 
-        policy.Should().Throw<ArgumentOutOfRangeException>().And
-              .ParamName.Should().Be("retryCount");
+        policy.Should.Throw<ArgumentOutOfRangeException>().And
+              .ParamName.ShouldBe("retryCount");
     }
 
     [Fact]
@@ -81,8 +81,8 @@ public class RetryTResultSpecs
                                   .HandleResult(ResultPrimitive.Fault)
                                   .Retry(1, nullOnRetry);
 
-        policy.Should().Throw<ArgumentNullException>().And
-              .ParamName.Should().Be("onRetry");
+        policy.Should.Throw<ArgumentNullException>().And
+              .ParamName.ShouldBe("onRetry");
     }
 
     [Fact]
@@ -93,7 +93,7 @@ public class RetryTResultSpecs
             .Retry(3);
 
         ResultPrimitive result = policy.RaiseResultSequence(ResultPrimitive.Fault, ResultPrimitive.Fault, ResultPrimitive.Fault, ResultPrimitive.Good);
-        result.Should().Be(ResultPrimitive.Good);
+        result.ShouldBe(ResultPrimitive.Good);
     }
 
     [Fact]
@@ -105,7 +105,7 @@ public class RetryTResultSpecs
             .Retry(3);
 
         ResultPrimitive result = policy.RaiseResultSequence(ResultPrimitive.Fault, ResultPrimitive.FaultAgain, ResultPrimitive.Fault, ResultPrimitive.Good);
-        result.Should().Be(ResultPrimitive.Good);
+        result.ShouldBe(ResultPrimitive.Good);
     }
 
     [Fact]
@@ -116,7 +116,7 @@ public class RetryTResultSpecs
             .Retry(3);
 
         ResultPrimitive result = policy.RaiseResultSequence(ResultPrimitive.Fault, ResultPrimitive.Good);
-        result.Should().Be(ResultPrimitive.Good);
+        result.ShouldBe(ResultPrimitive.Good);
     }
 
     [Fact]
@@ -128,7 +128,7 @@ public class RetryTResultSpecs
             .Retry(3);
 
         ResultPrimitive result = policy.RaiseResultSequence(ResultPrimitive.Fault, ResultPrimitive.FaultAgain, ResultPrimitive.Good);
-        result.Should().Be(ResultPrimitive.Good);
+        result.ShouldBe(ResultPrimitive.Good);
     }
 
     [Fact]
@@ -139,7 +139,7 @@ public class RetryTResultSpecs
             .Retry(3);
 
         ResultPrimitive result = policy.RaiseResultSequence(ResultPrimitive.Fault, ResultPrimitive.Fault, ResultPrimitive.Fault, ResultPrimitive.Fault, ResultPrimitive.Good);
-        result.Should().Be(ResultPrimitive.Fault); // It should give up retrying after 3 retries and return the last failure, so should return Fault, not Good.
+        result.ShouldBe(ResultPrimitive.Fault); // It should give up retrying after 3 retries and return the last failure, so should return Fault, not Good.
     }
 
     [Fact]
@@ -151,7 +151,7 @@ public class RetryTResultSpecs
             .Retry(3);
 
         ResultPrimitive result = policy.RaiseResultSequence(ResultPrimitive.FaultAgain, ResultPrimitive.FaultAgain, ResultPrimitive.FaultAgain, ResultPrimitive.FaultAgain, ResultPrimitive.Good);
-        result.Should().Be(ResultPrimitive.FaultAgain);
+        result.ShouldBe(ResultPrimitive.FaultAgain);
     }
 
     [Fact]
@@ -162,7 +162,7 @@ public class RetryTResultSpecs
             .Retry();
 
         ResultPrimitive result = policy.RaiseResultSequence(ResultPrimitive.FaultAgain, ResultPrimitive.Good);
-        result.Should().Be(ResultPrimitive.FaultAgain);
+        result.ShouldBe(ResultPrimitive.FaultAgain);
     }
 
     [Fact]
@@ -174,7 +174,7 @@ public class RetryTResultSpecs
             .Retry();
 
         ResultPrimitive result = policy.RaiseResultSequence(ResultPrimitive.FaultYetAgain, ResultPrimitive.Good);
-        result.Should().Be(ResultPrimitive.FaultYetAgain);
+        result.ShouldBe(ResultPrimitive.FaultYetAgain);
     }
 
     [Fact]
@@ -185,7 +185,7 @@ public class RetryTResultSpecs
             .Retry();
 
         ResultClass result = policy.RaiseResultSequence(new ResultClass(ResultPrimitive.FaultAgain), new ResultClass(ResultPrimitive.Good));
-        result.ResultCode.Should().Be(ResultPrimitive.FaultAgain);
+        result.ResultCode.ShouldBe(ResultPrimitive.FaultAgain);
     }
 
     [Fact]
@@ -197,7 +197,7 @@ public class RetryTResultSpecs
             .Retry();
 
         ResultClass result = policy.RaiseResultSequence(new ResultClass(ResultPrimitive.FaultYetAgain), new ResultClass(ResultPrimitive.Good));
-        result.ResultCode.Should().Be(ResultPrimitive.FaultYetAgain);
+        result.ResultCode.ShouldBe(ResultPrimitive.FaultYetAgain);
     }
 
     [Fact]
@@ -208,7 +208,7 @@ public class RetryTResultSpecs
             .Retry();
 
         ResultClass result = policy.RaiseResultSequence(new ResultClass(ResultPrimitive.Fault), new ResultClass(ResultPrimitive.Good));
-        result.ResultCode.Should().Be(ResultPrimitive.Good);
+        result.ResultCode.ShouldBe(ResultPrimitive.Good);
     }
 
     [Fact]
@@ -220,7 +220,7 @@ public class RetryTResultSpecs
             .Retry();
 
         ResultClass result = policy.RaiseResultSequence(new ResultClass(ResultPrimitive.FaultAgain), new ResultClass(ResultPrimitive.Good));
-        result.ResultCode.Should().Be(ResultPrimitive.Good);
+        result.ResultCode.ShouldBe(ResultPrimitive.Good);
     }
 
     [Fact]
@@ -286,7 +286,7 @@ public class RetryTResultSpecs
         policy.RaiseResultSequence(
             CreateDictionary("key1", "value1", "key2", "value2"),
             ResultPrimitive.Fault, ResultPrimitive.Good)
-            .Should().Be(ResultPrimitive.Good);
+            .ShouldBe(ResultPrimitive.Good);
 
         contextData.Should()
             .ContainKeys("key1", "key2").And
@@ -306,7 +306,7 @@ public class RetryTResultSpecs
             CreateDictionary("key1", "value1", "key2", "value2"),
             ResultPrimitive.Fault, ResultPrimitive.Good);
 
-        result.Should().BeEquivalentTo(new
+        result.ShouldBeEquivalentTo(new
         {
             Outcome = OutcomeType.Successful,
             FinalException = (Exception?)null,
@@ -349,13 +349,13 @@ public class RetryTResultSpecs
             CreateDictionary("key", "original_value"),
             ResultPrimitive.Fault, ResultPrimitive.Good);
 
-        contextValue.Should().Be("original_value");
+        contextValue.ShouldBe("original_value");
 
         policy.RaiseResultSequence(
             CreateDictionary("key", "new_value"),
             ResultPrimitive.Fault, ResultPrimitive.Good);
 
-        contextValue.Should().Be("new_value");
+        contextValue.ShouldBe("new_value");
     }
 
     [Fact]
@@ -371,13 +371,13 @@ public class RetryTResultSpecs
             CreateDictionary("key", "original_value"),
             ResultPrimitive.Fault, ResultPrimitive.Good);
 
-        contextValue.Should().Be("original_value");
+        contextValue.ShouldBe("original_value");
 
         policy.RaiseResultSequenceOnExecuteAndCapture(
             CreateDictionary("key", "new_value"),
             ResultPrimitive.Fault, ResultPrimitive.Good);
 
-        contextValue.Should().Be("new_value");
+        contextValue.ShouldBe("new_value");
     }
 
     [Fact]
@@ -387,9 +387,9 @@ public class RetryTResultSpecs
             .HandleResult(ResultPrimitive.Fault)
             .Retry(1);
 
-        policy.RaiseResultSequence(ResultPrimitive.Fault, ResultPrimitive.Good).Should().Be(ResultPrimitive.Good);
+        policy.RaiseResultSequence(ResultPrimitive.Fault, ResultPrimitive.Good).ShouldBe(ResultPrimitive.Good);
 
-        policy.RaiseResultSequence(ResultPrimitive.Fault, ResultPrimitive.Good).Should().Be(ResultPrimitive.Good);
+        policy.RaiseResultSequence(ResultPrimitive.Fault, ResultPrimitive.Good).ShouldBe(ResultPrimitive.Good);
 
     }
 
@@ -404,9 +404,9 @@ public class RetryTResultSpecs
             .HandleResult(ResultPrimitive.Fault)
             .Retry(0, onRetry);
 
-        policy.RaiseResultSequence(ResultPrimitive.Fault, ResultPrimitive.Good).Should().Be(ResultPrimitive.Fault);
+        policy.RaiseResultSequence(ResultPrimitive.Fault, ResultPrimitive.Good).ShouldBe(ResultPrimitive.Fault);
 
-        retryInvoked.Should().BeFalse();
+        retryInvoked.ShouldBeFalse();
     }
 
     [Fact]
@@ -422,9 +422,9 @@ public class RetryTResultSpecs
 
         policy.RaiseResultSequence(
             CreateDictionary("key", "value"),
-            ResultPrimitive.Fault, ResultPrimitive.Good).Should().Be(ResultPrimitive.Fault);
+            ResultPrimitive.Fault, ResultPrimitive.Good).ShouldBe(ResultPrimitive.Fault);
 
-        retryInvoked.Should().BeFalse();
+        retryInvoked.ShouldBeFalse();
     }
 
     #region Sync cancellation tests
@@ -449,10 +449,10 @@ public class RetryTResultSpecs
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             policy.RaiseResultSequenceAndOrCancellation(scenario, cancellationTokenSource, onExecute, ResultPrimitive.Good)
-            .Should().Be(ResultPrimitive.Good);
+            .ShouldBe(ResultPrimitive.Good);
         }
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
     }
 
     [Fact]
@@ -479,10 +479,10 @@ public class RetryTResultSpecs
                 ResultPrimitive.Fault,
                 ResultPrimitive.Fault,
                 ResultPrimitive.Good)
-                .Should().Be(ResultPrimitive.Good);
+                .ShouldBe(ResultPrimitive.Good);
         }
 
-        attemptsInvoked.Should().Be(1 + 3);
+        attemptsInvoked.ShouldBe(1 + 3);
     }
 
     [Fact]
@@ -510,11 +510,11 @@ public class RetryTResultSpecs
                    ResultPrimitive.Fault,
                    ResultPrimitive.Fault,
                    ResultPrimitive.Good))
-                .Should().Throw<OperationCanceledException>()
-                .And.CancellationToken.Should().Be(cancellationToken);
+                .Should.Throw<OperationCanceledException>()
+                .And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(0);
+        attemptsInvoked.ShouldBe(0);
     }
 
     [Fact]
@@ -542,11 +542,11 @@ public class RetryTResultSpecs
                ResultPrimitive.Good,
                ResultPrimitive.Good,
                ResultPrimitive.Good))
-            .Should().Throw<OperationCanceledException>()
-            .And.CancellationToken.Should().Be(cancellationToken);
+            .Should.Throw<OperationCanceledException>()
+            .And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
     }
 
     [Fact]
@@ -574,11 +574,11 @@ public class RetryTResultSpecs
                ResultPrimitive.Fault,
                ResultPrimitive.Fault,
                ResultPrimitive.Good))
-            .Should().Throw<OperationCanceledException>()
-            .And.CancellationToken.Should().Be(cancellationToken);
+            .Should.Throw<OperationCanceledException>()
+            .And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
     }
 
     [Fact]
@@ -606,11 +606,11 @@ public class RetryTResultSpecs
                ResultPrimitive.Fault,
                ResultPrimitive.Fault,
                ResultPrimitive.Good))
-            .Should().Throw<OperationCanceledException>()
-            .And.CancellationToken.Should().Be(cancellationToken);
+            .Should.Throw<OperationCanceledException>()
+            .And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
     }
 
     [Fact]
@@ -638,11 +638,11 @@ public class RetryTResultSpecs
                ResultPrimitive.Fault,
                ResultPrimitive.Fault,
                ResultPrimitive.Good))
-            .Should().Throw<OperationCanceledException>()
-            .And.CancellationToken.Should().Be(cancellationToken);
+            .Should.Throw<OperationCanceledException>()
+            .And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(2);
+        attemptsInvoked.ShouldBe(2);
     }
 
     [Fact]
@@ -670,11 +670,11 @@ public class RetryTResultSpecs
                ResultPrimitive.Fault,
                ResultPrimitive.Fault,
                ResultPrimitive.Good))
-            .Should().Throw<OperationCanceledException>()
-            .And.CancellationToken.Should().Be(cancellationToken);
+            .Should.Throw<OperationCanceledException>()
+            .And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(2);
+        attemptsInvoked.ShouldBe(2);
     }
 
     [Fact]
@@ -703,11 +703,11 @@ public class RetryTResultSpecs
                ResultPrimitive.Fault,
                ResultPrimitive.Fault,
                ResultPrimitive.Good))
-            .Should().Throw<OperationCanceledException>()
-            .And.CancellationToken.Should().Be(cancellationToken);
+            .Should.Throw<OperationCanceledException>()
+            .And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(1 + 3);
+        attemptsInvoked.ShouldBe(1 + 3);
     }
 
     [Fact]
@@ -736,10 +736,10 @@ public class RetryTResultSpecs
                ResultPrimitive.Fault,
                ResultPrimitive.Fault,
                ResultPrimitive.Good)
-           .Should().Be(ResultPrimitive.Fault);
+           .ShouldBe(ResultPrimitive.Fault);
         }
 
-        attemptsInvoked.Should().Be(1 + 3);
+        attemptsInvoked.ShouldBe(1 + 3);
     }
 
     [Fact]
@@ -770,11 +770,11 @@ public class RetryTResultSpecs
                    ResultPrimitive.Fault,
                    ResultPrimitive.Fault,
                    ResultPrimitive.Good))
-                .Should().Throw<OperationCanceledException>()
-                .And.CancellationToken.Should().Be(cancellationToken);
+                .Should.Throw<OperationCanceledException>()
+                .And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
     }
 
     #endregion

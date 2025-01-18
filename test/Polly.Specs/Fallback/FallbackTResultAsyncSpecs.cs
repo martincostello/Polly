@@ -27,10 +27,10 @@ public class FallbackTResultAsyncSpecs
 
         var func = () => methodInfo.Invoke(instance, [action, new Context(), CancellationToken.None, false]);
 
-        var exceptionAssertions = func.Should().Throw<TargetInvocationException>();
-        exceptionAssertions.And.Message.Should().Be("Exception has been thrown by the target of an invocation.");
-        exceptionAssertions.And.InnerException.Should().BeOfType<ArgumentNullException>()
-            .Which.ParamName.Should().Be("action");
+        var exceptionAssertions = func.Should.Throw<TargetInvocationException>();
+        exceptionAssertions.And.Message.ShouldBe("Exception has been thrown by the target of an invocation.");
+        exceptionAssertions.And.InnerException.ShouldBeOfType<ArgumentNullException>()
+            .Which.ParamName.ShouldBe("action");
     }
 
     [Fact]
@@ -42,8 +42,8 @@ public class FallbackTResultAsyncSpecs
                                 .HandleResult(ResultPrimitive.Fault)
                                 .FallbackAsync(fallbackAction);
 
-        policy.Should().Throw<ArgumentNullException>()
-            .And.ParamName.Should().Be("fallbackAction");
+        policy.Should.Throw<ArgumentNullException>()
+            .And.ParamName.ShouldBe("fallbackAction");
     }
 
     [Fact]
@@ -56,8 +56,8 @@ public class FallbackTResultAsyncSpecs
                                 .HandleResult(ResultPrimitive.Fault)
                                 .FallbackAsync(fallbackAction, onFallbackAsync);
 
-        policy.Should().Throw<ArgumentNullException>()
-            .And.ParamName.Should().Be("fallbackAction");
+        policy.Should.Throw<ArgumentNullException>()
+            .And.ParamName.ShouldBe("fallbackAction");
     }
 
     [Fact]
@@ -70,8 +70,8 @@ public class FallbackTResultAsyncSpecs
                                 .HandleResult(ResultPrimitive.Fault)
                                 .FallbackAsync(fallbackAction, onFallbackAsync);
 
-        policy.Should().Throw<ArgumentNullException>()
-            .And.ParamName.Should().Be("fallbackAction");
+        policy.Should.Throw<ArgumentNullException>()
+            .And.ParamName.ShouldBe("fallbackAction");
     }
 
     [Fact]
@@ -84,8 +84,8 @@ public class FallbackTResultAsyncSpecs
                                 .HandleResult(ResultPrimitive.Fault)
                                 .FallbackAsync(fallbackAction, onFallbackAsync);
 
-        policy.Should().Throw<ArgumentNullException>()
-            .And.ParamName.Should().Be("onFallbackAsync");
+        policy.Should.Throw<ArgumentNullException>()
+            .And.ParamName.ShouldBe("onFallbackAsync");
     }
 
     [Fact]
@@ -98,8 +98,8 @@ public class FallbackTResultAsyncSpecs
                                 .HandleResult(ResultPrimitive.Fault)
                                 .FallbackAsync(fallbackAction, onFallbackAsync);
 
-        policy.Should().Throw<ArgumentNullException>()
-            .And.ParamName.Should().Be("onFallbackAsync");
+        policy.Should.Throw<ArgumentNullException>()
+            .And.ParamName.ShouldBe("onFallbackAsync");
     }
 
     #endregion
@@ -118,7 +118,7 @@ public class FallbackTResultAsyncSpecs
 
         await fallbackPolicy.ExecuteAsync(() => Task.FromResult(ResultPrimitive.Good));
 
-        fallbackActionExecuted.Should().BeFalse();
+        fallbackActionExecuted.ShouldBeFalse();
     }
 
     [Fact]
@@ -132,9 +132,9 @@ public class FallbackTResultAsyncSpecs
                                 .FallbackAsync(fallbackAction);
 
         (await fallbackPolicy.RaiseResultSequenceAsync(ResultPrimitive.FaultAgain))
-            .Should().Be(ResultPrimitive.FaultAgain);
+            .ShouldBe(ResultPrimitive.FaultAgain);
 
-        fallbackActionExecuted.Should().BeFalse();
+        fallbackActionExecuted.ShouldBeFalse();
     }
 
     [Fact]
@@ -145,7 +145,7 @@ public class FallbackTResultAsyncSpecs
                                 .FallbackAsync(ResultPrimitive.Substitute);
 
         (await fallbackPolicy.RaiseResultSequenceAsync(ResultPrimitive.Fault))
-            .Should().Be(ResultPrimitive.Substitute);
+            .ShouldBe(ResultPrimitive.Substitute);
     }
 
     [Fact]
@@ -159,9 +159,9 @@ public class FallbackTResultAsyncSpecs
                                 .FallbackAsync(fallbackAction);
 
         (await fallbackPolicy.RaiseResultSequenceAsync(ResultPrimitive.Fault))
-            .Should().Be(ResultPrimitive.Substitute);
+            .ShouldBe(ResultPrimitive.Substitute);
 
-        fallbackActionExecuted.Should().BeTrue();
+        fallbackActionExecuted.ShouldBeTrue();
     }
 
     [Fact]
@@ -176,9 +176,9 @@ public class FallbackTResultAsyncSpecs
                                 .FallbackAsync(fallbackAction);
 
         (await fallbackPolicy.RaiseResultSequenceAsync(ResultPrimitive.FaultAgain))
-            .Should().Be(ResultPrimitive.Substitute);
+            .ShouldBe(ResultPrimitive.Substitute);
 
-        fallbackActionExecuted.Should().BeTrue();
+        fallbackActionExecuted.ShouldBeTrue();
     }
 
     [Fact]
@@ -193,9 +193,9 @@ public class FallbackTResultAsyncSpecs
                                 .FallbackAsync(fallbackAction);
 
         (await fallbackPolicy.RaiseResultSequenceAsync(ResultPrimitive.FaultYetAgain))
-            .Should().Be(ResultPrimitive.FaultYetAgain);
+            .ShouldBe(ResultPrimitive.FaultYetAgain);
 
-        fallbackActionExecuted.Should().BeFalse();
+        fallbackActionExecuted.ShouldBeFalse();
     }
 
     [Fact]
@@ -209,9 +209,9 @@ public class FallbackTResultAsyncSpecs
                                 .FallbackAsync(fallbackAction);
 
         (await fallbackPolicy.RaiseResultSequenceAsync(ResultPrimitive.Fault))
-            .Should().Be(ResultPrimitive.Fault);
+            .ShouldBe(ResultPrimitive.Fault);
 
-        fallbackActionExecuted.Should().BeFalse();
+        fallbackActionExecuted.ShouldBeFalse();
     }
 
     [Fact]
@@ -226,9 +226,9 @@ public class FallbackTResultAsyncSpecs
                                 .FallbackAsync(fallbackAction);
 
         (await fallbackPolicy.RaiseResultSequenceAsync(ResultPrimitive.FaultYetAgain))
-            .Should().Be(ResultPrimitive.FaultYetAgain);
+            .ShouldBe(ResultPrimitive.FaultYetAgain);
 
-        fallbackActionExecuted.Should().BeFalse();
+        fallbackActionExecuted.ShouldBeFalse();
     }
 
     [Fact]
@@ -242,9 +242,9 @@ public class FallbackTResultAsyncSpecs
                                 .FallbackAsync(fallbackAction);
 
         (await fallbackPolicy.RaiseResultSequenceAsync(ResultPrimitive.Undefined))
-            .Should().Be(ResultPrimitive.Substitute);
+            .ShouldBe(ResultPrimitive.Substitute);
 
-        fallbackActionExecuted.Should().BeTrue();
+        fallbackActionExecuted.ShouldBeTrue();
     }
 
     [Fact]
@@ -259,9 +259,9 @@ public class FallbackTResultAsyncSpecs
                                 .FallbackAsync(fallbackAction);
 
         (await fallbackPolicy.RaiseResultSequenceAsync(ResultPrimitive.Undefined))
-            .Should().Be(ResultPrimitive.Substitute);
+            .ShouldBe(ResultPrimitive.Substitute);
 
-        fallbackActionExecuted.Should().BeTrue();
+        fallbackActionExecuted.ShouldBeTrue();
     }
 
     [Fact]
@@ -279,9 +279,9 @@ public class FallbackTResultAsyncSpecs
             .FallbackAsync(fallbackAction);
 
         (await fallbackPolicy.RaiseResultSequenceAsync(new ResultClass(ResultPrimitive.Fault, "FromExecuteDelegate")))
-            .Should().Match<ResultClass>(r => r.ResultCode == ResultPrimitive.Fault && r.SomeString == "FromFallbackAction");
+            .ShouldMatch<ResultClass>(r => r.ResultCode == ResultPrimitive.Fault && r.SomeString == "FromFallbackAction");
 
-        fallbackActionExecuted.Should().BeTrue();
+        fallbackActionExecuted.ShouldBeTrue();
     }
 
     #endregion
@@ -304,9 +304,9 @@ public class FallbackTResultAsyncSpecs
         ResultClass resultFromDelegate = new ResultClass(ResultPrimitive.Fault);
         await fallbackPolicy.ExecuteAsync(() => Task.FromResult(resultFromDelegate));
 
-        fallbackActionExecuted.Should().BeTrue();
-        resultPassedToOnFallback.Should().NotBeNull();
-        resultPassedToOnFallback.Should().Be(resultFromDelegate);
+        fallbackActionExecuted.ShouldBeTrue();
+        resultPassedToOnFallback.ShouldNotBeNull();
+        resultPassedToOnFallback.ShouldBe(resultFromDelegate);
     }
 
     [Fact]
@@ -323,7 +323,7 @@ public class FallbackTResultAsyncSpecs
 
         await fallbackPolicy.ExecuteAsync(() => Task.FromResult(ResultPrimitive.Good));
 
-        onFallbackExecuted.Should().BeFalse();
+        onFallbackExecuted.ShouldBeFalse();
     }
 
     #endregion
@@ -346,7 +346,7 @@ public class FallbackTResultAsyncSpecs
         fallbackPolicy.ExecuteAsync(_ => Task.FromResult(ResultPrimitive.Fault),
             CreateDictionary("key1", "value1", "key2", "value2"))
             .Result
-            .Should().Be(ResultPrimitive.Substitute);
+            .ShouldBe(ResultPrimitive.Substitute);
 
         contextData.Should()
             .ContainKeys("key1", "key2").And
@@ -368,7 +368,7 @@ public class FallbackTResultAsyncSpecs
 
         (await fallbackPolicy.ExecuteAndCaptureAsync(_ => Task.FromResult(ResultPrimitive.Fault),
             CreateDictionary("key1", "value1", "key2", "value2")))
-            .Result.Should().Be(ResultPrimitive.Substitute);
+            .Result.ShouldBe(ResultPrimitive.Substitute);
 
         contextData.Should()
             .ContainKeys("key1", "key2").And
@@ -391,17 +391,17 @@ public class FallbackTResultAsyncSpecs
 
         fallbackPolicy.ExecuteAsync(_ => Task.FromResult(ResultPrimitive.Fault), CreateDictionary("key", "value1"))
             .Result
-            .Should().Be(ResultPrimitive.Substitute);
+            .ShouldBe(ResultPrimitive.Substitute);
 
         fallbackPolicy.ExecuteAsync(_ => Task.FromResult(ResultPrimitive.FaultAgain), CreateDictionary("key", "value2"))
             .Result
-            .Should().Be(ResultPrimitive.Substitute);
+            .ShouldBe(ResultPrimitive.Substitute);
 
-        contextData.Count.Should().Be(2);
-        contextData.Keys.Should().Contain(ResultPrimitive.Fault);
-        contextData.Keys.Should().Contain(ResultPrimitive.FaultAgain);
-        contextData[ResultPrimitive.Fault].Should().Be("value1");
-        contextData[ResultPrimitive.FaultAgain].Should().Be("value2");
+        contextData.Count.ShouldBe(2);
+        contextData.Keys.ShouldContain(ResultPrimitive.Fault);
+        contextData.Keys.ShouldContain(ResultPrimitive.FaultAgain);
+        contextData[ResultPrimitive.Fault].ShouldBe("value1");
+        contextData[ResultPrimitive.FaultAgain].ShouldBe("value2");
     }
 
     [Fact]
@@ -419,10 +419,10 @@ public class FallbackTResultAsyncSpecs
             .FallbackAsync(fallbackAction, onFallbackAsync);
 
         (await fallbackPolicy.RaiseResultSequenceAsync(ResultPrimitive.Fault))
-            .Should().Be(ResultPrimitive.Substitute);
+            .ShouldBe(ResultPrimitive.Substitute);
 
-        onFallbackExecuted.Should().BeTrue();
-        capturedContext.Should().BeEmpty();
+        onFallbackExecuted.ShouldBeTrue();
+        capturedContext.ShouldBeEmpty();
     }
 
     [Fact]
@@ -441,7 +441,7 @@ public class FallbackTResultAsyncSpecs
         fallbackPolicy.ExecuteAsync(_ => Task.FromResult(ResultPrimitive.Fault),
                 CreateDictionary("key1", "value1", "key2", "value2"))
             .Result
-            .Should().Be(ResultPrimitive.Substitute);
+            .ShouldBe(ResultPrimitive.Substitute);
 
         contextData.Should()
             .ContainKeys("key1", "key2").And
@@ -463,7 +463,7 @@ public class FallbackTResultAsyncSpecs
 
         await fallbackPolicy.Awaiting(p => p.ExecuteAndCaptureAsync(_ => Task.FromResult(ResultPrimitive.Fault),
                 CreateDictionary("key1", "value1", "key2", "value2")))
-            .Should().NotThrowAsync();
+            .Should.NotThrowAsync();
 
         contextData.Should()
             .ContainKeys("key1", "key2").And
@@ -490,10 +490,10 @@ public class FallbackTResultAsyncSpecs
             .FallbackAsync(fallbackActionAsync, onFallbackAsync);
 
         (await fallbackPolicy.RaiseResultSequenceAsync(ResultPrimitive.Fault))
-            .Should().Be(ResultPrimitive.Substitute);
+            .ShouldBe(ResultPrimitive.Substitute);
 
-        fallbackExecuted.Should().BeTrue();
-        capturedContext.Should().BeEmpty();
+        fallbackExecuted.ShouldBeTrue();
+        capturedContext.ShouldBeEmpty();
     }
     #endregion
 
@@ -514,11 +514,11 @@ public class FallbackTResultAsyncSpecs
             .FallbackAsync(fallbackAction, onFallback);
 
         var result = await fallbackPolicy.ExecuteAsync(() => Task.FromResult(ResultPrimitive.Fault));
-        result.Should().Be(ResultPrimitive.Substitute);
+        result.ShouldBe(ResultPrimitive.Substitute);
 
-        fallbackOutcome!.Should().NotBeNull();
-        fallbackOutcome!.Exception.Should().BeNull();
-        fallbackOutcome!.Result.Should().Be(ResultPrimitive.Fault);
+        fallbackOutcome!.ShouldNotBeNull();
+        fallbackOutcome!.Exception.ShouldBeNull();
+        fallbackOutcome!.Result.ShouldBe(ResultPrimitive.Fault);
     }
 
     [Fact]
@@ -536,12 +536,12 @@ public class FallbackTResultAsyncSpecs
             .FallbackAsync(fallbackAction, onFallback);
 
         var result = await fallbackPolicy.ExecuteAndCaptureAsync(() => Task.FromResult(ResultPrimitive.Fault));
-        result.Should().NotBeNull();
-        result.Result.Should().Be(ResultPrimitive.Substitute);
+        result.ShouldNotBeNull();
+        result.Result.ShouldBe(ResultPrimitive.Substitute);
 
-        fallbackOutcome!.Should().NotBeNull();
-        fallbackOutcome!.Exception.Should().BeNull();
-        fallbackOutcome!.Result.Should().Be(ResultPrimitive.Fault);
+        fallbackOutcome!.ShouldNotBeNull();
+        fallbackOutcome!.Exception.ShouldBeNull();
+        fallbackOutcome!.Result.ShouldBe(ResultPrimitive.Fault);
     }
 
     [Fact]
@@ -559,9 +559,9 @@ public class FallbackTResultAsyncSpecs
             .FallbackAsync(fallbackAction, onFallback);
 
         var result = await fallbackPolicy.ExecuteAsync(() => Task.FromResult(ResultPrimitive.FaultAgain));
-        result.Should().Be(ResultPrimitive.FaultAgain);
+        result.ShouldBe(ResultPrimitive.FaultAgain);
 
-        fallbackOutcome.Should().BeNull();
+        fallbackOutcome.ShouldBeNull();
     }
 
     #endregion
@@ -592,12 +592,12 @@ public class FallbackTResultAsyncSpecs
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             (await policy.RaiseResultSequenceAndOrCancellationAsync(scenario, cancellationTokenSource, onExecute, ResultPrimitive.Good))
-                .Should().Be(ResultPrimitive.Good);
+                .ShouldBe(ResultPrimitive.Good);
         }
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
 
-        fallbackActionExecuted.Should().BeFalse();
+        fallbackActionExecuted.ShouldBeFalse();
     }
 
     [Fact]
@@ -624,12 +624,12 @@ public class FallbackTResultAsyncSpecs
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             (await policy.RaiseResultSequenceAndOrCancellationAsync(scenario, cancellationTokenSource, onExecute, ResultPrimitive.Fault))
-                .Should().Be(ResultPrimitive.Substitute);
+                .ShouldBe(ResultPrimitive.Substitute);
         }
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
 
-        fallbackActionExecuted.Should().BeTrue();
+        fallbackActionExecuted.ShouldBeTrue();
     }
 
     [Fact]
@@ -657,14 +657,14 @@ public class FallbackTResultAsyncSpecs
             cancellationTokenSource.Cancel();
 
             var ex = await policy.Awaiting(x => x.RaiseResultSequenceAndOrCancellationAsync(scenario, cancellationTokenSource, onExecute, ResultPrimitive.Fault))
-                .Should().ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.Should().Be(cancellationToken);
+                .Should.ThrowAsync<OperationCanceledException>();
+            ex.And.CancellationToken.ShouldBe(cancellationToken);
 
         }
 
-        attemptsInvoked.Should().Be(0);
+        attemptsInvoked.ShouldBe(0);
 
-        fallbackActionExecuted.Should().BeFalse();
+        fallbackActionExecuted.ShouldBeFalse();
 
     }
 
@@ -693,13 +693,13 @@ public class FallbackTResultAsyncSpecs
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             var ex = await policy.Awaiting(x => x.RaiseResultSequenceAndOrCancellationAsync(scenario, cancellationTokenSource, onExecute, ResultPrimitive.Good))
-                .Should().ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.Should().Be(cancellationToken);
+                .Should.ThrowAsync<OperationCanceledException>();
+            ex.And.CancellationToken.ShouldBe(cancellationToken);
         }
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
 
-        fallbackActionExecuted.Should().BeFalse();
+        fallbackActionExecuted.ShouldBeFalse();
     }
 
     [Fact]
@@ -728,12 +728,12 @@ public class FallbackTResultAsyncSpecs
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             (await policy.RaiseResultSequenceAndOrCancellationAsync(scenario, cancellationTokenSource, onExecute, ResultPrimitive.Good))
-                .Should().Be(ResultPrimitive.Substitute);
+                .ShouldBe(ResultPrimitive.Substitute);
         }
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
 
-        fallbackActionExecuted.Should().BeTrue();
+        fallbackActionExecuted.ShouldBeTrue();
     }
 
     [Fact]
@@ -761,12 +761,12 @@ public class FallbackTResultAsyncSpecs
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             (await policy.RaiseResultSequenceAndOrCancellationAsync(scenario, cancellationTokenSource, onExecute, ResultPrimitive.Good))
-                .Should().Be(ResultPrimitive.Good);
+                .ShouldBe(ResultPrimitive.Good);
         }
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
 
-        fallbackActionExecuted.Should().BeFalse();
+        fallbackActionExecuted.ShouldBeFalse();
     }
 
     [Fact]
@@ -794,12 +794,12 @@ public class FallbackTResultAsyncSpecs
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             (await policy.RaiseResultSequenceAndOrCancellationAsync(scenario, cancellationTokenSource, onExecute, ResultPrimitive.FaultYetAgain))
-                .Should().Be(ResultPrimitive.FaultYetAgain);
+                .ShouldBe(ResultPrimitive.FaultYetAgain);
         }
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
 
-        fallbackActionExecuted.Should().BeFalse();
+        fallbackActionExecuted.ShouldBeFalse();
     }
 
     [Fact]
@@ -827,12 +827,12 @@ public class FallbackTResultAsyncSpecs
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             (await policy.RaiseResultSequenceAndOrCancellationAsync(scenario, cancellationTokenSource, onExecute, ResultPrimitive.Fault))
-                .Should().Be(ResultPrimitive.Substitute);
+                .ShouldBe(ResultPrimitive.Substitute);
         }
 
-        attemptsInvoked.Should().Be(1);
+        attemptsInvoked.ShouldBe(1);
 
-        fallbackActionExecuted.Should().BeTrue();
+        fallbackActionExecuted.ShouldBeTrue();
     }
 
     #endregion

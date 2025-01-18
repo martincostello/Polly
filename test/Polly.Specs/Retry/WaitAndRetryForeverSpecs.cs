@@ -14,8 +14,8 @@ public class WaitAndRetryForeverSpecs : IDisposable
                                   .Handle<DivideByZeroException>()
                                   .WaitAndRetryForever(null, onRetry);
 
-        policy.Should().Throw<ArgumentNullException>().And
-              .ParamName.Should().Be("sleepDurationProvider");
+        policy.Should.Throw<ArgumentNullException>().And
+              .ParamName.ShouldBe("sleepDurationProvider");
     }
 
     [Fact]
@@ -29,8 +29,8 @@ public class WaitAndRetryForeverSpecs : IDisposable
                                   .Handle<DivideByZeroException>()
                                   .WaitAndRetryForever(sleepDurationProvider, onRetry);
 
-        policy.Should().Throw<ArgumentNullException>().And
-              .ParamName.Should().Be("sleepDurationProvider");
+        policy.Should.Throw<ArgumentNullException>().And
+              .ParamName.ShouldBe("sleepDurationProvider");
     }
 
     [Fact]
@@ -43,8 +43,8 @@ public class WaitAndRetryForeverSpecs : IDisposable
                                   .Handle<DivideByZeroException>()
                                   .WaitAndRetryForever(provider, nullOnRetry);
 
-        policy.Should().Throw<ArgumentNullException>().And
-              .ParamName.Should().Be("onRetry");
+        policy.Should.Throw<ArgumentNullException>().And
+              .ParamName.ShouldBe("onRetry");
     }
 
     [Fact]
@@ -57,8 +57,8 @@ public class WaitAndRetryForeverSpecs : IDisposable
                                   .Handle<DivideByZeroException>()
                                   .WaitAndRetryForever(provider, nullOnRetry);
 
-        policy.Should().Throw<ArgumentNullException>().And
-              .ParamName.Should().Be("onRetry");
+        policy.Should.Throw<ArgumentNullException>().And
+              .ParamName.ShouldBe("onRetry");
     }
 
     [Fact]
@@ -69,7 +69,7 @@ public class WaitAndRetryForeverSpecs : IDisposable
             .WaitAndRetryForever(_ => default);
 
         policy.Invoking(x => x.RaiseException<DivideByZeroException>(3))
-              .Should().NotThrow();
+              .Should.NotThrow();
     }
 
     [Fact]
@@ -81,7 +81,7 @@ public class WaitAndRetryForeverSpecs : IDisposable
             .WaitAndRetryForever(_ => default);
 
         policy.Invoking(x => x.RaiseException<ArgumentException>(3))
-              .Should().NotThrow();
+              .Should.NotThrow();
     }
 
     [Fact]
@@ -94,7 +94,7 @@ public class WaitAndRetryForeverSpecs : IDisposable
             .WaitAndRetryForever(provider);
 
         policy.Invoking(x => x.RaiseException<NullReferenceException>())
-              .Should().Throw<NullReferenceException>();
+              .Should.Throw<NullReferenceException>();
     }
 
     [Fact]
@@ -108,7 +108,7 @@ public class WaitAndRetryForeverSpecs : IDisposable
             .WaitAndRetryForever(provider);
 
         policy.Invoking(x => x.RaiseException<NullReferenceException>())
-              .Should().Throw<NullReferenceException>();
+              .Should.Throw<NullReferenceException>();
     }
 
     [Fact]
@@ -121,7 +121,7 @@ public class WaitAndRetryForeverSpecs : IDisposable
             .WaitAndRetryForever(provider);
 
         policy.Invoking(x => x.RaiseException<DivideByZeroException>())
-              .Should().Throw<DivideByZeroException>();
+              .Should.Throw<DivideByZeroException>();
     }
 
     [Fact]
@@ -135,7 +135,7 @@ public class WaitAndRetryForeverSpecs : IDisposable
             .WaitAndRetryForever(provider);
 
         policy.Invoking(x => x.RaiseException<ArgumentException>())
-              .Should().Throw<ArgumentException>();
+              .Should.Throw<ArgumentException>();
     }
 
     [Fact]
@@ -148,7 +148,7 @@ public class WaitAndRetryForeverSpecs : IDisposable
             .WaitAndRetryForever(provider);
 
         policy.Invoking(x => x.RaiseException<DivideByZeroException>())
-              .Should().NotThrow();
+              .Should.NotThrow();
     }
 
     [Fact]
@@ -162,7 +162,7 @@ public class WaitAndRetryForeverSpecs : IDisposable
            .WaitAndRetryForever(provider);
 
         policy.Invoking(x => x.RaiseException<ArgumentException>())
-              .Should().NotThrow();
+              .Should.NotThrow();
     }
 
     [Fact]
@@ -179,7 +179,7 @@ public class WaitAndRetryForeverSpecs : IDisposable
         SystemClock.Sleep = (span, _) => totalTimeSlept += span.Seconds;
 
         policy.Invoking(x => x.RaiseException<NullReferenceException>())
-              .Should().Throw<NullReferenceException>();
+              .Should.Throw<NullReferenceException>();
 
         totalTimeSlept.Should()
                       .Be(0);
@@ -232,9 +232,9 @@ public class WaitAndRetryForeverSpecs : IDisposable
             .WaitAndRetryForever(provider, (exception, _) => retryExceptions.Add(exception));
 
         policy.Invoking(x => x.RaiseException<ArgumentException>())
-              .Should().Throw<ArgumentException>();
+              .Should.Throw<ArgumentException>();
 
-        retryExceptions.Should().BeEmpty();
+        retryExceptions.ShouldBeEmpty();
     }
 
     [Fact]
@@ -253,12 +253,12 @@ public class WaitAndRetryForeverSpecs : IDisposable
         policy.RaiseException<DivideByZeroException>(
             CreateDictionary("key", "original_value"));
 
-        contextValue.Should().Be("original_value");
+        contextValue.ShouldBe("original_value");
 
         policy.RaiseException<DivideByZeroException>(
             CreateDictionary("key", "new_value"));
 
-        contextValue.Should().Be("new_value");
+        contextValue.ShouldBe("new_value");
     }
 
     [Fact]
@@ -315,7 +315,7 @@ public class WaitAndRetryForeverSpecs : IDisposable
             });
         }
 
-        actualRetryWaits.Should().ContainInOrder(expectedRetryWaits.Values);
+        actualRetryWaits.ShouldContainInOrder(expectedRetryWaits.Values);
     }
 
     [Fact]
@@ -346,7 +346,7 @@ public class WaitAndRetryForeverSpecs : IDisposable
             },
             CreateDictionary("RetryAfter", defaultRetryAfter)); // Can also set an initial value for RetryAfter, in the Context passed into the call.
 
-        actualRetryDuration.Should().Be(expectedRetryDuration);
+        actualRetryDuration.ShouldBe(expectedRetryDuration);
     }
 
     public void Dispose() =>

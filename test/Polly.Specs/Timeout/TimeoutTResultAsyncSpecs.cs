@@ -26,10 +26,10 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
 
         var func = () => methodInfo.Invoke(instance, [action, new Context(), CancellationToken, false]);
 
-        var exceptionAssertions = func.Should().Throw<TargetInvocationException>();
-        exceptionAssertions.And.Message.Should().Be("Exception has been thrown by the target of an invocation.");
-        exceptionAssertions.And.InnerException.Should().BeOfType<ArgumentNullException>()
-            .Which.ParamName.Should().Be("action");
+        var exceptionAssertions = func.Should.Throw<TargetInvocationException>();
+        exceptionAssertions.And.Message.ShouldBe("Exception has been thrown by the target of an invocation.");
+        exceptionAssertions.And.InnerException.ShouldBeOfType<ArgumentNullException>()
+            .Which.ParamName.ShouldBe("action");
     }
 
     [Fact]
@@ -37,8 +37,8 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
     {
         Action policy = () => Policy.TimeoutAsync<ResultPrimitive>(TimeSpan.Zero);
 
-        policy.Should().Throw<ArgumentOutOfRangeException>().And
-            .ParamName.Should().Be("timeout");
+        policy.Should.Throw<ArgumentOutOfRangeException>().And
+            .ParamName.ShouldBe("timeout");
     }
 
     [Fact]
@@ -46,8 +46,8 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
     {
         Action policy = () => Policy.TimeoutAsync<ResultPrimitive>(0);
 
-        policy.Should().Throw<ArgumentOutOfRangeException>().And
-            .ParamName.Should().Be("seconds");
+        policy.Should.Throw<ArgumentOutOfRangeException>().And
+            .ParamName.ShouldBe("seconds");
     }
 
     [Fact]
@@ -55,8 +55,8 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
     {
         Action policy = () => Policy.TimeoutAsync<ResultPrimitive>(-TimeSpan.FromHours(1));
 
-        policy.Should().Throw<ArgumentOutOfRangeException>().And
-            .ParamName.Should().Be("timeout");
+        policy.Should.Throw<ArgumentOutOfRangeException>().And
+            .ParamName.ShouldBe("timeout");
     }
 
     [Fact]
@@ -64,8 +64,8 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
     {
         Action policy = () => Policy.TimeoutAsync<ResultPrimitive>(-10);
 
-        policy.Should().Throw<ArgumentOutOfRangeException>().And
-            .ParamName.Should().Be("seconds");
+        policy.Should.Throw<ArgumentOutOfRangeException>().And
+            .ParamName.ShouldBe("seconds");
     }
 
     [Fact]
@@ -73,7 +73,7 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
     {
         Action policy = () => Policy.TimeoutAsync<ResultPrimitive>(TimeSpan.FromMilliseconds(1));
 
-        policy.Should().NotThrow();
+        policy.Should.NotThrow();
     }
 
     [Fact]
@@ -81,7 +81,7 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
     {
         Action policy = () => Policy.TimeoutAsync<ResultPrimitive>(3);
 
-        policy.Should().NotThrow();
+        policy.Should.NotThrow();
     }
 
     [Fact]
@@ -89,7 +89,7 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
     {
         Action policy = () => Policy.TimeoutAsync<ResultPrimitive>(TimeSpan.MaxValue);
 
-        policy.Should().NotThrow();
+        policy.Should.NotThrow();
     }
 
     [Fact]
@@ -97,7 +97,7 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
     {
         Action policy = () => Policy.TimeoutAsync<ResultPrimitive>(int.MaxValue);
 
-        policy.Should().NotThrow();
+        policy.Should.NotThrow();
     }
 
     [Fact]
@@ -105,7 +105,7 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
     {
         Action policy = () => Policy.TimeoutAsync<ResultPrimitive>(System.Threading.Timeout.InfiniteTimeSpan);
 
-        policy.Should().NotThrow();
+        policy.Should.NotThrow();
     }
 
     [Fact]
@@ -113,7 +113,7 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
     {
         Action policy = () => Policy.TimeoutAsync<ResultPrimitive>(System.Threading.Timeout.InfiniteTimeSpan, TimeoutStrategy.Optimistic);
 
-        policy.Should().NotThrow();
+        policy.Should.NotThrow();
     }
 
     [Fact]
@@ -122,7 +122,7 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
         Func<Context, TimeSpan, Task, Task> doNothingAsync = (_, _, _) => TaskHelper.EmptyTask;
         Action policy = () => Policy.TimeoutAsync<ResultPrimitive>(System.Threading.Timeout.InfiniteTimeSpan, doNothingAsync);
 
-        policy.Should().NotThrow();
+        policy.Should.NotThrow();
     }
 
     [Fact]
@@ -131,7 +131,7 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
         Func<Context, TimeSpan, Task, Task> doNothingAsync = (_, _, _) => TaskHelper.EmptyTask;
         Action policy = () => Policy.TimeoutAsync<ResultPrimitive>(System.Threading.Timeout.InfiniteTimeSpan, TimeoutStrategy.Optimistic, doNothingAsync);
 
-        policy.Should().NotThrow();
+        policy.Should.NotThrow();
     }
 
     [Fact]
@@ -140,8 +140,8 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
         Func<Context, TimeSpan, Task, Task> onTimeout = null!;
         Action policy = () => Policy.TimeoutAsync<ResultPrimitive>(TimeSpan.FromMinutes(0.5), onTimeout);
 
-        policy.Should().Throw<ArgumentNullException>()
-            .And.ParamName.Should().Be("onTimeoutAsync");
+        policy.Should.Throw<ArgumentNullException>()
+            .And.ParamName.ShouldBe("onTimeoutAsync");
     }
 
     [Fact]
@@ -150,8 +150,8 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
         Func<Context, TimeSpan, Task, Exception, Task> onTimeout = null!;
         Action policy = () => Policy.TimeoutAsync<ResultPrimitive>(TimeSpan.FromMinutes(0.5), onTimeout);
 
-        policy.Should().Throw<ArgumentNullException>()
-            .And.ParamName.Should().Be("onTimeoutAsync");
+        policy.Should.Throw<ArgumentNullException>()
+            .And.ParamName.ShouldBe("onTimeoutAsync");
     }
 
     [Fact]
@@ -160,8 +160,8 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
         Func<Context, TimeSpan, Task, Task> onTimeout = null!;
         Action policy = () => Policy.TimeoutAsync<ResultPrimitive>(30, onTimeout);
 
-        policy.Should().Throw<ArgumentNullException>()
-            .And.ParamName.Should().Be("onTimeoutAsync");
+        policy.Should.Throw<ArgumentNullException>()
+            .And.ParamName.ShouldBe("onTimeoutAsync");
     }
 
     [Fact]
@@ -170,8 +170,8 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
         Func<Context, TimeSpan, Task, Exception, Task> onTimeout = null!;
         Action policy = () => Policy.TimeoutAsync<ResultPrimitive>(30, onTimeout);
 
-        policy.Should().Throw<ArgumentNullException>()
-            .And.ParamName.Should().Be("onTimeoutAsync");
+        policy.Should.Throw<ArgumentNullException>()
+            .And.ParamName.ShouldBe("onTimeoutAsync");
     }
 
     [Fact]
@@ -179,8 +179,8 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
     {
         Action policy = () => Policy.TimeoutAsync<ResultPrimitive>((Func<TimeSpan>)null!);
 
-        policy.Should().Throw<ArgumentNullException>()
-            .And.ParamName.Should().Be("timeoutProvider");
+        policy.Should.Throw<ArgumentNullException>()
+            .And.ParamName.ShouldBe("timeoutProvider");
     }
 
     [Fact]
@@ -189,8 +189,8 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
         Func<Context, TimeSpan, Task, Task> onTimeoutAsync = null!;
         Action policy = () => Policy.TimeoutAsync<ResultPrimitive>(() => TimeSpan.FromSeconds(30), onTimeoutAsync);
 
-        policy.Should().Throw<ArgumentNullException>()
-            .And.ParamName.Should().Be("onTimeoutAsync");
+        policy.Should.Throw<ArgumentNullException>()
+            .And.ParamName.ShouldBe("onTimeoutAsync");
     }
 
     [Fact]
@@ -199,8 +199,8 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
         Func<Context, TimeSpan, Task, Exception, Task> onTimeoutAsync = null!;
         Action policy = () => Policy.TimeoutAsync<ResultPrimitive>(() => TimeSpan.FromSeconds(30), onTimeoutAsync);
 
-        policy.Should().Throw<ArgumentNullException>()
-            .And.ParamName.Should().Be("onTimeoutAsync");
+        policy.Should.Throw<ArgumentNullException>()
+            .And.ParamName.ShouldBe("onTimeoutAsync");
     }
 
     [Fact]
@@ -208,7 +208,7 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
     {
         Action policy = () => Policy.TimeoutAsync<ResultPrimitive>(() => TimeSpan.FromSeconds(1));
 
-        policy.Should().NotThrow();
+        policy.Should.NotThrow();
     }
 
     #endregion
@@ -226,7 +226,7 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
         {
             await SystemClock.SleepAsync(TimeSpan.FromSeconds(3), CancellationToken);
             return ResultPrimitive.WhateverButTooLate;
-        })).Should().ThrowAsync<TimeoutRejectedException>();
+        })).Should.ThrowAsync<TimeoutRejectedException>();
     }
 
     [Fact]
@@ -238,8 +238,8 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
 
         Func<Task> act = async () => result = await policy.ExecuteAsync(() => Task.FromResult(ResultPrimitive.Good));
 
-        act.Should().NotThrowAsync();
-        result.Should().Be(ResultPrimitive.Good);
+        act.Should.NotThrowAsync();
+        result.ShouldBe(ResultPrimitive.Good);
     }
 
     [Fact]
@@ -258,10 +258,10 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
             await SystemClock.SleepAsync(TimeSpan.FromSeconds(10), CancellationToken);
             return ResultPrimitive.WhateverButTooLate;
         }))
-            .Should().ThrowAsync<TimeoutRejectedException>();
+            .Should.ThrowAsync<TimeoutRejectedException>();
         watch.Stop();
 
-        watch.Elapsed.Should().BeCloseTo(timeout, TimeSpan.FromMilliseconds(tolerance.TotalMilliseconds));
+        watch.Elapsed.ShouldBeCloseTo(timeout, TimeSpan.FromMilliseconds(tolerance.TotalMilliseconds));
     }
 
     [Fact]
@@ -269,7 +269,7 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
     {
         var policy = Policy.TimeoutAsync<ResultPrimitive>(TimeSpan.FromSeconds(10), TimeoutStrategy.Pessimistic);
 
-        await policy.Awaiting(p => p.ExecuteAsync(() => throw new NotSupportedException())).Should().ThrowAsync<NotSupportedException>();
+        await policy.Awaiting(p => p.ExecuteAsync(() => throw new NotSupportedException())).Should.ThrowAsync<NotSupportedException>();
     }
 
     #endregion
@@ -286,7 +286,7 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
         {
             await SystemClock.SleepAsync(TimeSpan.FromSeconds(3), ct);
             return ResultPrimitive.WhateverButTooLate;
-        }, userCancellationToken)).Should().ThrowAsync<TimeoutRejectedException>();
+        }, userCancellationToken)).Should.ThrowAsync<TimeoutRejectedException>();
     }
 
     [Fact]
@@ -299,8 +299,8 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
 
         Func<Task> act = async () => result = await policy.ExecuteAsync(_ => Task.FromResult(ResultPrimitive.Good), userCancellationToken);
 
-        act.Should().NotThrowAsync();
-        result.Should().Be(ResultPrimitive.Good);
+        act.Should.NotThrowAsync();
+        result.ShouldBe(ResultPrimitive.Good);
     }
 
     [Fact]
@@ -320,10 +320,10 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
             await SystemClock.SleepAsync(TimeSpan.FromSeconds(10), ct);
             return ResultPrimitive.WhateverButTooLate;
         }, userCancellationToken))
-            .Should().ThrowAsync<TimeoutRejectedException>();
+            .Should.ThrowAsync<TimeoutRejectedException>();
         watch.Stop();
 
-        watch.Elapsed.Should().BeCloseTo(timeout, TimeSpan.FromMilliseconds(tolerance.TotalMilliseconds));
+        watch.Elapsed.ShouldBeCloseTo(timeout, TimeSpan.FromMilliseconds(tolerance.TotalMilliseconds));
     }
 
     [Fact]
@@ -331,7 +331,7 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
     {
         var policy = Policy.TimeoutAsync<ResultPrimitive>(TimeSpan.FromSeconds(10), TimeoutStrategy.Optimistic);
 
-        await policy.Awaiting(p => p.ExecuteAsync(() => throw new NotSupportedException())).Should().ThrowAsync<NotSupportedException>();
+        await policy.Awaiting(p => p.ExecuteAsync(() => throw new NotSupportedException())).Should.ThrowAsync<NotSupportedException>();
     }
 
     #endregion
@@ -352,7 +352,7 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
             await SystemClock.SleepAsync(TimeSpan.FromSeconds(timeout * 2),
                 CancellationToken); // ... but if the executed delegate does not observe it
             return ResultPrimitive.WhateverButTooLate;
-        }, userTokenSource.Token)).Should().ThrowAsync<TimeoutRejectedException>(); // ... it's still the timeout we expect.
+        }, userTokenSource.Token)).Should.ThrowAsync<TimeoutRejectedException>(); // ... it's still the timeout we expect.
     }
 
     [Fact]
@@ -372,10 +372,10 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
                 await TaskHelper.EmptyTask;
                 return ResultPrimitive.WhateverButTooLate;
             }, cts.Token))
-            .Should().ThrowAsync<OperationCanceledException>();
+            .Should.ThrowAsync<OperationCanceledException>();
         }
 
-        executed.Should().BeFalse();
+        executed.ShouldBeFalse();
     }
 
     #endregion
@@ -395,7 +395,7 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
                 ct.ThrowIfCancellationRequested();   // Simulate cancel in the middle of execution
                 return Task.FromResult(ResultPrimitive.WhateverButTooLate);
             }, userTokenSource.Token)) // ... with user token.
-           .Should().ThrowAsync<OperationCanceledException>();
+           .Should.ThrowAsync<OperationCanceledException>();
     }
 
     [Fact]
@@ -415,10 +415,10 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
                 await TaskHelper.EmptyTask;
                 return ResultPrimitive.WhateverButTooLate;
             }, cts.Token))
-            .Should().ThrowAsync<OperationCanceledException>();
+            .Should.ThrowAsync<OperationCanceledException>();
         }
 
-        executed.Should().BeFalse();
+        executed.ShouldBeFalse();
     }
 
     #endregion
@@ -444,9 +444,9 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
             await SystemClock.SleepAsync(TimeSpan.FromSeconds(3), CancellationToken);
             return ResultPrimitive.WhateverButTooLate;
         }))
-        .Should().ThrowAsync<TimeoutRejectedException>();
+        .Should.ThrowAsync<TimeoutRejectedException>();
 
-        timeoutPassedToOnTimeout.Should().Be(timeoutPassedToConfiguration);
+        timeoutPassedToOnTimeout.ShouldBe(timeoutPassedToConfiguration);
     }
 
     [Fact]
@@ -470,11 +470,11 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
                 await SystemClock.SleepAsync(TimeSpan.FromSeconds(3), CancellationToken);
                 return ResultPrimitive.WhateverButTooLate;
             }, contextPassedToExecute))
-            .Should().ThrowAsync<TimeoutRejectedException>();
+            .Should.ThrowAsync<TimeoutRejectedException>();
 
-        contextPassedToOnTimeout!.Should().NotBeNull();
-        contextPassedToOnTimeout!.OperationKey.Should().Be(operationKey);
-        contextPassedToOnTimeout!.Should().BeSameAs(contextPassedToExecute);
+        contextPassedToOnTimeout!.ShouldNotBeNull();
+        contextPassedToOnTimeout!.OperationKey.ShouldBe(operationKey);
+        contextPassedToOnTimeout!.ShouldBeSameAs(contextPassedToExecute);
     }
 
     [Theory]
@@ -499,9 +499,9 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
                 await SystemClock.SleepAsync(TimeSpan.FromSeconds(3), CancellationToken);
                 return ResultPrimitive.WhateverButTooLate;
             }))
-            .Should().ThrowAsync<TimeoutRejectedException>();
+            .Should.ThrowAsync<TimeoutRejectedException>();
 
-        timeoutPassedToOnTimeout.Should().Be(timeoutFunc());
+        timeoutPassedToOnTimeout.ShouldBe(timeoutFunc());
     }
 
     [Theory]
@@ -529,9 +529,9 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
             await SystemClock.SleepAsync(TimeSpan.FromSeconds(3), CancellationToken);
             return ResultPrimitive.WhateverButTooLate;
         }, context))
-        .Should().ThrowAsync<TimeoutRejectedException>();
+        .Should.ThrowAsync<TimeoutRejectedException>();
 
-        timeoutPassedToOnTimeout.Should().Be(timeoutProvider(context));
+        timeoutPassedToOnTimeout.ShouldBe(timeoutProvider(context));
     }
 
     [Fact]
@@ -552,9 +552,9 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
             await SystemClock.SleepAsync(TimeSpan.FromSeconds(3), CancellationToken);
             return ResultPrimitive.WhateverButTooLate;
         }))
-        .Should().ThrowAsync<TimeoutRejectedException>();
+        .Should.ThrowAsync<TimeoutRejectedException>();
 
-        taskPassedToOnTimeout.Should().NotBeNull();
+        taskPassedToOnTimeout.ShouldNotBeNull();
     }
 
     [Fact]
@@ -583,11 +583,11 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
             await SystemClock.SleepAsync(thriceShimTimeSpan, CancellationToken);
             throw exceptionToThrow;
         }))
-        .Should().ThrowAsync<TimeoutRejectedException>();
+        .Should.ThrowAsync<TimeoutRejectedException>();
 
         await SystemClock.SleepAsync(thriceShimTimeSpan, CancellationToken);
-        exceptionObservedFromTaskPassedToOnTimeout.Should().NotBeNull();
-        exceptionObservedFromTaskPassedToOnTimeout.Should().Be(exceptionToThrow);
+        exceptionObservedFromTaskPassedToOnTimeout.ShouldNotBeNull();
+        exceptionObservedFromTaskPassedToOnTimeout.ShouldBe(exceptionToThrow);
 
     }
 
@@ -610,10 +610,10 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
                 await SystemClock.SleepAsync(TimeSpan.FromSeconds(3), CancellationToken);
                 return ResultPrimitive.WhateverButTooLate;
             }))
-            .Should().ThrowAsync<TimeoutRejectedException>();
+            .Should.ThrowAsync<TimeoutRejectedException>();
 
-        exceptionPassedToOnTimeout.Should().NotBeNull();
-        exceptionPassedToOnTimeout.Should().BeOfType<OperationCanceledException>();
+        exceptionPassedToOnTimeout.ShouldNotBeNull();
+        exceptionPassedToOnTimeout.ShouldBeOfType<OperationCanceledException>();
     }
 
     #endregion
@@ -640,9 +640,9 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
             await SystemClock.SleepAsync(TimeSpan.FromSeconds(3), ct);
             return ResultPrimitive.WhateverButTooLate;
         }, userCancellationToken))
-        .Should().ThrowAsync<TimeoutRejectedException>();
+        .Should.ThrowAsync<TimeoutRejectedException>();
 
-        timeoutPassedToOnTimeout.Should().Be(timeoutPassedToConfiguration);
+        timeoutPassedToOnTimeout.ShouldBe(timeoutPassedToConfiguration);
     }
 
     [Fact]
@@ -667,11 +667,11 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
                 await SystemClock.SleepAsync(TimeSpan.FromSeconds(3), ct);
                 return ResultPrimitive.WhateverButTooLate;
             }, contextPassedToExecute, userCancellationToken))
-            .Should().ThrowAsync<TimeoutRejectedException>();
+            .Should.ThrowAsync<TimeoutRejectedException>();
 
-        contextPassedToOnTimeout!.Should().NotBeNull();
-        contextPassedToOnTimeout!.OperationKey.Should().Be(operationKey);
-        contextPassedToOnTimeout!.Should().BeSameAs(contextPassedToExecute);
+        contextPassedToOnTimeout!.ShouldNotBeNull();
+        contextPassedToOnTimeout!.OperationKey.ShouldBe(operationKey);
+        contextPassedToOnTimeout!.ShouldBeSameAs(contextPassedToExecute);
     }
 
     [Theory]
@@ -697,9 +697,9 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
                 await SystemClock.SleepAsync(TimeSpan.FromSeconds(3), ct);
                 return ResultPrimitive.WhateverButTooLate;
             }, userCancellationToken))
-            .Should().ThrowAsync<TimeoutRejectedException>();
+            .Should.ThrowAsync<TimeoutRejectedException>();
 
-        timeoutPassedToOnTimeout.Should().Be(timeoutFunc());
+        timeoutPassedToOnTimeout.ShouldBe(timeoutFunc());
     }
 
     [Theory]
@@ -731,9 +731,9 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
             await SystemClock.SleepAsync(TimeSpan.FromSeconds(3), ct);
             return ResultPrimitive.WhateverButTooLate;
         }, context, userCancellationToken))
-            .Should().ThrowAsync<TimeoutRejectedException>();
+            .Should.ThrowAsync<TimeoutRejectedException>();
 
-        timeoutPassedToOnTimeout.Should().Be(timeoutProvider(context));
+        timeoutPassedToOnTimeout.ShouldBe(timeoutProvider(context));
     }
 
     [Fact]
@@ -755,9 +755,9 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
             await SystemClock.SleepAsync(TimeSpan.FromSeconds(3), ct);
             return ResultPrimitive.WhateverButTooLate;
         }, userCancellationToken))
-        .Should().ThrowAsync<TimeoutRejectedException>();
+        .Should.ThrowAsync<TimeoutRejectedException>();
 
-        taskPassedToOnTimeout.Should().BeNull();
+        taskPassedToOnTimeout.ShouldBeNull();
     }
 
     [Fact]
@@ -780,10 +780,10 @@ public class TimeoutTResultAsyncSpecs : TimeoutSpecsBase
                 await SystemClock.SleepAsync(TimeSpan.FromSeconds(3), ct);
                 return ResultPrimitive.WhateverButTooLate;
             }, userCancellationToken))
-            .Should().ThrowAsync<TimeoutRejectedException>();
+            .Should.ThrowAsync<TimeoutRejectedException>();
 
-        exceptionPassedToOnTimeout.Should().NotBeNull();
-        exceptionPassedToOnTimeout.Should().BeOfType<OperationCanceledException>();
+        exceptionPassedToOnTimeout.ShouldNotBeNull();
+        exceptionPassedToOnTimeout.ShouldBeOfType<OperationCanceledException>();
     }
 
     #endregion
