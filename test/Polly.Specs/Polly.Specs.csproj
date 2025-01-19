@@ -22,7 +22,6 @@
     <Using Include="Polly.Specs.Helpers.Custom.AddBehaviourIfHandle" />
     <Using Include="Polly.Specs.Helpers.Custom.PreExecute" />
     <Using Include="Polly.Specs.Helpers.RateLimit" />
-    <Using Include="Shouldly" />
     <Using Include="Xunit" />
     <Using Include="Xunit.Abstractions" />
     <Using Include="Xunit.Sdk" />
@@ -31,6 +30,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Polly.TestUtils\Polly.TestUtils.csproj" />
     <ProjectReference Include="..\..\src\Polly\Polly.csproj" />
-    <PackageReference Include="Shouldly" />
   </ItemGroup>
 </Project>
