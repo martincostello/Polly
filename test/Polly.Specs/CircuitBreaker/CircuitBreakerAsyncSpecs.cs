@@ -26,7 +26,7 @@ public class CircuitBreakerAsyncSpecs : IDisposable
                                  .CircuitBreakerAsync(0, TimeSpan.FromSeconds(10));
 
         action.Should.Throw<ArgumentOutOfRangeException>()
-              .And.ParamName.Should()
+              .ParamName.Should()
               .Be("exceptionsAllowedBeforeBreaking");
     }
 
@@ -38,7 +38,7 @@ public class CircuitBreakerAsyncSpecs : IDisposable
                                  .CircuitBreakerAsync(1, -TimeSpan.FromSeconds(1));
 
         action.Should.Throw<ArgumentOutOfRangeException>()
-            .And.ParamName.Should()
+            .ParamName.Should()
             .Be("durationOfBreak");
     }
 
@@ -1161,7 +1161,7 @@ public class CircuitBreakerAsyncSpecs : IDisposable
 
         var ex = await breaker.Awaiting(x => x.RaiseExceptionAsync(withInner))
             .Should.ThrowAsync<DivideByZeroException>();
-        ex.Which.ShouldBeSameAs(toRaiseAsInner);
+        ex.ShouldBeSameAs(toRaiseAsInner);
 
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
@@ -1383,7 +1383,7 @@ public class CircuitBreakerAsyncSpecs : IDisposable
 
         var ex = await breaker.Awaiting(x => x.RaiseExceptionAsync(withInner))
             .Should.ThrowAsync<DivideByZeroException>();
-        ex.Which.ShouldBeSameAs(toRaiseAsInner);
+        ex.ShouldBeSameAs(toRaiseAsInner);
 
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
@@ -1484,7 +1484,7 @@ public class CircuitBreakerAsyncSpecs : IDisposable
 
             var ex = await breaker.Awaiting(x => x.RaiseExceptionAndOrCancellationAsync<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
                 .Should.ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.ShouldBe(cancellationToken);
+            ex.CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(0);
@@ -1514,7 +1514,7 @@ public class CircuitBreakerAsyncSpecs : IDisposable
 
             var ex = await breaker.Awaiting(x => x.RaiseExceptionAndOrCancellationAsync<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
                 .Should.ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.ShouldBe(cancellationToken);
+            ex.CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(1);
@@ -1544,7 +1544,7 @@ public class CircuitBreakerAsyncSpecs : IDisposable
 
             var ex = await breaker.Awaiting(x => x.RaiseExceptionAndOrCancellationAsync<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
                 .Should.ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.ShouldBe(cancellationToken);
+            ex.CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(1);
@@ -1611,7 +1611,7 @@ public class CircuitBreakerAsyncSpecs : IDisposable
 
             var ex2 = await breaker.Awaiting(x => x.RaiseExceptionAndOrCancellationAsync<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
                 .Should.ThrowAsync<OperationCanceledException>();
-            ex2.And.CancellationToken.ShouldBe(cancellationToken);
+            ex2.CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(0);
@@ -1644,7 +1644,7 @@ public class CircuitBreakerAsyncSpecs : IDisposable
                 implicitlyCapturedActionCancellationToken.ThrowIfCancellationRequested();
             }, policyCancellationToken))
                 .Should.ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.ShouldBe(implicitlyCapturedActionCancellationToken);
+            ex.CancellationToken.ShouldBe(implicitlyCapturedActionCancellationToken);
         }
 
         attemptsInvoked.ShouldBe(1);
@@ -1708,7 +1708,7 @@ public class CircuitBreakerAsyncSpecs : IDisposable
             Func<AsyncCircuitBreakerPolicy, Task> action = async x => result = await x.RaiseExceptionAndOrCancellationAsync<DivideByZeroException, bool>(scenario, cancellationTokenSource, onExecute, true);
             var ex = await breaker.Awaiting(action)
                 .Should.ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.ShouldBe(cancellationToken);
+            ex.CancellationToken.ShouldBe(cancellationToken);
 
             result.ShouldBe(null);
         }

@@ -9,13 +9,12 @@ public class CustomAsyncSpecs
         {
             AsyncPreExecutePolicy policy = AsyncPreExecutePolicy.CreateAsync(async () =>
             {
-                // Placeholder for more substantive async work.
                 Console.WriteLine("Do something");
                 await Task.CompletedTask;
             });
         };
 
-        construct.Should.NotThrow();
+        Should.NotThrow(construct);
     }
 
     [Fact]
@@ -26,8 +25,7 @@ public class CustomAsyncSpecs
 
         bool executed = false;
 
-        await policy.Awaiting(x => x.ExecuteAsync(() => { executed = true; return Task.CompletedTask; }))
-            .Should.NotThrowAsync();
+        await Should.NotThrowAsync(() => policy.ExecuteAsync(() => { executed = true; return Task.CompletedTask; }));
 
         executed.ShouldBeTrue();
         preExecuted.ShouldBeTrue();
@@ -40,13 +38,12 @@ public class CustomAsyncSpecs
         {
             AsyncAddBehaviourIfHandlePolicy policy = Policy.Handle<Exception>().WithBehaviourAsync(async ex =>
             {
-                // Placeholder for more substantive async work.
                 Console.WriteLine("Handling " + ex.Message);
                 await Task.CompletedTask;
             });
         };
 
-        construct.Should.NotThrow();
+        Should.NotThrow(construct);
     }
 
     [Fact]
@@ -58,13 +55,12 @@ public class CustomAsyncSpecs
         Exception toThrow = new InvalidOperationException();
         bool executed = false;
 
-        var ex = await policy.Awaiting(x => x.ExecuteAsync(() =>
+        var ex = await Should.ThrowAsync<Exception>(() => policy.ExecuteAsync(() =>
         {
             executed = true;
             throw toThrow;
-        }))
-            .Should.ThrowAsync<Exception>();
-        ex.Which.ShouldBe(toThrow);
+        }));
+        ex.ShouldBe(toThrow);
 
         executed.ShouldBeTrue();
         handled.ShouldBe(toThrow);
@@ -79,13 +75,12 @@ public class CustomAsyncSpecs
         Exception toThrow = new NotImplementedException();
         bool executed = false;
 
-        var ex = await policy.Awaiting(x => x.ExecuteAsync(() =>
-            {
-                executed = true;
-                throw toThrow;
-            }))
-            .Should.ThrowAsync<Exception>();
-        ex.Which.ShouldBe(toThrow);
+        var ex = await Should.ThrowAsync<Exception>(() => policy.ExecuteAsync(() =>
+        {
+            executed = true;
+            throw toThrow;
+        }));
+        ex.ShouldBe(toThrow);
 
         executed.ShouldBeTrue();
         handled.ShouldBe(null);

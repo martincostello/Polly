@@ -39,9 +39,9 @@ public class CircuitBreakerTResultAsyncSpecs : IDisposable
         var func = () => methodInfo.Invoke(instance, [action, new Context(), CancellationToken.None, false]);
 
         var exceptionAssertions = func.Should.Throw<TargetInvocationException>();
-        exceptionAssertions.And.Message.ShouldBe("Exception has been thrown by the target of an invocation.");
-        exceptionAssertions.And.InnerException.ShouldBeOfType<ArgumentNullException>()
-            .Which.ParamName.ShouldBe("action");
+        exceptionAssertions.Message.ShouldBe("Exception has been thrown by the target of an invocation.");
+        exceptionAssertions.InnerException.ShouldBeOfType<ArgumentNullException>()
+            .ParamName.ShouldBe("action");
     }
 
     [Fact]
@@ -63,7 +63,7 @@ public class CircuitBreakerTResultAsyncSpecs : IDisposable
                                  .CircuitBreakerAsync(0, TimeSpan.FromSeconds(10));
 
         action.Should.Throw<ArgumentOutOfRangeException>()
-              .And.ParamName.Should()
+              .ParamName.Should()
               .Be("handledEventsAllowedBeforeBreaking");
     }
 
@@ -75,7 +75,7 @@ public class CircuitBreakerTResultAsyncSpecs : IDisposable
                                  .CircuitBreakerAsync(1, -TimeSpan.FromSeconds(1));
 
         action.Should.Throw<ArgumentOutOfRangeException>()
-            .And.ParamName.Should()
+            .ParamName.Should()
             .Be("durationOfBreak");
     }
 
@@ -1497,7 +1497,7 @@ public class CircuitBreakerTResultAsyncSpecs : IDisposable
                ResultPrimitive.Fault,
                ResultPrimitive.Good))
             .Should.ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.ShouldBe(cancellationToken);
+            ex.CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(0);
@@ -1528,7 +1528,7 @@ public class CircuitBreakerTResultAsyncSpecs : IDisposable
                    ResultPrimitive.Good,
                    ResultPrimitive.Good))
                 .Should.ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.ShouldBe(cancellationToken);
+            ex.CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(1);
@@ -1559,7 +1559,7 @@ public class CircuitBreakerTResultAsyncSpecs : IDisposable
                    ResultPrimitive.Fault,
                    ResultPrimitive.Good))
                 .Should.ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.ShouldBe(cancellationToken);
+            ex.CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(1);
@@ -1627,7 +1627,7 @@ public class CircuitBreakerTResultAsyncSpecs : IDisposable
                    ResultPrimitive.Fault,
                    ResultPrimitive.Good))
                 .Should.ThrowAsync<OperationCanceledException>();
-            ex2.And.CancellationToken.ShouldBe(cancellationToken);
+            ex2.CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(0);
@@ -1661,7 +1661,7 @@ public class CircuitBreakerTResultAsyncSpecs : IDisposable
                 return ResultPrimitive.Good;
             }, policyCancellationToken))
                 .Should.ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.ShouldBe(implicitlyCapturedActionCancellationToken);
+            ex.CancellationToken.ShouldBe(implicitlyCapturedActionCancellationToken);
         }
 
         attemptsInvoked.ShouldBe(1);

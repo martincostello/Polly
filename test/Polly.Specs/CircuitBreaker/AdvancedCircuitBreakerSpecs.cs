@@ -26,7 +26,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
             .AdvancedCircuitBreaker(0, TimeSpan.FromSeconds(10), 4, TimeSpan.FromSeconds(30));
 
         action.Should.Throw<ArgumentOutOfRangeException>()
-            .And.ParamName.Should()
+            .ParamName.Should()
             .Be("failureThreshold");
     }
 
@@ -38,7 +38,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
             .AdvancedCircuitBreaker(-0.5, TimeSpan.FromSeconds(10), 4, TimeSpan.FromSeconds(30));
 
         action.Should.Throw<ArgumentOutOfRangeException>()
-            .And.ParamName.Should()
+            .ParamName.Should()
             .Be("failureThreshold");
     }
 
@@ -60,7 +60,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
             .AdvancedCircuitBreaker(1.01, TimeSpan.FromSeconds(10), 4, TimeSpan.FromSeconds(30));
 
         action.Should.Throw<ArgumentOutOfRangeException>()
-            .And.ParamName.Should()
+            .ParamName.Should()
             .Be("failureThreshold");
     }
 
@@ -76,7 +76,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 TimeSpan.FromSeconds(30));
 
         action.Should.Throw<ArgumentOutOfRangeException>()
-            .And.ParamName.Should()
+            .ParamName.Should()
             .Be("samplingDuration");
     }
 
@@ -98,7 +98,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
             .AdvancedCircuitBreaker(0.5, TimeSpan.FromSeconds(10), 1, TimeSpan.FromSeconds(30));
 
         action.Should.Throw<ArgumentOutOfRangeException>()
-            .And.ParamName.Should()
+            .ParamName.Should()
             .Be("minimumThroughput");
     }
 
@@ -110,7 +110,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
             .AdvancedCircuitBreaker(0.5, TimeSpan.FromSeconds(10), 0, TimeSpan.FromSeconds(30));
 
         action.Should.Throw<ArgumentOutOfRangeException>()
-            .And.ParamName.Should()
+            .ParamName.Should()
             .Be("minimumThroughput");
     }
 
@@ -122,7 +122,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
             .AdvancedCircuitBreaker(0.5, TimeSpan.FromSeconds(10), 4, -TimeSpan.FromSeconds(1));
 
         action.Should.Throw<ArgumentOutOfRangeException>()
-            .And.ParamName.Should()
+            .ParamName.Should()
             .Be("durationOfBreak");
     }
 
@@ -2834,7 +2834,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
 
             breaker.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
                 .Should.Throw<OperationCanceledException>()
-                .And.CancellationToken.ShouldBe(cancellationToken);
+                .CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(0);
@@ -2864,7 +2864,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
 
             breaker.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
                 .Should.Throw<OperationCanceledException>()
-                .And.CancellationToken.ShouldBe(cancellationToken);
+                .CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(1);
@@ -2894,7 +2894,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
 
             breaker.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
                 .Should.Throw<OperationCanceledException>()
-                .And.CancellationToken.ShouldBe(cancellationToken);
+                .CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(1);
@@ -2965,7 +2965,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
 
             breaker.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
                 .Should.Throw<OperationCanceledException>()
-                .And.CancellationToken.ShouldBe(cancellationToken);
+                .CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(0);
@@ -2997,7 +2997,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 implicitlyCapturedActionCancellationToken.ThrowIfCancellationRequested();
             }, policyCancellationToken))
                 .Should.Throw<OperationCanceledException>()
-                .And.CancellationToken.ShouldBe(implicitlyCapturedActionCancellationToken);
+                .CancellationToken.ShouldBe(implicitlyCapturedActionCancellationToken);
         }
 
         attemptsInvoked.ShouldBe(1);
@@ -3059,7 +3059,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             breaker.Invoking(x => result = x.RaiseExceptionAndOrCancellation<DivideByZeroException, bool>(scenario, cancellationTokenSource, onExecute, true))
-                .Should.Throw<OperationCanceledException>().And.CancellationToken.ShouldBe(cancellationToken);
+                .Should.Throw<OperationCanceledException>().CancellationToken.ShouldBe(cancellationToken);
         }
 
         result.ShouldBe(null);

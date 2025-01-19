@@ -7,7 +7,7 @@ public class ResultTtlSpecs
     {
         Action configure = () => _ = new ResultTtl<object>((Func<object?, Ttl>)null!);
 
-        configure.Should.Throw<ArgumentNullException>().And.ParamName.ShouldBe("ttlFunc");
+        Should.Throw<ArgumentNullException>(configure).ParamName.ShouldBe("ttlFunc");
     }
 
     [Fact]
@@ -15,7 +15,7 @@ public class ResultTtlSpecs
     {
         Action configure = () => _ = new ResultTtl<object>((Func<Context, object?, Ttl>)null!);
 
-        configure.Should.Throw<ArgumentNullException>().And.ParamName.ShouldBe("ttlFunc");
+        Should.Throw<ArgumentNullException>(configure).ParamName.ShouldBe("ttlFunc");
     }
 
     [Fact]
@@ -23,7 +23,7 @@ public class ResultTtlSpecs
     {
         Action configure = () => _ = new ResultTtl<object>(_ => default);
 
-        configure.Should.NotThrow();
+        Should.NotThrow(configure);
     }
 
     [Fact]
@@ -31,7 +31,7 @@ public class ResultTtlSpecs
     {
         Action configure = () => _ = new ResultTtl<object>((_, _) => default);
 
-        configure.Should.NotThrow();
+        Should.NotThrow(configure);
     }
 
     [Fact]

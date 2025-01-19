@@ -27,10 +27,10 @@ public class FallbackTResultSpecs
 
         var func = () => methodInfo.Invoke(instance, [action, new Context(), CancellationToken.None]);
 
-        var exceptionAssertions = func.Should.Throw<TargetInvocationException>();
-        exceptionAssertions.And.Message.ShouldBe("Exception has been thrown by the target of an invocation.");
-        exceptionAssertions.And.InnerException.ShouldBeOfType<ArgumentNullException>()
-            .Which.ParamName.ShouldBe("action");
+        var exceptionAssertions = Should.Throw<TargetInvocationException>(func);
+        exceptionAssertions.Message.ShouldBe("Exception has been thrown by the target of an invocation.");
+        exceptionAssertions.InnerException.ShouldBeOfType<ArgumentNullException>()
+            .ParamName.ShouldBe("action");
     }
 
     [Fact]
@@ -42,8 +42,8 @@ public class FallbackTResultSpecs
                                 .HandleResult(ResultPrimitive.Fault)
                                 .Fallback(fallbackAction);
 
-        policy.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("fallbackAction");
+        Should.Throw<ArgumentNullException>(policy)
+            .ParamName.ShouldBe("fallbackAction");
     }
 
     [Fact]
@@ -55,8 +55,8 @@ public class FallbackTResultSpecs
             .HandleResult(ResultPrimitive.Fault)
             .Fallback(fallbackAction);
 
-        policy.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("fallbackAction");
+        Should.Throw<ArgumentNullException>(policy)
+            .ParamName.ShouldBe("fallbackAction");
     }
 
     [Fact]
@@ -69,8 +69,8 @@ public class FallbackTResultSpecs
                                 .HandleResult(ResultPrimitive.Fault)
                                 .Fallback(fallbackAction, onFallback);
 
-        policy.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("fallbackAction");
+        Should.Throw<ArgumentNullException>(policy)
+            .ParamName.ShouldBe("fallbackAction");
     }
 
     [Fact]
@@ -83,8 +83,8 @@ public class FallbackTResultSpecs
             .HandleResult(ResultPrimitive.Fault)
             .Fallback(fallbackAction, onFallback);
 
-        policy.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("fallbackAction");
+        Should.Throw<ArgumentNullException>(policy)
+            .ParamName.ShouldBe("fallbackAction");
     }
 
     [Fact]
@@ -97,8 +97,8 @@ public class FallbackTResultSpecs
                                 .HandleResult(ResultPrimitive.Fault)
                                 .Fallback(fallbackAction, onFallback);
 
-        policy.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("fallbackAction");
+        Should.Throw<ArgumentNullException>(policy)
+            .ParamName.ShouldBe("fallbackAction");
     }
 
     [Fact]
@@ -111,8 +111,8 @@ public class FallbackTResultSpecs
                                 .HandleResult(ResultPrimitive.Fault)
                                 .Fallback(fallbackAction, onFallback);
 
-        policy.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("fallbackAction");
+        Should.Throw<ArgumentNullException>(policy)
+            .ParamName.ShouldBe("fallbackAction");
     }
 
     [Fact]
@@ -125,8 +125,8 @@ public class FallbackTResultSpecs
                                 .HandleResult(ResultPrimitive.Fault)
                                 .Fallback(fallbackAction, onFallback);
 
-        policy.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("onFallback");
+        Should.Throw<ArgumentNullException>(policy)
+            .ParamName.ShouldBe("onFallback");
     }
 
     [Fact]
@@ -139,8 +139,8 @@ public class FallbackTResultSpecs
             .HandleResult(ResultPrimitive.Fault)
             .Fallback(fallbackAction, onFallback);
 
-        policy.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("onFallback");
+        Should.Throw<ArgumentNullException>(policy)
+            .ParamName.ShouldBe("onFallback");
     }
 
     [Fact]
@@ -153,8 +153,8 @@ public class FallbackTResultSpecs
                                 .HandleResult(ResultPrimitive.Fault)
                                 .Fallback(fallbackAction, onFallback);
 
-        policy.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("onFallback");
+        Should.Throw<ArgumentNullException>(policy)
+            .ParamName.ShouldBe("onFallback");
     }
 
     [Fact]
@@ -167,8 +167,8 @@ public class FallbackTResultSpecs
                                 .HandleResult(ResultPrimitive.Fault)
                                 .Fallback(fallbackAction, onFallback);
 
-        policy.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("onFallback");
+        Should.Throw<ArgumentNullException>(policy)
+            .ParamName.ShouldBe("onFallback");
     }
 
     #endregion
@@ -338,9 +338,11 @@ public class FallbackTResultSpecs
             .HandleResult<ResultClass>(r => r.ResultCode == ResultPrimitive.Fault)
             .Fallback(fallbackAction);
 
-        fallbackPolicy.RaiseResultSequence(new ResultClass(ResultPrimitive.Fault, "FromExecuteDelegate"))
-            .ShouldMatch<ResultClass>(r => r.ResultCode == ResultPrimitive.Fault && r.SomeString == "FromFallbackAction");
+        var result = fallbackPolicy.RaiseResultSequence(new ResultClass(ResultPrimitive.Fault, "FromExecuteDelegate"));
 
+        result.ShouldNotBeNull();
+        result.ResultCode.ShouldBe(ResultPrimitive.Fault);
+        result.SomeString.ShouldBe("FromFallbackAction");
         fallbackActionExecuted.ShouldBeTrue();
     }
 
@@ -407,9 +409,9 @@ public class FallbackTResultSpecs
             CreateDictionary("key1", "value1", "key2", "value2"))
             .ShouldBe(ResultPrimitive.Substitute);
 
-        contextData.Should()
-            .ContainKeys("key1", "key2").And
-            .ContainValues("value1", "value2");
+        contextData.ShouldNotBeNull();
+        contextData.ShouldContainKeyAndValue("key1", "value1");
+        contextData.ShouldContainKeyAndValue("key2", "value2");
     }
 
     [Fact]
@@ -429,9 +431,9 @@ public class FallbackTResultSpecs
             CreateDictionary("key1", "value1", "key2", "value2"))
             .Result.ShouldBe(ResultPrimitive.Substitute);
 
-        contextData.Should()
-            .ContainKeys("key1", "key2").And
-            .ContainValues("value1", "value2");
+        contextData.ShouldNotBeNull();
+        contextData.ShouldContainKeyAndValue("key1", "value1");
+        contextData.ShouldContainKeyAndValue("key2", "value2");
     }
 
     [Fact]
@@ -498,9 +500,9 @@ public class FallbackTResultSpecs
                 CreateDictionary("key1", "value1", "key2", "value2"))
             .ShouldBe(ResultPrimitive.Substitute);
 
-        contextData.Should()
-            .ContainKeys("key1", "key2").And
-            .ContainValues("value1", "value2");
+        contextData.ShouldNotBeNull();
+        contextData.ShouldContainKeyAndValue("key1", "value1");
+        contextData.ShouldContainKeyAndValue("key2", "value2");
     }
 
     [Fact]
@@ -520,9 +522,9 @@ public class FallbackTResultSpecs
                 CreateDictionary("key1", "value1", "key2", "value2"))
             .Result.ShouldBe(ResultPrimitive.Substitute);
 
-        contextData.Should()
-            .ContainKeys("key1", "key2").And
-            .ContainValues("value1", "value2");
+        contextData.ShouldNotBeNull();
+        contextData.ShouldContainKeyAndValue("key1", "value1");
+        contextData.ShouldContainKeyAndValue("key2", "value2");
     }
 
     [Fact]
@@ -702,9 +704,8 @@ public class FallbackTResultSpecs
             CancellationToken cancellationToken = cancellationTokenSource.Token;
             cancellationTokenSource.Cancel();
 
-            policy.Invoking(x => x.RaiseResultSequenceAndOrCancellation(scenario, cancellationTokenSource, onExecute, ResultPrimitive.Fault))
-                .Should.Throw<OperationCanceledException>()
-                .And.CancellationToken.ShouldBe(cancellationToken);
+            Should.Throw<OperationCanceledException>(() => policy.RaiseResultSequenceAndOrCancellation(scenario, cancellationTokenSource, onExecute, ResultPrimitive.Fault))
+                .CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(0);
@@ -737,9 +738,8 @@ public class FallbackTResultSpecs
         {
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
-            policy.Invoking(x => x.RaiseResultSequenceAndOrCancellation(scenario, cancellationTokenSource, onExecute, ResultPrimitive.Good))
-            .Should.Throw<OperationCanceledException>()
-            .And.CancellationToken.ShouldBe(cancellationToken);
+            Should.Throw<OperationCanceledException>(() => policy.RaiseResultSequenceAndOrCancellation(scenario, cancellationTokenSource, onExecute, ResultPrimitive.Good))
+                .CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(1);

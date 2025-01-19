@@ -15,8 +15,8 @@ public class AsyncSerializingCacheProviderSpecs
 
         Action configure = () => _ = new AsyncSerializingCacheProvider<StubSerialized>(null!, stubObjectSerializer);
 
-        configure.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("wrappedCacheProvider");
+        Should.Throw<ArgumentNullException>(configure)
+            .ParamName.ShouldBe("wrappedCacheProvider");
     }
 
     [Fact]
@@ -24,8 +24,8 @@ public class AsyncSerializingCacheProviderSpecs
     {
         Action configure = () => _ = new AsyncSerializingCacheProvider<object>(new StubCacheProvider().AsyncFor<object>(), null!);
 
-        configure.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("serializer");
+        Should.Throw<ArgumentNullException>(configure)
+            .ParamName.ShouldBe("serializer");
     }
 
     [Fact]
@@ -33,8 +33,8 @@ public class AsyncSerializingCacheProviderSpecs
     {
         Action configure = () => new StubCacheProvider().AsyncFor<object>().WithSerializer(null!);
 
-        configure.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("serializer");
+        Should.Throw<ArgumentNullException>(configure)
+            .ParamName.ShouldBe("serializer");
     }
 
     [Fact]
@@ -57,7 +57,7 @@ public class AsyncSerializingCacheProviderSpecs
 
         cacheHit.ShouldBeTrue();
         fromCache.ShouldBeOfType<StubSerialized>()
-            .Which.Original.ShouldBe(objectToCache);
+            .Original.ShouldBe(objectToCache);
     }
 
     [Fact]
@@ -80,7 +80,7 @@ public class AsyncSerializingCacheProviderSpecs
 
         cacheHit.ShouldBeTrue();
         fromCache.ShouldBeOfType<StubSerialized>()
-            .Which.Original.ShouldBe(objectToCache);
+            .Original.ShouldBe(objectToCache);
     }
 
     [Fact]
@@ -145,7 +145,7 @@ public class AsyncSerializingCacheProviderSpecs
 
         cacheHit.ShouldBeTrue();
         fromCache.ShouldBeOfType<StubSerialized>()
-            .Which.Original.ShouldBe(objectToCache);
+            .Original.ShouldBe(objectToCache);
     }
 
     [Fact]
@@ -168,7 +168,7 @@ public class AsyncSerializingCacheProviderSpecs
 
         cacheHit.ShouldBeTrue();
         fromCache.ShouldBeOfType<StubSerialized>()
-            .Which.Original.ShouldBe(objectToCache);
+            .Original.ShouldBe(objectToCache);
     }
 
     [Fact]
@@ -226,8 +226,8 @@ public class AsyncSerializingCacheProviderSpecs
 
         Action configure = () => _ = new AsyncSerializingCacheProvider<ResultPrimitive, StubSerialized<ResultPrimitive>>(null!, stubTResultSerializer);
 
-        configure.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("wrappedCacheProvider");
+        Should.Throw<ArgumentNullException>(configure)
+            .ParamName.ShouldBe("wrappedCacheProvider");
     }
 
     [Fact]
@@ -235,8 +235,8 @@ public class AsyncSerializingCacheProviderSpecs
     {
         Action configure = () => _ = new AsyncSerializingCacheProvider<object, object>(new StubCacheProvider().AsyncFor<object>(), null!);
 
-        configure.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("serializer");
+        Should.Throw<ArgumentNullException>(configure)
+            .ParamName.ShouldBe("serializer");
     }
 
     [Fact]
@@ -244,8 +244,8 @@ public class AsyncSerializingCacheProviderSpecs
     {
         Action configure = () => new StubCacheProvider().AsyncFor<object>().WithSerializer<object, object>(null!);
 
-        configure.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("serializer");
+        Should.Throw<ArgumentNullException>(configure)
+            .ParamName.ShouldBe("serializer");
     }
 
     [Fact]
@@ -268,7 +268,7 @@ public class AsyncSerializingCacheProviderSpecs
 
         cacheHit.ShouldBeTrue();
         fromCache.ShouldBeOfType<StubSerialized<ResultPrimitive>>()
-            .Which.Original.ShouldBe(objectToCache);
+            .Original.ShouldBe(objectToCache);
     }
 
     [Fact]
@@ -291,7 +291,7 @@ public class AsyncSerializingCacheProviderSpecs
 
         cacheHit.ShouldBeTrue();
         fromCache.ShouldBeOfType<StubSerialized<ResultPrimitive>>()
-            .Which.Original.ShouldBe(objectToCache);
+            .Original.ShouldBe(objectToCache);
     }
 
     [Fact]
@@ -355,7 +355,7 @@ public class AsyncSerializingCacheProviderSpecs
         (bool cacheHit, object? fromCache) = await stubCacheProvider.TryGetAsync(key, CancellationToken, false);
         cacheHit.ShouldBeTrue();
         fromCache.ShouldBeOfType<StubSerialized<ResultPrimitive>>()
-            .Which.Original.ShouldBe(objectToCache);
+            .Original.ShouldBe(objectToCache);
     }
 
     [Fact]
@@ -379,7 +379,7 @@ public class AsyncSerializingCacheProviderSpecs
 
         cacheHit.ShouldBeTrue();
         fromCache.ShouldBeOfType<StubSerialized<ResultPrimitive>>()
-            .Which.Original.ShouldBe(objectToCache);
+            .Original.ShouldBe(objectToCache);
     }
 
     [Fact]

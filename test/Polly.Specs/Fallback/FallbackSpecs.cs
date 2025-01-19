@@ -16,7 +16,7 @@ public class FallbackSpecs
                                 .Fallback(fallbackAction);
 
         policy.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("fallbackAction");
+            .ParamName.ShouldBe("fallbackAction");
     }
 
     [Fact]
@@ -29,7 +29,7 @@ public class FallbackSpecs
             .Fallback(fallbackAction);
 
         policy.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("fallbackAction");
+            .ParamName.ShouldBe("fallbackAction");
     }
 
     [Fact]
@@ -43,7 +43,7 @@ public class FallbackSpecs
                                 .Fallback(fallbackAction, onFallback);
 
         policy.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("fallbackAction");
+            .ParamName.ShouldBe("fallbackAction");
     }
 
     [Fact]
@@ -57,7 +57,7 @@ public class FallbackSpecs
             .Fallback(fallbackAction, onFallback);
 
         policy.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("fallbackAction");
+            .ParamName.ShouldBe("fallbackAction");
     }
 
     [Fact]
@@ -71,7 +71,7 @@ public class FallbackSpecs
                                 .Fallback(fallbackAction, onFallback);
 
         policy.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("fallbackAction");
+            .ParamName.ShouldBe("fallbackAction");
     }
 
     [Fact]
@@ -85,7 +85,7 @@ public class FallbackSpecs
                                 .Fallback(fallbackAction, onFallback);
 
         policy.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("fallbackAction");
+            .ParamName.ShouldBe("fallbackAction");
     }
 
     [Fact]
@@ -99,7 +99,7 @@ public class FallbackSpecs
                                 .Fallback(fallbackAction, onFallback);
 
         policy.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("onFallback");
+            .ParamName.ShouldBe("onFallback");
     }
 
     [Fact]
@@ -113,7 +113,7 @@ public class FallbackSpecs
             .Fallback(fallbackAction, onFallback);
 
         policy.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("onFallback");
+            .ParamName.ShouldBe("onFallback");
     }
 
     [Fact]
@@ -127,7 +127,7 @@ public class FallbackSpecs
                                 .Fallback(fallbackAction, onFallback);
 
         policy.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("onFallback");
+            .ParamName.ShouldBe("onFallback");
     }
 
     [Fact]
@@ -141,7 +141,7 @@ public class FallbackSpecs
                                 .Fallback(fallbackAction, onFallback);
 
         policy.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("onFallback");
+            .ParamName.ShouldBe("onFallback");
     }
 
     #endregion
@@ -302,7 +302,7 @@ public class FallbackSpecs
             .Fallback(fallbackAction);
 
         fallbackPolicy.Invoking(x => x.RaiseException<DivideByZeroException>((e, _) => e.HelpLink = "FromExecuteDelegate"))
-            .Should.Throw<DivideByZeroException>().And.HelpLink.ShouldBe("FromFallbackAction");
+            .Should.Throw<DivideByZeroException>().HelpLink.ShouldBe("FromFallbackAction");
 
         fallbackActionExecuted.ShouldBeTrue();
     }
@@ -333,7 +333,7 @@ public class FallbackSpecs
 
         Exception withInner = new Exception(string.Empty, new DivideByZeroException());
 
-        fallbackPolicy.Invoking(x => x.RaiseException(withInner)).Should.Throw<Exception>().And.InnerException.ShouldBeOfType<DivideByZeroException>();
+        fallbackPolicy.Invoking(x => x.RaiseException(withInner)).Should.Throw<Exception>().InnerException.ShouldBeOfType<DivideByZeroException>();
 
         fallbackActionExecuted.ShouldBeFalse();
     }
@@ -419,7 +419,7 @@ public class FallbackSpecs
 
         Exception withInner = new Exception(string.Empty, new ArgumentException());
 
-        fallbackPolicy.Invoking(x => x.RaiseException(withInner)).Should.Throw<Exception>().And.InnerException.ShouldBeOfType<ArgumentException>();
+        fallbackPolicy.Invoking(x => x.RaiseException(withInner)).Should.Throw<Exception>().InnerException.ShouldBeOfType<ArgumentException>();
 
         fallbackActionExecuted.ShouldBeFalse();
     }
@@ -488,7 +488,7 @@ public class FallbackSpecs
 
         Exception withInner = new Exception(string.Empty, new DivideByZeroException());
 
-        fallbackPolicy.Invoking(x => x.RaiseException(withInner)).Should.Throw<Exception>().And.InnerException.ShouldBeOfType<DivideByZeroException>();
+        fallbackPolicy.Invoking(x => x.RaiseException(withInner)).Should.Throw<Exception>().InnerException.ShouldBeOfType<DivideByZeroException>();
 
         fallbackActionExecuted.ShouldBeFalse();
     }
@@ -506,7 +506,7 @@ public class FallbackSpecs
 
         Exception withInner = new Exception(string.Empty, new ArgumentNullException());
 
-        fallbackPolicy.Invoking(x => x.RaiseException(withInner)).Should.Throw<Exception>().And.InnerException.ShouldBeOfType<ArgumentNullException>();
+        fallbackPolicy.Invoking(x => x.RaiseException(withInner)).Should.Throw<Exception>().InnerException.ShouldBeOfType<ArgumentNullException>();
 
         fallbackActionExecuted.ShouldBeFalse();
     }
@@ -527,7 +527,7 @@ public class FallbackSpecs
 
         Exception withInner = new AggregateException(new DivideByZeroException());
 
-        fallbackPolicy.Invoking(x => x.RaiseException(withInner)).Should.Throw<AggregateException>().And.InnerExceptions.ShouldContainSingle(e => e is DivideByZeroException);
+        fallbackPolicy.Invoking(x => x.RaiseException(withInner)).Should.Throw<AggregateException>().InnerExceptions.ShouldContainSingle(e => e is DivideByZeroException);
 
         fallbackActionExecuted.ShouldBeFalse();
     }
@@ -613,7 +613,7 @@ public class FallbackSpecs
 
         Exception withInner = new AggregateException(new ArgumentException());
 
-        fallbackPolicy.Invoking(x => x.RaiseException(withInner)).Should.Throw<AggregateException>().And.InnerExceptions.ShouldContainSingle(e => e is ArgumentException);
+        fallbackPolicy.Invoking(x => x.RaiseException(withInner)).Should.Throw<AggregateException>().InnerExceptions.ShouldContainSingle(e => e is ArgumentException);
 
         fallbackActionExecuted.ShouldBeFalse();
     }
@@ -682,7 +682,7 @@ public class FallbackSpecs
 
         Exception withInner = new AggregateException(new DivideByZeroException());
 
-        fallbackPolicy.Invoking(x => x.RaiseException(withInner)).Should.Throw<AggregateException>().And.InnerExceptions.ShouldContainSingle(e => e is DivideByZeroException);
+        fallbackPolicy.Invoking(x => x.RaiseException(withInner)).Should.Throw<AggregateException>().InnerExceptions.ShouldContainSingle(e => e is DivideByZeroException);
 
         fallbackActionExecuted.ShouldBeFalse();
     }
@@ -700,7 +700,7 @@ public class FallbackSpecs
 
         Exception withInner = new AggregateException(new ArgumentNullException());
 
-        fallbackPolicy.Invoking(x => x.RaiseException(withInner)).Should.Throw<AggregateException>().And.InnerExceptions.ShouldContainSingle(e => e is ArgumentNullException);
+        fallbackPolicy.Invoking(x => x.RaiseException(withInner)).Should.Throw<AggregateException>().InnerExceptions.ShouldContainSingle(e => e is ArgumentNullException);
 
         fallbackActionExecuted.ShouldBeFalse();
     }
@@ -949,7 +949,7 @@ public class FallbackSpecs
             .Should.NotThrow();
 
         fallbackException.ShouldNotBeNull()
-            .And.BeOfType<ArgumentNullException>();
+            .BeOfType<ArgumentNullException>();
     }
 
     [Fact]
@@ -1041,7 +1041,7 @@ public class FallbackSpecs
 
         using (var cancellationTokenSource = new CancellationTokenSource())
         {
-            policy.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
+            policy.Invoking(() => policy.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
                 .Should.NotThrow();
         }
 
@@ -1071,7 +1071,7 @@ public class FallbackSpecs
 
         using (var cancellationTokenSource = new CancellationTokenSource())
         {
-            policy.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
+            policy.Invoking(() => policy.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
                 .Should.NotThrow();
         }
 
@@ -1105,9 +1105,9 @@ public class FallbackSpecs
 
             cancellationTokenSource.Cancel();
 
-            policy.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
+            policy.Invoking(() => policy.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
                 .Should.Throw<OperationCanceledException>()
-                .And.CancellationToken.ShouldBe(cancellationToken);
+                .CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(0);
@@ -1139,9 +1139,9 @@ public class FallbackSpecs
         using (var cancellationTokenSource = new CancellationTokenSource())
         {
             CancellationToken cancellationToken = cancellationTokenSource.Token;
-            policy.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
+            policy.Invoking(() => policy.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
                 .Should.Throw<OperationCanceledException>()
-                .And.CancellationToken.ShouldBe(cancellationToken);
+                .CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(1);
@@ -1172,7 +1172,7 @@ public class FallbackSpecs
 
         using (var cancellationTokenSource = new CancellationTokenSource())
         {
-            policy.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
+            policy.Invoking(() => policy.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
                 .Should.NotThrow();
         }
 
@@ -1203,7 +1203,7 @@ public class FallbackSpecs
 
         using (var cancellationTokenSource = new CancellationTokenSource())
         {
-            policy.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
+            policy.Invoking(() => policy.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
                 .Should.NotThrow();
         }
 
@@ -1233,7 +1233,7 @@ public class FallbackSpecs
 
         using (var cancellationTokenSource = new CancellationTokenSource())
         {
-            policy.Invoking(x => x.RaiseExceptionAndOrCancellation<NullReferenceException>(scenario, cancellationTokenSource, onExecute))
+            policy.Invoking(() => policy.RaiseExceptionAndOrCancellation<NullReferenceException>(scenario, cancellationTokenSource, onExecute))
                 .Should.Throw<NullReferenceException>();
         }
 
@@ -1264,7 +1264,7 @@ public class FallbackSpecs
 
         using (var cancellationTokenSource = new CancellationTokenSource())
         {
-            policy.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
+            policy.Invoking(() => policy.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
                 .Should.NotThrow();
         }
 

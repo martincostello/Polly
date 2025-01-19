@@ -7,7 +7,7 @@ public class ContextualTtlSpecs
     {
         Context context = null!;
         Action action = () => new ContextualTtl().GetTtl(context, null);
-        action.Should.Throw<ArgumentNullException>().And.ParamName.ShouldBe("context");
+        Should.Throw<ArgumentNullException>(action).ParamName.ShouldBe("context");
     }
 
     [Fact]

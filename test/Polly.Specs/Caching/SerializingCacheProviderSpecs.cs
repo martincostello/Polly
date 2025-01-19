@@ -13,8 +13,8 @@ public class SerializingCacheProviderSpecs
 
         Action configure = () => _ = new SerializingCacheProvider<StubSerialized>(null!, stubObjectSerializer);
 
-        configure.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("wrappedCacheProvider");
+        Should.Throw<ArgumentNullException>(configure)
+            .ParamName.ShouldBe("wrappedCacheProvider");
     }
 
     [Fact]
@@ -22,8 +22,8 @@ public class SerializingCacheProviderSpecs
     {
         Action configure = () => _ = new SerializingCacheProvider<object>(new StubCacheProvider().For<object>(), null!);
 
-        configure.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("serializer");
+        Should.Throw<ArgumentNullException>(configure)
+            .ParamName.ShouldBe("serializer");
     }
 
     [Fact]
@@ -31,8 +31,8 @@ public class SerializingCacheProviderSpecs
     {
         Action configure = () => new StubCacheProvider().For<object>().WithSerializer(null!);
 
-        configure.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("serializer");
+        Should.Throw<ArgumentNullException>(configure)
+            .ParamName.ShouldBe("serializer");
     }
 
     [Fact]
@@ -55,7 +55,7 @@ public class SerializingCacheProviderSpecs
 
         cacheHit.ShouldBeTrue();
         fromCache.ShouldBeOfType<StubSerialized>()
-            .Which.Original.ShouldBe(objectToCache);
+            .Original.ShouldBe(objectToCache);
     }
 
     [Fact]
@@ -78,7 +78,7 @@ public class SerializingCacheProviderSpecs
 
         cacheHit.ShouldBeTrue();
         fromCache.ShouldBeOfType<StubSerialized>()
-            .Which.Original.ShouldBe(objectToCache);
+            .Original.ShouldBe(objectToCache);
     }
 
     [Fact]
@@ -143,7 +143,7 @@ public class SerializingCacheProviderSpecs
 
         cacheHit.ShouldBeTrue();
         fromCache.ShouldBeOfType<StubSerialized>()
-            .Which.Original.ShouldBe(objectToCache);
+            .Original.ShouldBe(objectToCache);
     }
 
     [Fact]
@@ -166,7 +166,7 @@ public class SerializingCacheProviderSpecs
 
         cacheHit.ShouldBeTrue();
         fromCache.ShouldBeOfType<StubSerialized>()
-            .Which.Original.ShouldBe(objectToCache);
+            .Original.ShouldBe(objectToCache);
     }
 
     [Fact]
@@ -223,8 +223,8 @@ public class SerializingCacheProviderSpecs
 
         Action configure = () => _ = new SerializingCacheProvider<ResultPrimitive, StubSerialized<ResultPrimitive>>(null!, stubTResultSerializer);
 
-        configure.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("wrappedCacheProvider");
+        Should.Throw<ArgumentNullException>(configure)
+            .ParamName.ShouldBe("wrappedCacheProvider");
     }
 
     [Fact]
@@ -232,8 +232,8 @@ public class SerializingCacheProviderSpecs
     {
         Action configure = () => _ = new SerializingCacheProvider<object, object>(new StubCacheProvider().For<object>(), null!);
 
-        configure.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("serializer");
+        Should.Throw<ArgumentNullException>(configure)
+            .ParamName.ShouldBe("serializer");
     }
 
     [Fact]
@@ -241,8 +241,8 @@ public class SerializingCacheProviderSpecs
     {
         Action configure = () => new StubCacheProvider().For<object>().WithSerializer<object, object>(null!);
 
-        configure.Should.Throw<ArgumentNullException>()
-            .And.ParamName.ShouldBe("serializer");
+        Should.Throw<ArgumentNullException>(configure)
+            .ParamName.ShouldBe("serializer");
     }
 
     [Fact]
@@ -265,7 +265,7 @@ public class SerializingCacheProviderSpecs
 
         cacheHit.ShouldBeTrue();
         fromCache.ShouldBeOfType<StubSerialized<ResultPrimitive>>()
-            .Which.Original.ShouldBe(objectToCache);
+            .Original.ShouldBe(objectToCache);
     }
 
     [Fact]
@@ -288,7 +288,7 @@ public class SerializingCacheProviderSpecs
 
         cacheHit.ShouldBeTrue();
         fromCache.ShouldBeOfType<StubSerialized<ResultPrimitive>>()
-            .Which.Original.ShouldBe(objectToCache);
+            .Original.ShouldBe(objectToCache);
     }
 
     [Fact]
@@ -353,7 +353,7 @@ public class SerializingCacheProviderSpecs
 
         cacheHit.ShouldBeTrue();
         fromCache.ShouldBeOfType<StubSerialized<ResultPrimitive>>()
-            .Which.Original.ShouldBe(objectToCache);
+            .Original.ShouldBe(objectToCache);
     }
 
     [Fact]
@@ -378,7 +378,7 @@ public class SerializingCacheProviderSpecs
 
         cacheHit.ShouldBeTrue();
         fromCache.ShouldBeOfType<StubSerialized<ResultPrimitive>>()
-            .Which.Original.ShouldBe(objectToCache);
+            .Original.ShouldBe(objectToCache);
     }
 
     [Fact]

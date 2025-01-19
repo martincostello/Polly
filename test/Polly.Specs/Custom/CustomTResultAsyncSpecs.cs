@@ -15,7 +15,7 @@ public class CustomTResultAsyncSpecs
             });
         };
 
-        construct.Should.NotThrow();
+        Should.NotThrow(construct);
     }
 
     [Fact]
@@ -25,8 +25,7 @@ public class CustomTResultAsyncSpecs
         AsyncPreExecutePolicy<ResultPrimitive> policy = AsyncPreExecutePolicy<ResultPrimitive>.CreateAsync(() => { preExecuted = true; return Task.CompletedTask; });
 
         bool executed = false;
-        await policy.Awaiting(x => x.ExecuteAsync(async () => { executed = true; await Task.CompletedTask; return ResultPrimitive.Undefined; }))
-            .Should.NotThrowAsync();
+        await Should.NotThrowAsync(() => policy.ExecuteAsync(async () => { executed = true; await Task.CompletedTask; return ResultPrimitive.Undefined; }));
 
         executed.ShouldBeTrue();
         preExecuted.ShouldBeTrue();
@@ -45,7 +44,7 @@ public class CustomTResultAsyncSpecs
             });
         };
 
-        construct.Should.NotThrow();
+        Should.NotThrow(construct);
     }
 
     [Fact]

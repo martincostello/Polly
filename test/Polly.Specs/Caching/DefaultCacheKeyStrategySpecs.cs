@@ -7,7 +7,7 @@ public class DefaultCacheKeyStrategySpecs
     {
         Context context = null!;
         Action action = () => DefaultCacheKeyStrategy.Instance.GetCacheKey(context);
-        action.Should.Throw<ArgumentNullException>().And.ParamName.ShouldBe("context");
+        Should.Throw<ArgumentNullException>(action).ParamName.ShouldBe("context");
     }
 
     [Fact]

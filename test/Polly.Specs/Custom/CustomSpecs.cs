@@ -10,7 +10,7 @@ public class CustomSpecs
             PreExecutePolicy policy = PreExecutePolicy.Create(() => Console.WriteLine("Do something"));
         };
 
-        construct.Should.NotThrow();
+        Should.NotThrow(construct);
     }
 
     [Fact]
@@ -21,8 +21,7 @@ public class CustomSpecs
 
         bool executed = false;
 
-        policy.Invoking(x => x.Execute(() => { executed = true; }))
-            .Should.NotThrow();
+        Should.NotThrow(() => policy.Execute(() => executed = true));
 
         executed.ShouldBeTrue();
         preExecuted.ShouldBeTrue();
@@ -36,7 +35,7 @@ public class CustomSpecs
             AddBehaviourIfHandlePolicy policy = Policy.Handle<Exception>().WithBehaviour(ex => Console.WriteLine("Handling " + ex.Message));
         };
 
-        construct.Should.NotThrow();
+        Should.NotThrow(construct);
     }
 
     [Fact]
@@ -48,12 +47,11 @@ public class CustomSpecs
         Exception toThrow = new InvalidOperationException();
         bool executed = false;
 
-        policy.Invoking(x => x.Execute(() =>
+        Should.Throw<Exception>(() => policy.Execute(() =>
         {
             executed = true;
             throw toThrow;
-        }))
-            .Should.Throw<Exception>().Which.ShouldBe(toThrow);
+        })).ShouldBe(toThrow);
 
         executed.ShouldBeTrue();
         handled.ShouldBe(toThrow);
@@ -68,14 +66,13 @@ public class CustomSpecs
         Exception toThrow = new NotImplementedException();
         bool executed = false;
 
-        policy.Invoking(x => x.Execute(() =>
+        Should.Throw<Exception>(() => policy.Execute(() =>
         {
             executed = true;
             throw toThrow;
-        }))
-            .Should.Throw<Exception>().Which.ShouldBe(toThrow);
+        })).ShouldBe(toThrow);
 
         executed.ShouldBeTrue();
-        handled.ShouldBe(null);
+        handled.ShouldBeNull();
     }
 }

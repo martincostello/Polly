@@ -8,7 +8,7 @@ public class AbsoluteTtlSpecs : IDisposable
     {
         Action configure = () => _ = new AbsoluteTtl(DateTimeOffset.UtcNow.Date.AddDays(1));
 
-        configure.Should.NotThrow();
+        Should.NotThrow(configure);
     }
 
     [Fact]
@@ -16,7 +16,7 @@ public class AbsoluteTtlSpecs : IDisposable
     {
         Action configure = () => _ = new AbsoluteTtl(DateTimeOffset.MaxValue);
 
-        configure.Should.NotThrow();
+        Should.NotThrow(configure);
     }
 
     [Fact]
@@ -24,7 +24,7 @@ public class AbsoluteTtlSpecs : IDisposable
     {
         Action configure = () => _ = new AbsoluteTtl(DateTimeOffset.MinValue);
 
-        configure.Should.NotThrow();
+        Should.NotThrow(configure);
     }
 
     [Fact]

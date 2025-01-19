@@ -7,7 +7,7 @@ public class RelativeTtlSpecs
     {
         Action configure = () => _ = new RelativeTtl(TimeSpan.FromMilliseconds(-1));
 
-        configure.Should.Throw<ArgumentOutOfRangeException>().And.ParamName.ShouldBe("ttl");
+        Should.Throw<ArgumentOutOfRangeException>(configure).ParamName.ShouldBe("ttl");
     }
 
     [Fact]
@@ -15,7 +15,7 @@ public class RelativeTtlSpecs
     {
         Action configure = () => _ = new RelativeTtl(TimeSpan.Zero);
 
-        configure.Should.NotThrow();
+        Should.NotThrow(configure);
     }
 
     [Fact]
@@ -23,7 +23,7 @@ public class RelativeTtlSpecs
     {
         Action configure = () => _ = new RelativeTtl(TimeSpan.MaxValue);
 
-        configure.Should.NotThrow();
+        Should.NotThrow(configure);
     }
 
     [Fact]
@@ -34,7 +34,7 @@ public class RelativeTtlSpecs
         RelativeTtl ttlStrategy = new RelativeTtl(ttl);
 
         Ttl retrieved = ttlStrategy.GetTtl(new Context("someOperationKey"), null);
-        retrieved.Timespan.ShouldBeCloseTo(ttl, TimeSpan.Zero);
+        retrieved.Timespan.ShouldBe(ttl, TimeSpan.Zero);
         retrieved.SlidingExpiration.ShouldBeFalse();
     }
 
@@ -50,7 +50,7 @@ public class RelativeTtlSpecs
         SystemClock.DateTimeOffsetUtcNow = () => fixedTime.Add(delay);
 
         Ttl retrieved = ttlStrategy.GetTtl(new Context("someOperationKey"), null);
-        retrieved.Timespan.ShouldBeCloseTo(ttl, TimeSpan.Zero);
+        retrieved.Timespan.ShouldBe(ttl, TimeSpan.Zero);
         retrieved.SlidingExpiration.ShouldBeFalse();
     }
 }

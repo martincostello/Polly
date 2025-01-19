@@ -14,7 +14,7 @@ public class SystemClockSpecs
     }
 
     [Fact]
-    public void Sleep_Should.NotThrow_WhenCancellationNotRequested() =>
+    public void Sleep_Should_NotThrow_WhenCancellationNotRequested() =>
         Should.NotThrow(() =>
         {
             using var cts = new CancellationTokenSource();
@@ -22,7 +22,7 @@ public class SystemClockSpecs
         });
 
     [Fact]
-    public void Sleep_Should.Throw_WhenCancellationRequested() =>
+    public void Sleep_Should_Throw_WhenCancellationRequested() =>
         Should.Throw<OperationCanceledException>(() =>
         {
             using var cts = new CancellationTokenSource();
@@ -31,7 +31,7 @@ public class SystemClockSpecs
         });
 
     [Fact]
-    public async Task SleepAsync_Should.NotThrow_WhenCancellationNotRequested() =>
+    public async Task SleepAsync_Should_NotThrow_WhenCancellationNotRequested() =>
         await Should.NotThrowAsync(async () =>
         {
             using var cts = new CancellationTokenSource();
@@ -39,7 +39,7 @@ public class SystemClockSpecs
         });
 
     [Fact]
-    public async Task SleepAsync_Should.Throw_WhenCancellationRequested() =>
+    public async Task SleepAsync_Should_Throw_WhenCancellationRequested() =>
         await Should.ThrowAsync<OperationCanceledException>(async () =>
         {
             using var cts = new CancellationTokenSource();

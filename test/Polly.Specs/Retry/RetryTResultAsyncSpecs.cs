@@ -28,9 +28,9 @@ public class RetryTResultAsyncSpecs
         var func = () => methodInfo.Invoke(instance, [action, new Context(), CancellationToken.None, false]);
 
         var exceptionAssertions = func.Should.Throw<TargetInvocationException>();
-        exceptionAssertions.And.Message.ShouldBe("Exception has been thrown by the target of an invocation.");
-        exceptionAssertions.And.InnerException.ShouldBeOfType<ArgumentNullException>()
-            .Which.ParamName.ShouldBe("action");
+        exceptionAssertions.Message.ShouldBe("Exception has been thrown by the target of an invocation.");
+        exceptionAssertions.InnerException.ShouldBeOfType<ArgumentNullException>()
+            .ParamName.ShouldBe("action");
     }
 
     [Fact]
@@ -526,7 +526,7 @@ public class RetryTResultAsyncSpecs
                    ResultPrimitive.Fault,
                    ResultPrimitive.Good))
                 .Should.ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.ShouldBe(cancellationToken);
+            ex.CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(0);
@@ -558,7 +558,7 @@ public class RetryTResultAsyncSpecs
                ResultPrimitive.Good,
                ResultPrimitive.Good))
             .Should.ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.ShouldBe(cancellationToken);
+            ex.CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(1);
@@ -590,7 +590,7 @@ public class RetryTResultAsyncSpecs
                ResultPrimitive.Fault,
                ResultPrimitive.Good))
             .Should.ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.ShouldBe(cancellationToken);
+            ex.CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(1);
@@ -622,7 +622,7 @@ public class RetryTResultAsyncSpecs
                ResultPrimitive.Fault,
                ResultPrimitive.Good))
             .Should.ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.ShouldBe(cancellationToken);
+            ex.CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(1);
@@ -654,7 +654,7 @@ public class RetryTResultAsyncSpecs
                ResultPrimitive.Fault,
                ResultPrimitive.Good))
             .Should.ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.ShouldBe(cancellationToken);
+            ex.CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(2);
@@ -686,7 +686,7 @@ public class RetryTResultAsyncSpecs
                ResultPrimitive.Fault,
                ResultPrimitive.Good))
             .Should.ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.ShouldBe(cancellationToken);
+            ex.CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(2);
@@ -719,7 +719,7 @@ public class RetryTResultAsyncSpecs
                ResultPrimitive.Fault,
                ResultPrimitive.Good))
             .Should.ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.ShouldBe(cancellationToken);
+            ex.CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(1 + 3);
@@ -786,7 +786,7 @@ public class RetryTResultAsyncSpecs
                    ResultPrimitive.Fault,
                    ResultPrimitive.Good))
                 .Should.ThrowAsync<OperationCanceledException>();
-            ex.And.CancellationToken.ShouldBe(cancellationToken);
+            ex.CancellationToken.ShouldBe(cancellationToken);
         }
 
         attemptsInvoked.ShouldBe(1);

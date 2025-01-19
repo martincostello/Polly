@@ -16,9 +16,9 @@ public class NoOpAsyncSpecs
 
         var func = () => generic.Invoke(instance, [action, new Context(), CancellationToken.None, false]);
 
-        var exceptionAssertions = func.Should.Throw<TargetInvocationException>();
-        exceptionAssertions.And.Message.ShouldBe("Exception has been thrown by the target of an invocation.");
-        exceptionAssertions.WithInnerException<ArgumentNullException>("action");
+        var exceptionAssertions = Should.Throw<TargetInvocationException>(func);
+        exceptionAssertions.Message.ShouldBe("Exception has been thrown by the target of an invocation.");
+        exceptionAssertions.InnerException.ShouldBeOfType<ArgumentNullException>().ParamName.ShouldBe("action");
     }
 
     [Fact]
@@ -27,8 +27,7 @@ public class NoOpAsyncSpecs
         var policy = Policy.NoOpAsync();
         bool executed = false;
 
-        await policy.Awaiting(p => p.ExecuteAsync(() => { executed = true; return TaskHelper.EmptyTask; }))
-            .Should.NotThrowAsync();
+        await Should.NotThrowAsync(() => policy.ExecuteAsync(() => { executed = true; return TaskHelper.EmptyTask; }));
 
         executed.ShouldBeTrue();
     }
@@ -44,9 +43,8 @@ public class NoOpAsyncSpecs
         {
             cts.Cancel();
 
-            await policy.Awaiting(p => p.ExecuteAsync(
-                _ => { executed = true; return TaskHelper.EmptyTask; }, cts.Token))
-                .Should.NotThrowAsync();
+            await Should.NotThrowAsync(() => policy.ExecuteAsync(
+                _ => { executed = true; return TaskHelper.EmptyTask; }, cts.Token));
         }
 
         executed.ShouldBeTrue();

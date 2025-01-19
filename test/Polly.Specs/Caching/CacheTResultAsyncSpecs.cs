@@ -44,9 +44,9 @@ public class CacheTResultAsyncSpecs : IDisposable
         var func = () => methodInfo.Invoke(instance, [action, new Context(), CancellationToken, false]);
 
         var exceptionAssertions = func.Should.Throw<TargetInvocationException>();
-        exceptionAssertions.And.Message.ShouldBe("Exception has been thrown by the target of an invocation.");
-        exceptionAssertions.And.InnerException.ShouldBeOfType<ArgumentNullException>()
-            .Which.ParamName.ShouldBe("action");
+        exceptionAssertions.Message.ShouldBe("Exception has been thrown by the target of an invocation.");
+        exceptionAssertions.InnerException.ShouldBeOfType<ArgumentNullException>()
+            .ParamName.ShouldBe("action");
     }
 
     [Fact]
@@ -54,7 +54,7 @@ public class CacheTResultAsyncSpecs : IDisposable
     {
         IAsyncCacheProvider cacheProvider = null!;
         Action action = () => Policy.CacheAsync<ResultPrimitive>(cacheProvider, TimeSpan.MaxValue);
-        action.Should.Throw<ArgumentNullException>().And.ParamName.ShouldBe("cacheProvider");
+        action.Should.Throw<ArgumentNullException>().ParamName.ShouldBe("cacheProvider");
     }
 
     [Fact]
@@ -63,7 +63,7 @@ public class CacheTResultAsyncSpecs : IDisposable
         IAsyncCacheProvider cacheProvider = new StubCacheProvider();
         ITtlStrategy ttlStrategy = null!;
         Action action = () => Policy.CacheAsync<ResultPrimitive>(cacheProvider, ttlStrategy);
-        action.Should.Throw<ArgumentNullException>().And.ParamName.ShouldBe("ttlStrategy");
+        action.Should.Throw<ArgumentNullException>().ParamName.ShouldBe("ttlStrategy");
     }
 
     [Fact]
@@ -82,40 +82,40 @@ public class CacheTResultAsyncSpecs : IDisposable
         const string CacheKeyStrategyExpected = "cacheKeyStrategy";
 
         Action action = () => Policy.CacheAsync<ResultPrimitive>(cacheProvider, ttl, cacheKeyStrategy, onCacheGetError);
-        action.Should.Throw<ArgumentNullException>().And.ParamName.ShouldBe(CacheKeyStrategyExpected);
+        action.Should.Throw<ArgumentNullException>().ParamName.ShouldBe(CacheKeyStrategyExpected);
 
         action = () => Policy.CacheAsync<ResultPrimitive>(cacheProvider, ttlStrategy, cacheKeyStrategy, onCacheGetError);
-        action.Should.Throw<ArgumentNullException>().And.ParamName.ShouldBe(CacheKeyStrategyExpected);
+        action.Should.Throw<ArgumentNullException>().ParamName.ShouldBe(CacheKeyStrategyExpected);
 
         action = () => Policy.CacheAsync<ResultPrimitive>(cacheProvider, ttl, cacheKeyStrategyFunc);
-        action.Should.Throw<ArgumentNullException>().And.ParamName.ShouldBe(CacheKeyStrategyExpected);
+        action.Should.Throw<ArgumentNullException>().ParamName.ShouldBe(CacheKeyStrategyExpected);
 
         action = () => Policy.CacheAsync<ResultPrimitive>(cacheProvider.AsyncFor<ResultPrimitive>(), ttl, cacheKeyStrategy);
-        action.Should.Throw<ArgumentNullException>().And.ParamName.ShouldBe(CacheKeyStrategyExpected);
+        action.Should.Throw<ArgumentNullException>().ParamName.ShouldBe(CacheKeyStrategyExpected);
 
         action = () => Policy.CacheAsync<ResultPrimitive>(cacheProvider.AsyncFor<ResultPrimitive>(), ttlStrategy, cacheKeyStrategy);
-        action.Should.Throw<ArgumentNullException>().And.ParamName.ShouldBe(CacheKeyStrategyExpected);
+        action.Should.Throw<ArgumentNullException>().ParamName.ShouldBe(CacheKeyStrategyExpected);
 
         action = () => Policy.CacheAsync<ResultPrimitive>(
             cacheProvider.AsyncFor<ResultPrimitive>(),
             ttlStrategy.For<ResultPrimitive>(),
             cacheKeyStrategy,
             onCacheGetError);
-        action.Should.Throw<ArgumentNullException>().And.ParamName.ShouldBe(CacheKeyStrategyExpected);
+        action.Should.Throw<ArgumentNullException>().ParamName.ShouldBe(CacheKeyStrategyExpected);
 
         action = () => Policy.CacheAsync<ResultPrimitive>(
             cacheProvider.AsyncFor<ResultPrimitive>(),
             ttl,
             cacheKeyStrategy,
             onCacheGetError);
-        action.Should.Throw<ArgumentNullException>().And.ParamName.ShouldBe(CacheKeyStrategyExpected);
+        action.Should.Throw<ArgumentNullException>().ParamName.ShouldBe(CacheKeyStrategyExpected);
 
         action = () => Policy.CacheAsync<ResultPrimitive>(
             cacheProvider.AsyncFor<ResultPrimitive>(),
             ttl,
             cacheKeyStrategy,
             onCacheGetError);
-        action.Should.Throw<ArgumentNullException>().And.ParamName.ShouldBe(CacheKeyStrategyExpected);
+        action.Should.Throw<ArgumentNullException>().ParamName.ShouldBe(CacheKeyStrategyExpected);
 
         action = () => Policy.CacheAsync<ResultPrimitive>(
             cacheProvider.AsyncFor<ResultPrimitive>(),
@@ -126,7 +126,7 @@ public class CacheTResultAsyncSpecs : IDisposable
             onCachePut,
             onCacheGetError,
             onCachePutError);
-        action.Should.Throw<ArgumentNullException>().And.ParamName.ShouldBe(CacheKeyStrategyExpected);
+        action.Should.Throw<ArgumentNullException>().ParamName.ShouldBe(CacheKeyStrategyExpected);
 
         action = () => Policy.CacheAsync<ResultPrimitive>(
             cacheProvider.AsyncFor<ResultPrimitive>(),
@@ -137,7 +137,7 @@ public class CacheTResultAsyncSpecs : IDisposable
             onCachePut,
             onCacheGetError,
             onCachePutError);
-        action.Should.Throw<ArgumentNullException>().And.ParamName.ShouldBe(CacheKeyStrategyExpected);
+        action.Should.Throw<ArgumentNullException>().ParamName.ShouldBe(CacheKeyStrategyExpected);
 
         action = () => Policy.CacheAsync<ResultPrimitive>(
             cacheProvider.AsyncFor<ResultPrimitive>(),
@@ -148,7 +148,7 @@ public class CacheTResultAsyncSpecs : IDisposable
             onCachePut,
             onCacheGetError,
             onCachePutError);
-        action.Should.Throw<ArgumentNullException>().And.ParamName.ShouldBe(CacheKeyStrategyExpected);
+        action.Should.Throw<ArgumentNullException>().ParamName.ShouldBe(CacheKeyStrategyExpected);
     }
     #endregion
 

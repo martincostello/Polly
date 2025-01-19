@@ -111,8 +111,7 @@ public class ReadOnlyPolicyRegistrySpecs
         Policy? policy = null;
         bool result = false;
 
-        ReadOnlyRegistry.Invoking(r => result = r.TryGet(key, out policy))
-            .Should.NotThrow();
+        Should.NotThrow(() => result = ReadOnlyRegistry.TryGet(key, out policy));
 
         result.ShouldBeFalse();
         policy.ShouldBeNull();
@@ -125,8 +124,7 @@ public class ReadOnlyPolicyRegistrySpecs
         Policy<ResultPrimitive>? policy = null;
         bool result = false;
 
-        ReadOnlyRegistry.Invoking(r => result = r.TryGet(key, out policy))
-            .Should.NotThrow();
+        Should.NotThrow(() => result = ReadOnlyRegistry.TryGet(key, out policy));
 
         result.ShouldBeFalse();
         policy.ShouldBeNull();
@@ -139,8 +137,7 @@ public class ReadOnlyPolicyRegistrySpecs
         ISyncPolicy<ResultPrimitive>? policy = null;
         bool result = false;
 
-        ReadOnlyRegistry.Invoking(r => result = r.TryGet<ISyncPolicy<ResultPrimitive>>(key, out policy))
-            .Should.NotThrow();
+        Should.NotThrow(() => result = ReadOnlyRegistry.TryGet<ISyncPolicy<ResultPrimitive>>(key, out policy));
 
         result.ShouldBeFalse();
         policy.ShouldBeNull();
@@ -151,8 +148,7 @@ public class ReadOnlyPolicyRegistrySpecs
     {
         string key = Guid.NewGuid().ToString();
         Policy? policy = null;
-        ReadOnlyRegistry.Invoking(r => policy = r.Get<Policy>(key))
-            .Should.Throw<KeyNotFoundException>();
+        Should.Throw<KeyNotFoundException>(() => policy = ReadOnlyRegistry.Get<Policy>(key));
         policy.ShouldBeNull();
     }
 
@@ -161,8 +157,7 @@ public class ReadOnlyPolicyRegistrySpecs
     {
         string key = Guid.NewGuid().ToString();
         Policy<ResultPrimitive>? policy = null;
-        ReadOnlyRegistry.Invoking(r => policy = r.Get<Policy<ResultPrimitive>>(key))
-            .Should.Throw<KeyNotFoundException>();
+        Should.Throw<KeyNotFoundException>(() => policy = ReadOnlyRegistry.Get<Policy<ResultPrimitive>>(key));
         policy.ShouldBeNull();
     }
 
@@ -171,8 +166,7 @@ public class ReadOnlyPolicyRegistrySpecs
     {
         string key = Guid.NewGuid().ToString();
         ISyncPolicy<ResultPrimitive>? policy = null;
-        ReadOnlyRegistry.Invoking(r => policy = r.Get<ISyncPolicy<ResultPrimitive>>(key))
-            .Should.Throw<KeyNotFoundException>();
+        Should.Throw<KeyNotFoundException>(() => policy = ReadOnlyRegistry.Get<ISyncPolicy<ResultPrimitive>>(key));
         policy.ShouldBeNull();
     }
 
@@ -181,8 +175,7 @@ public class ReadOnlyPolicyRegistrySpecs
     {
         string key = Guid.NewGuid().ToString();
         IsPolicy? outPolicy = null;
-        ReadOnlyRegistry.Invoking(r => outPolicy = r[key])
-            .Should.Throw<KeyNotFoundException>();
+        Should.Throw<KeyNotFoundException>(() => outPolicy = ReadOnlyRegistry[key]);
         outPolicy.ShouldBeNull();
     }
 
@@ -191,8 +184,7 @@ public class ReadOnlyPolicyRegistrySpecs
     {
         string key = null!;
         Policy? policy = null;
-        ReadOnlyRegistry.Invoking(r => policy = r.Get<Policy>(key))
-            .Should.Throw<ArgumentNullException>();
+        Should.Throw<ArgumentNullException>(() => policy = ReadOnlyRegistry.Get<Policy>(key));
         policy.ShouldBeNull();
     }
 
@@ -201,8 +193,7 @@ public class ReadOnlyPolicyRegistrySpecs
     {
         string key = null!;
         Policy<ResultPrimitive>? policy = null;
-        ReadOnlyRegistry.Invoking(r => policy = r.Get<Policy<ResultPrimitive>>(key))
-            .Should.Throw<ArgumentNullException>();
+        Should.Throw<ArgumentNullException>(() => policy = ReadOnlyRegistry.Get<Policy<ResultPrimitive>>(key));
         policy.ShouldBeNull();
     }
 
@@ -211,8 +202,7 @@ public class ReadOnlyPolicyRegistrySpecs
     {
         string key = null!;
         ISyncPolicy<ResultPrimitive>? policy = null;
-        ReadOnlyRegistry.Invoking(r => policy = r.Get<ISyncPolicy<ResultPrimitive>>(key))
-            .Should.Throw<ArgumentNullException>();
+        Should.Throw<ArgumentNullException>(() => policy = ReadOnlyRegistry.Get<ISyncPolicy<ResultPrimitive>>(key));
         policy.ShouldBeNull();
     }
 
@@ -221,8 +211,7 @@ public class ReadOnlyPolicyRegistrySpecs
     {
         string key = null!;
         IsPolicy? policy = null;
-        ReadOnlyRegistry.Invoking(r => policy = r[key])
-            .Should.Throw<ArgumentNullException>();
+        Should.Throw<ArgumentNullException>(() => policy = ReadOnlyRegistry[key]);
         policy.ShouldBeNull();
     }
     #endregion
@@ -246,8 +235,7 @@ public class ReadOnlyPolicyRegistrySpecs
     public void Should_throw_when_checking_if_key_exists_when_key_is_null()
     {
         string key = null!;
-        ReadOnlyRegistry.Invoking(r => r.ContainsKey(key))
-            .Should.Throw<ArgumentNullException>();
+        Should.Throw<ArgumentNullException>(() => ReadOnlyRegistry.ContainsKey(key));
     }
     #endregion
 
@@ -276,12 +264,12 @@ public class ReadOnlyPolicyRegistrySpecs
 
         var testRegistry = new PolicyRegistry
         {
-            {key, policy}
+            [key] = policy
         };
 
-        testRegistry.ShouldEqual(new Dictionary<string, IsPolicy>
+        testRegistry.ShouldBe(new Dictionary<string, IsPolicy>
         {
-            {key, policy}
+            [key] = policy
         });
     }
     #endregion

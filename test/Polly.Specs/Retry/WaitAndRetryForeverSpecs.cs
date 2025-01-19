@@ -68,7 +68,7 @@ public class WaitAndRetryForeverSpecs : IDisposable
             .Handle<DivideByZeroException>()
             .WaitAndRetryForever(_ => default);
 
-        policy.Invoking(x => x.RaiseException<DivideByZeroException>(3))
+        policy.Invoking(() => policy.RaiseException<DivideByZeroException>(3))
               .Should.NotThrow();
     }
 
@@ -80,7 +80,7 @@ public class WaitAndRetryForeverSpecs : IDisposable
             .Or<ArgumentException>()
             .WaitAndRetryForever(_ => default);
 
-        policy.Invoking(x => x.RaiseException<ArgumentException>(3))
+        policy.Invoking(() => policy.RaiseException<ArgumentException>(3))
               .Should.NotThrow();
     }
 
@@ -93,7 +93,7 @@ public class WaitAndRetryForeverSpecs : IDisposable
             .Handle<DivideByZeroException>()
             .WaitAndRetryForever(provider);
 
-        policy.Invoking(x => x.RaiseException<NullReferenceException>())
+        policy.Invoking(() => policy.RaiseException<NullReferenceException>())
               .Should.Throw<NullReferenceException>();
     }
 
@@ -107,7 +107,7 @@ public class WaitAndRetryForeverSpecs : IDisposable
             .Or<ArgumentException>()
             .WaitAndRetryForever(provider);
 
-        policy.Invoking(x => x.RaiseException<NullReferenceException>())
+        policy.Invoking(() => policy.RaiseException<NullReferenceException>())
               .Should.Throw<NullReferenceException>();
     }
 
@@ -120,7 +120,7 @@ public class WaitAndRetryForeverSpecs : IDisposable
             .Handle<DivideByZeroException>(_ => false)
             .WaitAndRetryForever(provider);
 
-        policy.Invoking(x => x.RaiseException<DivideByZeroException>())
+        policy.Invoking(() => policy.RaiseException<DivideByZeroException>())
               .Should.Throw<DivideByZeroException>();
     }
 
@@ -134,7 +134,7 @@ public class WaitAndRetryForeverSpecs : IDisposable
             .Or<ArgumentException>(_ => false)
             .WaitAndRetryForever(provider);
 
-        policy.Invoking(x => x.RaiseException<ArgumentException>())
+        policy.Invoking(() => policy.RaiseException<ArgumentException>())
               .Should.Throw<ArgumentException>();
     }
 
@@ -147,7 +147,7 @@ public class WaitAndRetryForeverSpecs : IDisposable
             .Handle<DivideByZeroException>(_ => true)
             .WaitAndRetryForever(provider);
 
-        policy.Invoking(x => x.RaiseException<DivideByZeroException>())
+        policy.Invoking(() => policy.RaiseException<DivideByZeroException>())
               .Should.NotThrow();
     }
 
@@ -161,7 +161,7 @@ public class WaitAndRetryForeverSpecs : IDisposable
             .Or<ArgumentException>(_ => true)
            .WaitAndRetryForever(provider);
 
-        policy.Invoking(x => x.RaiseException<ArgumentException>())
+        policy.Invoking(() => policy.RaiseException<ArgumentException>())
               .Should.NotThrow();
     }
 
@@ -178,7 +178,7 @@ public class WaitAndRetryForeverSpecs : IDisposable
 
         SystemClock.Sleep = (span, _) => totalTimeSlept += span.Seconds;
 
-        policy.Invoking(x => x.RaiseException<NullReferenceException>())
+        policy.Invoking(() => policy.RaiseException<NullReferenceException>())
               .Should.Throw<NullReferenceException>();
 
         totalTimeSlept.Should()
@@ -231,7 +231,7 @@ public class WaitAndRetryForeverSpecs : IDisposable
             .Handle<DivideByZeroException>()
             .WaitAndRetryForever(provider, (exception, _) => retryExceptions.Add(exception));
 
-        policy.Invoking(x => x.RaiseException<ArgumentException>())
+        policy.Invoking(() => policy.RaiseException<ArgumentException>())
               .Should.Throw<ArgumentException>();
 
         retryExceptions.ShouldBeEmpty();

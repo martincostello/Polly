@@ -51,7 +51,7 @@ public abstract class RateLimitPolicySpecsBase : RateLimitSpecsBase
     {
         Action invalidSyntax = () => GetPolicyViaSyntax(1, TimeSpan.Zero);
 
-        invalidSyntax.Should.Throw<ArgumentOutOfRangeException>().And.ParamName.ShouldBe("perTimeSpan");
+        Should.Throw<ArgumentOutOfRangeException>(invalidSyntax).ParamName.ShouldBe("perTimeSpan");
     }
 
     [Fact]
@@ -59,7 +59,7 @@ public abstract class RateLimitPolicySpecsBase : RateLimitSpecsBase
     {
         Action invalidSyntax = () => GetPolicyViaSyntax(1, System.Threading.Timeout.InfiniteTimeSpan);
 
-        invalidSyntax.Should.Throw<ArgumentOutOfRangeException>().And.ParamName.ShouldBe("perTimeSpan");
+        Should.Throw<ArgumentOutOfRangeException>(invalidSyntax).ParamName.ShouldBe("perTimeSpan");
     }
 
     [Fact]
@@ -67,8 +67,8 @@ public abstract class RateLimitPolicySpecsBase : RateLimitSpecsBase
     {
         Action invalidSyntax = () => GetPolicyViaSyntax(int.MaxValue, TimeSpan.FromSeconds(1));
 
-        invalidSyntax.Should.Throw<ArgumentOutOfRangeException>().And.ParamName.ShouldBe("perTimeSpan");
-        invalidSyntax.Should.Throw<ArgumentOutOfRangeException>().And.Message.ShouldStartWith("The number of executions per timespan must be positive.");
+        Should.Throw<ArgumentOutOfRangeException>(invalidSyntax).ParamName.ShouldBe("perTimeSpan");
+        Should.Throw<ArgumentOutOfRangeException>(invalidSyntax).Message.ShouldStartWith("The number of executions per timespan must be positive.");
     }
 
     [Fact]
@@ -76,7 +76,7 @@ public abstract class RateLimitPolicySpecsBase : RateLimitSpecsBase
     {
         Action invalidSyntax = () => GetPolicyViaSyntax(-1, TimeSpan.FromSeconds(1));
 
-        invalidSyntax.Should.Throw<ArgumentOutOfRangeException>().And.ParamName.ShouldBe("numberOfExecutions");
+        Should.Throw<ArgumentOutOfRangeException>(invalidSyntax).ParamName.ShouldBe("numberOfExecutions");
     }
 
     [Fact]
@@ -84,7 +84,7 @@ public abstract class RateLimitPolicySpecsBase : RateLimitSpecsBase
     {
         Action invalidSyntax = () => GetPolicyViaSyntax(0, TimeSpan.FromSeconds(1));
 
-        invalidSyntax.Should.Throw<ArgumentOutOfRangeException>().And.ParamName.ShouldBe("numberOfExecutions");
+        Should.Throw<ArgumentOutOfRangeException>(invalidSyntax).ParamName.ShouldBe("numberOfExecutions");
     }
 
     [Fact]
@@ -92,7 +92,7 @@ public abstract class RateLimitPolicySpecsBase : RateLimitSpecsBase
     {
         Action invalidSyntax = () => GetPolicyViaSyntax(1, TimeSpan.FromTicks(-1));
 
-        invalidSyntax.Should.Throw<ArgumentOutOfRangeException>().And.ParamName.ShouldBe("perTimeSpan");
+        Should.Throw<ArgumentOutOfRangeException>(invalidSyntax).ParamName.ShouldBe("perTimeSpan");
     }
 
     [Fact]
@@ -100,7 +100,7 @@ public abstract class RateLimitPolicySpecsBase : RateLimitSpecsBase
     {
         Action invalidSyntax = () => GetPolicyViaSyntax(1, TimeSpan.FromSeconds(1), -1);
 
-        invalidSyntax.Should.Throw<ArgumentOutOfRangeException>().And.ParamName.ShouldBe("maxBurst");
+        Should.Throw<ArgumentOutOfRangeException>(invalidSyntax).ParamName.ShouldBe("maxBurst");
     }
 
     [Fact]
@@ -108,7 +108,7 @@ public abstract class RateLimitPolicySpecsBase : RateLimitSpecsBase
     {
         Action invalidSyntax = () => GetPolicyViaSyntax(1, TimeSpan.FromSeconds(1), 0);
 
-        invalidSyntax.Should.Throw<ArgumentOutOfRangeException>().And.ParamName.ShouldBe("maxBurst");
+        Should.Throw<ArgumentOutOfRangeException>(invalidSyntax).ParamName.ShouldBe("maxBurst");
     }
 
     [Theory]

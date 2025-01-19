@@ -1,13 +1,8 @@
 ﻿namespace Polly.Specs.Bulkhead;
 
 [Collection(Constants.ParallelThreadDependentTestCollection)]
-public class BulkheadTResultSpecs : BulkheadSpecsBase
+public class BulkheadTResultSpecs(ITestOutputHelper testOutputHelper) : BulkheadSpecsBase(testOutputHelper)
 {
-    public BulkheadTResultSpecs(ITestOutputHelper testOutputHelper)
-        : base(testOutputHelper)
-    {
-    }
-
     #region Configuration
 
     [Fact]
@@ -31,10 +26,10 @@ public class BulkheadTResultSpecs : BulkheadSpecsBase
 
         var func = () => methodInfo.Invoke(instance, [action, new Context(), CancellationToken]);
 
-        var exceptionAssertions = func.Should.Throw<TargetInvocationException>();
-        exceptionAssertions.And.Message.ShouldBe("Exception has been thrown by the target of an invocation.");
-        exceptionAssertions.And.InnerException.ShouldBeOfType<ArgumentNullException>()
-            .Which.ParamName.ShouldBe("action");
+        var exceptionAssertions = Should.Throw<TargetInvocationException>(func);
+        exceptionAssertions.Message.ShouldBe("Exception has been thrown by the target of an invocation.");
+        exceptionAssertions.InnerException.ShouldBeOfType<ArgumentNullException>()
+            .ParamName.ShouldBe("action");
     }
 
     [Fact]
@@ -43,7 +38,7 @@ public class BulkheadTResultSpecs : BulkheadSpecsBase
         Action policy = () => Policy
             .Bulkhead<int>(0);
 
-        policy.Should.Throw<ArgumentOutOfRangeException>().And
+        Should.Throw<ArgumentOutOfRangeException>(policy)
             .ParamName.ShouldBe("maxParallelization");
     }
 
@@ -53,7 +48,7 @@ public class BulkheadTResultSpecs : BulkheadSpecsBase
         Action policy = () => Policy
             .Bulkhead<int>(0, 1);
 
-        policy.Should.Throw<ArgumentOutOfRangeException>().And
+        Should.Throw<ArgumentOutOfRangeException>(policy)
             .ParamName.ShouldBe("maxParallelization");
     }
 
@@ -63,7 +58,7 @@ public class BulkheadTResultSpecs : BulkheadSpecsBase
         Action policy = () => Policy
             .Bulkhead<int>(1, -1);
 
-        policy.Should.Throw<ArgumentOutOfRangeException>().And
+        Should.Throw<ArgumentOutOfRangeException>(policy)
             .ParamName.ShouldBe("maxQueuingActions");
     }
 
@@ -73,7 +68,7 @@ public class BulkheadTResultSpecs : BulkheadSpecsBase
         Action policy = () => Policy
             .Bulkhead<int>(1, 0, null!);
 
-        policy.Should.Throw<ArgumentNullException>().And
+        Should.Throw<ArgumentNullException>(policy)
             .ParamName.ShouldBe("onBulkheadRejected");
     }
 
@@ -105,7 +100,7 @@ public class BulkheadTResultSpecs : BulkheadSpecsBase
 
             Within(CohesionTimeLimit, () => Expect(0, () => bulkhead.BulkheadAvailableCount, nameof(bulkhead.BulkheadAvailableCount)));
 
-            bulkhead.Invoking(b => b.Execute(_ => 1, contextPassedToExecute)).Should.Throw<BulkheadRejectedException>();
+            Should.Throw<BulkheadRejectedException>(() => bulkhead.Execute(_ => 1, contextPassedToExecute));
 
             cancellationSource.Cancel();
 
