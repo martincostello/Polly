@@ -46,12 +46,10 @@ public class PolicyAsyncSpecs
             .RetryAsync((_, _) => { })
             .ExecuteAndCaptureAsync(() => TaskHelper.EmptyTask);
 
-        result.ShouldBeEquivalentTo(new
-        {
-            Outcome = OutcomeType.Successful,
-            FinalException = (Exception?)null,
-            ExceptionType = (ExceptionType?)null,
-        });
+        result.ShouldNotBeNull();
+        result.Outcome.ShouldBe(OutcomeType.Successful);
+        result.FinalException.ShouldBeNull();
+        result.ExceptionType.ShouldBeNull();
     }
 
     [Fact]
@@ -64,12 +62,10 @@ public class PolicyAsyncSpecs
             .RetryAsync((_, _) => { })
             .ExecuteAndCaptureAsync(() => throw handledException);
 
-        result.ShouldBeEquivalentTo(new
-        {
-            Outcome = OutcomeType.Failure,
-            FinalException = handledException,
-            ExceptionType = ExceptionType.HandledByThisPolicy,
-        });
+        result.ShouldNotBeNull();
+        result.Outcome.ShouldBe(OutcomeType.Failure);
+        result.FinalException.ShouldBe(handledException);
+        result.ExceptionType.ShouldBe(ExceptionType.HandledByThisPolicy);
     }
 
     [Fact]
@@ -82,12 +78,10 @@ public class PolicyAsyncSpecs
             .RetryAsync((_, _) => { })
             .ExecuteAndCaptureAsync(() => throw unhandledException);
 
-        result.ShouldBeEquivalentTo(new
-        {
-            Outcome = OutcomeType.Failure,
-            FinalException = unhandledException,
-            ExceptionType = ExceptionType.Unhandled
-        });
+        result.ShouldNotBeNull();
+        result.Outcome.ShouldBe(OutcomeType.Failure);
+        result.FinalException.ShouldBe(unhandledException);
+        result.ExceptionType.ShouldBe(ExceptionType.Unhandled);
     }
 
     [Fact]
@@ -98,15 +92,13 @@ public class PolicyAsyncSpecs
             .RetryAsync((_, _) => { })
             .ExecuteAndCaptureAsync(() => Task.FromResult(int.MaxValue));
 
-        result.ShouldBeEquivalentTo(new
-        {
-            Outcome = OutcomeType.Successful,
-            FinalException = (Exception?)null,
-            ExceptionType = (ExceptionType?)null,
-            FaultType = (FaultType?)null,
-            FinalHandledResult = default(int),
-            Result = int.MaxValue
-        });
+        result.ShouldNotBeNull();
+        result.Outcome.ShouldBe(OutcomeType.Successful);
+        result.FinalException.ShouldBeNull();
+        result.ExceptionType.ShouldBeNull();
+        result.FaultType.ShouldBeNull();
+        result.FinalHandledResult.ShouldBe(default);
+        result.Result.ShouldBe(int.MaxValue);
     }
 
     [Fact]
@@ -119,15 +111,13 @@ public class PolicyAsyncSpecs
             .RetryAsync((_, _) => { })
             .ExecuteAndCaptureAsync<int>(() => throw handledException);
 
-        result.ShouldBeEquivalentTo(new
-        {
-            Outcome = OutcomeType.Failure,
-            FinalException = handledException,
-            ExceptionType = ExceptionType.HandledByThisPolicy,
-            FaultType = FaultType.ExceptionHandledByThisPolicy,
-            FinalHandledResult = default(int),
-            Result = default(int)
-        });
+        result.ShouldNotBeNull();
+        result.Outcome.ShouldBe(OutcomeType.Failure);
+        result.FinalException.ShouldBe(handledException);
+        result.ExceptionType.ShouldBe(ExceptionType.HandledByThisPolicy);
+        result.FaultType.ShouldBe(FaultType.ExceptionHandledByThisPolicy);
+        result.FinalHandledResult.ShouldBe(default);
+        result.Result.ShouldBe(default);
     }
 
     [Fact]
@@ -140,15 +130,13 @@ public class PolicyAsyncSpecs
             .RetryAsync((_, _) => { })
             .ExecuteAndCaptureAsync<int>(() => throw unhandledException);
 
-        result.ShouldBeEquivalentTo(new
-        {
-            Outcome = OutcomeType.Failure,
-            FinalException = unhandledException,
-            ExceptionType = ExceptionType.Unhandled,
-            FaultType = FaultType.UnhandledException,
-            FinalHandledResult = default(int),
-            Result = default(int)
-        });
+        result.ShouldNotBeNull();
+        result.Outcome.ShouldBe(OutcomeType.Failure);
+        result.FinalException.ShouldBe(unhandledException);
+        result.ExceptionType.ShouldBe(ExceptionType.Unhandled);
+        result.FaultType.ShouldBe(FaultType.UnhandledException);
+        result.FinalHandledResult.ShouldBe(default);
+        result.Result.ShouldBe(default);
     }
 
     #endregion

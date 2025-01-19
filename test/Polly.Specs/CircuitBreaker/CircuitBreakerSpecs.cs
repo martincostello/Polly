@@ -118,7 +118,7 @@ public class CircuitBreakerSpecs : IDisposable
         bool delegateExecutedWhenBroken = false;
         var ex = Should.Throw<BrokenCircuitException>(() => breaker.Execute(() => delegateExecutedWhenBroken = true));
         ex.Message.ShouldBe("The circuit is now open and is not allowing calls.");
-        ex.InnerException.ShouldBeOfType<DivideByZeroException>();
+        ex.InnerException.ShouldBeOfType<ArgumentOutOfRangeException>();
         breaker.CircuitState.ShouldBe(CircuitState.Open);
         delegateExecutedWhenBroken.ShouldBeFalse();
     }
@@ -181,7 +181,7 @@ public class CircuitBreakerSpecs : IDisposable
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         // 2 exception raised, circuit is now open
-        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
+        Should.Throw<BrokenCircuitException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         SystemClock.UtcNow = () => time.Add(durationOfBreak);
@@ -210,7 +210,7 @@ public class CircuitBreakerSpecs : IDisposable
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         // 2 exception raised, circuit is now open
-        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
+        Should.Throw<BrokenCircuitException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         SystemClock.UtcNow = () => time.Add(durationOfBreak);
@@ -262,7 +262,7 @@ public class CircuitBreakerSpecs : IDisposable
         Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
-        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
+        Should.Throw<BrokenCircuitException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
     }
 
@@ -1072,7 +1072,7 @@ public class CircuitBreakerSpecs : IDisposable
         // first call after duration raises an exception, so circuit should break again
         Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
-        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
+        Should.Throw<BrokenCircuitException>(() => breaker.RaiseException<DivideByZeroException>());
 
         transitionedStates[0].ShouldBe(CircuitState.Closed);
         transitionedStates[1].ShouldBe(CircuitState.HalfOpen);

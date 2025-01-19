@@ -1204,7 +1204,7 @@ public class AdvancedCircuitBreakerAsyncSpecs : IDisposable
         // first call after duration raises an exception, so circuit should open again
         await Should.ThrowAsync<DivideByZeroException>(() => breaker.RaiseExceptionAsync<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
-        await Should.ThrowAsync<DivideByZeroException>(() => breaker.RaiseExceptionAsync<DivideByZeroException>());
+        await Should.ThrowAsync<BrokenCircuitException>(() => breaker.RaiseExceptionAsync<DivideByZeroException>());
     }
 
     [Fact]
@@ -1776,7 +1776,7 @@ public class AdvancedCircuitBreakerAsyncSpecs : IDisposable
         onBreakCalled.ShouldBe(1);
 
         // call through circuit when already broken - should not retrigger onBreak
-        await Should.ThrowAsync<DivideByZeroException>(() => breaker.RaiseExceptionAsync<DivideByZeroException>());
+        await Should.ThrowAsync<BrokenCircuitException>(() => breaker.RaiseExceptionAsync<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
         onBreakCalled.ShouldBe(1);
     }
@@ -2192,7 +2192,7 @@ public class AdvancedCircuitBreakerAsyncSpecs : IDisposable
 
         // first call after duration raises an exception, so circuit should open again
         await Should.ThrowAsync<DivideByZeroException>(() => breaker.RaiseExceptionAsync<DivideByZeroException>());
-        breaker.CircuitState.ShouldBe(CircuitState.Closed);
+        breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         await Should.ThrowAsync<BrokenCircuitException>(() => breaker.RaiseExceptionAsync<DivideByZeroException>());
 

@@ -35,7 +35,7 @@ public class ContextSpecs
     {
         Context context = new Context("SomeKey");
 
-        context.ShouldNotBeEmpty();
+        context.OperationKey.ShouldBe("SomeKey");
     }
 
     [Fact]

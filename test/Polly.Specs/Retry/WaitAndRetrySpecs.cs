@@ -405,7 +405,7 @@ public class WaitAndRetrySpecs : IDisposable
 
         policy.RaiseException<DivideByZeroException>(3, (e, i) => e.HelpLink = "Exception #" + i);
 
-        retryExceptions.ShouldAllBe((ex) => expectedExceptions.Contains(ex.Message));
+        retryExceptions.Select((p) => p.HelpLink).ShouldBe(expectedExceptions);
     }
 
     [Fact]

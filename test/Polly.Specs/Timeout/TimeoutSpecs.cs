@@ -301,11 +301,9 @@ public class TimeoutSpecs : TimeoutSpecsBase
 
         var actual = Should.Throw<AggregateException>(() => policy.Execute(() => Helper_ThrowException(exception)));
         actual.Message.ShouldBe(exception.Message);
-        actual.InnerExceptions.ShouldNotBeNull();
-        var inner = actual.InnerExceptions.FirstOrDefault(e => e.InnerException is NotImplementedException);
-        inner.ShouldNotBeNull();
-        inner.StackTrace.ShouldNotBeNull();
-        inner.StackTrace.ShouldContain(nameof(Helper_ThrowException));
+        actual.InnerException.ShouldBeOfType<NotImplementedException>();
+        actual.StackTrace.ShouldNotBeNull();
+        actual.StackTrace.ShouldContain(nameof(Helper_ThrowException));
     }
 
     [Fact]
@@ -366,11 +364,13 @@ public class TimeoutSpecs : TimeoutSpecsBase
         };
 
         // Whether executing the delegate directly, or through the policy, exception behavior should be the same.
-        Should.Throw<AggregateException>(action)
-            .InnerExceptions.ShouldBe([innerException1, innerException2]);
+        var ex = Should.Throw<AggregateException>(action);
+        ex.InnerExceptions.ShouldContain(innerException1);
+        ex.InnerExceptions.ShouldContain(innerException2);
 
-        Should.Throw<AggregateException>(() => policy.Execute(action))
-            .InnerExceptions.ShouldBe([innerException1, innerException2]);
+        ex = Should.Throw<AggregateException>(() => policy.Execute(action));
+        ex.InnerExceptions.ShouldContain(innerException1);
+        ex.InnerExceptions.ShouldContain(innerException2);
     }
 
     #endregion

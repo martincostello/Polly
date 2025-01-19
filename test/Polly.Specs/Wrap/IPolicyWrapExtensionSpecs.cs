@@ -78,7 +78,9 @@ public class IPolicyWrapExtensionSpecs
         Policy policyC = Policy.NoOp();
         PolicyWrap wrap = policyA.Wrap(policyB.Wrap(policyC));
 
-        wrap.GetPolicies().ShouldBe([policyB]);
+        wrap.GetPolicies<RetryPolicy>()
+            .OfType<IsPolicy>()
+            .ShouldBe([policyB]);
     }
 
     [Fact]
@@ -100,7 +102,9 @@ public class IPolicyWrapExtensionSpecs
         Policy policyC = Policy.NoOp();
         PolicyWrap wrap = policyA.Wrap(policyB.Wrap(policyC));
 
-        wrap.GetPolicies().ShouldBe([policyA, policyC]);
+        wrap.GetPolicies<NoOpPolicy>()
+            .OfType<IsPolicy>()
+            .ShouldBe([policyA, policyC]);
     }
 
     [Fact]

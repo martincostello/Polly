@@ -357,10 +357,12 @@ public class TimeoutTResultSpecs : TimeoutSpecsBase
 
         // Whether executing the delegate directly, or through the policy, exception behavior should be the same.
         var exception = Should.Throw<AggregateException>(() => func());
-        exception.InnerExceptions.ShouldBe([innerException1, innerException2]);
+        exception.InnerExceptions.ShouldContain(innerException1);
+        exception.InnerExceptions.ShouldContain(innerException2);
 
-        Should.Throw<AggregateException>(() => policy.Execute(func));
-        exception.InnerExceptions.ShouldBe([innerException1, innerException2]);
+        exception = Should.Throw<AggregateException>(() => policy.Execute(func));
+        exception.InnerExceptions.ShouldContain(innerException1);
+        exception.InnerExceptions.ShouldContain(innerException2);
     }
 
     #endregion

@@ -302,15 +302,13 @@ public class RetryTResultSpecs
             CreateDictionary("key1", "value1", "key2", "value2"),
             ResultPrimitive.Fault, ResultPrimitive.Good);
 
-        result.ShouldBeEquivalentTo(new
-        {
-            Outcome = OutcomeType.Successful,
-            FinalException = (Exception?)null,
-            ExceptionType = (ExceptionType?)null,
-            FaultType = (FaultType?)null,
-            FinalHandledResult = default(ResultPrimitive),
-            Result = ResultPrimitive.Good
-        });
+        result.ShouldNotBeNull();
+        result.Outcome.ShouldBe(OutcomeType.Successful);
+        result.FinalException.ShouldBeNull();
+        result.ExceptionType.ShouldBeNull();
+        result.FaultType.ShouldBeNull();
+        result.FinalHandledResult.ShouldBe(default);
+        result.Result.ShouldBe(ResultPrimitive.Good);
 
         contextData.ShouldNotBeNull();
         contextData.ShouldContainKeyAndValue("key1", "value1");

@@ -332,7 +332,7 @@ public class AsyncSerializingCacheProviderSpecs
 
         cacheHit.ShouldBeFalse();
         deserializeInvoked.ShouldBeFalse();
-        fromCache.ShouldBe(default);
+        fromCache.ShouldBe(ResultPrimitive.Undefined);
     }
 
     [Fact]
@@ -422,7 +422,7 @@ public class AsyncSerializingCacheProviderSpecs
 
         cacheHit.ShouldBeFalse();
         deserializeInvoked.ShouldBeFalse();
-        fromCache.ShouldBe(default);
+        fromCache.ShouldBe(ResultPrimitive.Undefined);
     }
 
     #endregion

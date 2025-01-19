@@ -421,7 +421,7 @@ public class SerializingCacheProviderSpecs
 
         cacheHit.ShouldBeFalse();
         deserializeInvoked.ShouldBeFalse();
-        fromCache.ShouldBe(default);
+        fromCache.ShouldBe(ResultPrimitive.Undefined);
     }
 
     #endregion
