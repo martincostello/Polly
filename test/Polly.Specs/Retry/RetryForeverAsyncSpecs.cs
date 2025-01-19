@@ -245,7 +245,7 @@ public class RetryForeverAsyncSpecs
         // If Polly were to declare only an Action<...> delegate for onRetry - but users declared async () => { } onRetry delegates - the compiler would happily assign them to the Action<...>, but the next 'try' would/could occur before onRetry execution had completed.
         // This test ensures the relevant retry policy does have a Func<..., Task> form for onRetry, and that it is awaited before the next try commences.
 
-        TimeSpan shimTimeSpan = TimeSpan.FromSeconds(0.2); // Consider increasing shimTimeSpan if test fails transiently in different environments.
+        TimeSpan shimTimeSpan = TimeSpan.FromSeconds(0.2);
 
         int executeDelegateInvocations = 0;
         int executeDelegateInvocationsWhenOnRetryExits = 0;
