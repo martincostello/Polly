@@ -128,7 +128,7 @@ public class PolicyTResultAsyncSpecs
             .HandleResult(ResultPrimitive.Fault)
             .RetryAsync((_, _, _) => { });
 
-        var ex = await Should.ThrowAsync<ArgumentNullException>()(() => policy.ExecuteAndCaptureAsync(_ => Task.FromResult(ResultPrimitive.Good), null!));
+        var ex = await Should.ThrowAsync<ArgumentNullException>(() => policy.ExecuteAndCaptureAsync(_ => Task.FromResult(ResultPrimitive.Good), null!));
         ex.ParamName.ShouldBe("context");
     }
 

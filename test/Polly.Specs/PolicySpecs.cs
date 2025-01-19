@@ -168,7 +168,7 @@ public class PolicySpecs
             .Handle<DivideByZeroException>()
             .Retry((_, _, _) => { });
 
-        Should.Throw<ArgumentNullException>.Invoking(() => policy.Execute(_ => { }, null!))
+        Should.Throw<ArgumentNullException>(() => policy.Execute(_ => { }, null!))
             .ParamName.ShouldBe("context");
     }
 
@@ -214,7 +214,7 @@ public class PolicySpecs
             .Handle<DivideByZeroException>()
             .Retry((_, _, _) => { });
 
-        Should.Throw<ArgumentNullException>()(() => policy.ExecuteAndCapture(_ => { }, (IDictionary<string, object>)null!));
+        Should.Throw<ArgumentNullException>(() => policy.ExecuteAndCapture(_ => { }, (IDictionary<string, object>)null!));
     }
 
     [Fact]

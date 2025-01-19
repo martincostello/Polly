@@ -172,8 +172,7 @@ public class ResiliencePipelineConversionExtensionsTests
                 return "dummy";
             },
             context)
-            .Should()
-            .Be("dummy");
+            .ShouldBe("dummy");
 
         context["retry"].ShouldBe(6);
     }

@@ -38,7 +38,7 @@ public class PolicyKeySpecs
 
         Action configure = () => policy.WithPolicyKey(Guid.NewGuid().ToString());
 
-        ShouldNotThrow(configure);
+        Should.NotThrow(configure);
 
         Should.Throw<ArgumentException>(configure).ParamName.ShouldBe("policyKey");
     }

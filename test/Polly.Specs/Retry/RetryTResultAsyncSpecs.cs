@@ -332,7 +332,7 @@ public class RetryTResultAsyncSpecs
         await policy.RaiseResultSequenceAsync(ResultPrimitive.Fault, ResultPrimitive.Good);
 
         capturedContext.ShouldNotBeNull();
-        capturedContext.ShouldEmpty();
+        capturedContext.ShouldBeEmpty();
     }
 
     [Fact]

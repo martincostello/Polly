@@ -1,13 +1,8 @@
 ﻿namespace Polly.Specs.Bulkhead;
 
 [Collection(Constants.ParallelThreadDependentTestCollection)]
-public class BulkheadTResultAsyncSpecs : BulkheadSpecsBase
+public class BulkheadTResultAsyncSpecs(ITestOutputHelper testOutputHelper) : BulkheadSpecsBase(testOutputHelper)
 {
-    public BulkheadTResultAsyncSpecs(ITestOutputHelper testOutputHelper)
-        : base(testOutputHelper)
-    {
-    }
-
     #region Configuration
 
     [Fact]
@@ -34,7 +29,7 @@ public class BulkheadTResultAsyncSpecs : BulkheadSpecsBase
         var exceptionAssertions = Should.Throw<TargetInvocationException>(func);
         exceptionAssertions.Message.ShouldBe("Exception has been thrown by the target of an invocation.");
         exceptionAssertions.InnerException.ShouldBeOfType<ArgumentNullException>()
-            .Which.ParamName.ShouldBe("action");
+            .ParamName.ShouldBe("action");
     }
 
     [Fact]
