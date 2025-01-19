@@ -14,8 +14,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
             .Handle<DivideByZeroException>()
             .AdvancedCircuitBreaker(0.5, TimeSpan.FromSeconds(10), 4, TimeSpan.MaxValue);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
     }
 
     [Fact]
@@ -25,9 +24,8 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
             .Handle<DivideByZeroException>()
             .AdvancedCircuitBreaker(0, TimeSpan.FromSeconds(10), 4, TimeSpan.FromSeconds(30));
 
-        action.Should.Throw<ArgumentOutOfRangeException>()
-            .ParamName.Should()
-            .Be("failureThreshold");
+        Should.Throw<ArgumentOutOfRangeException>(action)
+            .ParamName.ShouldBe("failureThreshold");
     }
 
     [Fact]
@@ -37,9 +35,8 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
             .Handle<DivideByZeroException>()
             .AdvancedCircuitBreaker(-0.5, TimeSpan.FromSeconds(10), 4, TimeSpan.FromSeconds(30));
 
-        action.Should.Throw<ArgumentOutOfRangeException>()
-            .ParamName.Should()
-            .Be("failureThreshold");
+        Should.Throw<ArgumentOutOfRangeException>(action)
+            .ParamName.ShouldBe("failureThreshold");
     }
 
     [Fact]
@@ -49,7 +46,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
             .Handle<DivideByZeroException>()
             .AdvancedCircuitBreaker(1.0, TimeSpan.FromSeconds(10), 4, TimeSpan.FromSeconds(30));
 
-        action.Should.NotThrow();
+        Should.NotThrow(action);
     }
 
     [Fact]
@@ -59,9 +56,8 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
             .Handle<DivideByZeroException>()
             .AdvancedCircuitBreaker(1.01, TimeSpan.FromSeconds(10), 4, TimeSpan.FromSeconds(30));
 
-        action.Should.Throw<ArgumentOutOfRangeException>()
-            .ParamName.Should()
-            .Be("failureThreshold");
+        Should.Throw<ArgumentOutOfRangeException>(action)
+            .ParamName.ShouldBe("failureThreshold");
     }
 
     [Fact]
@@ -75,9 +71,8 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 4,
                 TimeSpan.FromSeconds(30));
 
-        action.Should.Throw<ArgumentOutOfRangeException>()
-            .ParamName.Should()
-            .Be("samplingDuration");
+        Should.Throw<ArgumentOutOfRangeException>(action)
+            .ParamName.ShouldBe("samplingDuration");
     }
 
     [Fact]
@@ -87,7 +82,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
             .Handle<DivideByZeroException>()
             .AdvancedCircuitBreaker(0.5, TimeSpan.FromMilliseconds(20), 4, TimeSpan.FromSeconds(30));
 
-        action.Should.NotThrow<ArgumentOutOfRangeException>();
+        Should.NotThrow(action);
     }
 
     [Fact]
@@ -97,9 +92,8 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
             .Handle<DivideByZeroException>()
             .AdvancedCircuitBreaker(0.5, TimeSpan.FromSeconds(10), 1, TimeSpan.FromSeconds(30));
 
-        action.Should.Throw<ArgumentOutOfRangeException>()
-            .ParamName.Should()
-            .Be("minimumThroughput");
+        Should.Throw<ArgumentOutOfRangeException>(action)
+            .ParamName.ShouldBe("minimumThroughput");
     }
 
     [Fact]
@@ -109,9 +103,8 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
             .Handle<DivideByZeroException>()
             .AdvancedCircuitBreaker(0.5, TimeSpan.FromSeconds(10), 0, TimeSpan.FromSeconds(30));
 
-        action.Should.Throw<ArgumentOutOfRangeException>()
-            .ParamName.Should()
-            .Be("minimumThroughput");
+        Should.Throw<ArgumentOutOfRangeException>(action)
+            .ParamName.ShouldBe("minimumThroughput");
     }
 
     [Fact]
@@ -121,9 +114,8 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
             .Handle<DivideByZeroException>()
             .AdvancedCircuitBreaker(0.5, TimeSpan.FromSeconds(10), 4, -TimeSpan.FromSeconds(1));
 
-        action.Should.Throw<ArgumentOutOfRangeException>()
-            .ParamName.Should()
-            .Be("durationOfBreak");
+        Should.Throw<ArgumentOutOfRangeException>(action)
+            .ParamName.ShouldBe("durationOfBreak");
     }
 
     [Fact]
@@ -133,7 +125,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
             .Handle<DivideByZeroException>()
             .AdvancedCircuitBreaker(0.5, TimeSpan.FromSeconds(10), 4, TimeSpan.Zero);
 
-        action.Should.NotThrow();
+        Should.NotThrow(action);
     }
 
     [Fact]
@@ -161,7 +153,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
     [Fact]
     public void Should_not_open_circuit_if_failure_threshold_and_minimum_threshold_is_equalled_but_last_call_is_success()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         CircuitBreakerPolicy breaker = Policy
@@ -173,32 +165,26 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
         // Three of three actions in this test throw handled failures.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // Failure threshold exceeded, but throughput threshold not yet.
 
         // Throughput threshold will be exceeded by the below successful call, but we never break on a successful call; hence don't break on this.
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
-
-        // No adjustment to SystemClock.UtcNow, so all exceptions were raised within same timeslice
     }
 
     [Fact]
     public void Should_not_open_circuit_if_exceptions_raised_are_not_one_of_the_specified_exceptions()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         CircuitBreakerPolicy breaker = Policy
@@ -211,20 +197,16 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
         // Four of four actions in this test throw unhandled failures.
-        breaker.Invoking(x => x.RaiseException<ArgumentNullException>())
-            .Should.Throw<ArgumentNullException>();
+        Should.Throw<ArgumentNullException>(() => breaker.RaiseException<ArgumentNullException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<ArgumentNullException>())
-            .Should.Throw<ArgumentNullException>();
+        Should.Throw<ArgumentNullException>(() => breaker.RaiseException<ArgumentNullException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<ArgumentNullException>())
-            .Should.Throw<ArgumentNullException>();
+        Should.Throw<ArgumentNullException>(() => breaker.RaiseException<ArgumentNullException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<ArgumentNullException>())
-            .Should.Throw<ArgumentNullException>();
+        Should.Throw<ArgumentNullException>(() => breaker.RaiseException<ArgumentNullException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
     }
 
@@ -241,7 +223,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
     [Fact]
     public void Should_open_circuit_blocking_executions_and_noting_the_last_raised_exception_if_failure_threshold_exceeded_and_throughput_threshold_equalled_within_timeslice_in_same_window()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         CircuitBreakerPolicy breaker = Policy
@@ -253,38 +235,31 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
         // Four of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // No adjustment to SystemClock.UtcNow, so all exceptions raised within same timeslice
-
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         bool delegateExecutedWhenBroken = false;
-        breaker.Invoking(x => x.Execute(() => delegateExecutedWhenBroken = true))
-            .Should.Throw<BrokenCircuitException>()
-            .WithMessage("The circuit is now open and is not allowing calls.")
-            .WithInnerException<DivideByZeroException>();
+        var ex = Should.Throw<BrokenCircuitException>(() => breaker.Execute(() => delegateExecutedWhenBroken = true));
+        ex.Message.ShouldBe("The circuit is now open and is not allowing calls.");
+        ex.InnerException.ShouldBeOfType<DivideByZeroException>();
         breaker.CircuitState.ShouldBe(CircuitState.Open);
         delegateExecutedWhenBroken.ShouldBeFalse();
-
     }
 
     [Fact]
     public void Should_open_circuit_with_the_last_raised_exception_if_failure_threshold_exceeded_and_throughput_threshold_equalled_within_timeslice_in_different_windows()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var samplingDuration = TimeSpan.FromSeconds(10);
@@ -298,16 +273,13 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
         // Four of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // Placing the rest of the invocations ('samplingDuration' / 2) + 1 seconds later
@@ -315,22 +287,19 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         // They are still placed within same timeslice.
         SystemClock.UtcNow = () => time.AddSeconds((samplingDuration.Seconds / 2d) + 1);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<BrokenCircuitException>()
-            .WithMessage("The circuit is now open and is not allowing calls.")
-            .WithInnerException<DivideByZeroException>();
+        var ex = Should.Throw<BrokenCircuitException>(() => breaker.RaiseException<DivideByZeroException>());
+        ex.Message.ShouldBe("The circuit is now open and is not allowing calls.");
+        ex.InnerException.ShouldBeOfType<DivideByZeroException>();
         breaker.CircuitState.ShouldBe(CircuitState.Open);
-
     }
 
     [Fact]
     public void Should_open_circuit_with_the_last_raised_exception_if_failure_threshold_exceeded_though_not_all_are_failures_and_throughput_threshold_equalled_within_timeslice_in_same_window()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         CircuitBreakerPolicy breaker = Policy
@@ -342,36 +311,29 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
         // Three of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         // No adjustment to SystemClock.UtcNow, so all exceptions were raised within same timeslice
-
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<BrokenCircuitException>()
-            .WithMessage("The circuit is now open and is not allowing calls.")
-            .WithInnerException<DivideByZeroException>();
+        var ex = Should.Throw<BrokenCircuitException>(() => breaker.RaiseException<DivideByZeroException>());
+        ex.Message.ShouldBe("The circuit is now open and is not allowing calls.");
+        ex.InnerException.ShouldBeOfType<DivideByZeroException>();
         breaker.CircuitState.ShouldBe(CircuitState.Open);
-
     }
 
     [Fact]
     public void Should_open_circuit_with_the_last_raised_exception_if_failure_threshold_exceeded_though_not_all_are_failures_and_throughput_threshold_equalled_within_timeslice_in_different_windows()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var samplingDuration = TimeSpan.FromSeconds(10);
@@ -385,20 +347,16 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
         // Three of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         // Placing the rest of the invocations ('samplingDuration' / 2) + 1 seconds later
@@ -406,18 +364,16 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         // They are still placed within same timeslice
         SystemClock.UtcNow = () => time.AddSeconds((samplingDuration.Seconds / 2d) + 1);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<BrokenCircuitException>()
-            .WithMessage("The circuit is now open and is not allowing calls.")
-            .WithInnerException<DivideByZeroException>();
+        var ex = Should.Throw<BrokenCircuitException>(() => breaker.RaiseException<DivideByZeroException>());
+        ex.Message.ShouldBe("The circuit is now open and is not allowing calls.");
+        ex.InnerException.ShouldBeOfType<DivideByZeroException>();
         breaker.CircuitState.ShouldBe(CircuitState.Open);
-
     }
 
     [Fact]
     public void Should_open_circuit_with_the_last_raised_exception_if_failure_threshold_equalled_and_throughput_threshold_equalled_within_timeslice_in_same_window()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         CircuitBreakerPolicy breaker = Policy
@@ -429,36 +385,29 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
         // Two of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         // No adjustment to SystemClock.UtcNow, so all exceptions were raised within same timeslice
-
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<BrokenCircuitException>()
-            .WithMessage("The circuit is now open and is not allowing calls.")
-            .WithInnerException<DivideByZeroException>();
+        var ex = Should.Throw<BrokenCircuitException>(() => breaker.RaiseException<DivideByZeroException>());
+        ex.Message.ShouldBe("The circuit is now open and is not allowing calls.");
+        ex.InnerException.ShouldBeOfType<DivideByZeroException>();
         breaker.CircuitState.ShouldBe(CircuitState.Open);
-
     }
 
     [Fact]
     public void Should_open_circuit_with_the_last_raised_exception_if_failure_threshold_equalled_and_throughput_threshold_equalled_within_timeslice_in_different_windows()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var samplingDuration = TimeSpan.FromSeconds(10);
@@ -472,20 +421,16 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
         // Two of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         // Placing the rest of the invocations ('samplingDuration' / 2) + 1 seconds later
@@ -493,18 +438,16 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         // They are still placed within same timeslice
         SystemClock.UtcNow = () => time.AddSeconds((samplingDuration.Seconds / 2d) + 1);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<BrokenCircuitException>()
-            .WithMessage("The circuit is now open and is not allowing calls.")
-            .WithInnerException<DivideByZeroException>();
+        var ex = Should.Throw<BrokenCircuitException>(() => breaker.RaiseException<DivideByZeroException>());
+        ex.Message.ShouldBe("The circuit is now open and is not allowing calls.");
+        ex.InnerException.ShouldBeOfType<DivideByZeroException>();
         breaker.CircuitState.ShouldBe(CircuitState.Open);
-
     }
 
     [Fact]
     public void Should_not_open_circuit_if_failure_threshold_exceeded_but_throughput_threshold_not_met_before_timeslice_expires()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var samplingDuration = TimeSpan.FromSeconds(10);
@@ -518,31 +461,26 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
         // Four of four actions in this test throw handled failures; but only the first three within the timeslice.
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // Adjust SystemClock so that timeslice (clearly) expires; fourth exception thrown in next-recorded timeslice.
         SystemClock.UtcNow = () => time.Add(samplingDuration).Add(samplingDuration);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
-
     }
 
     [Fact]
     public void Should_not_open_circuit_if_failure_threshold_exceeded_but_throughput_threshold_not_met_before_timeslice_expires_even_if_timeslice_expires_only_exactly()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var samplingDuration = TimeSpan.FromSeconds(10);
@@ -556,31 +494,26 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
         // Four of four actions in this test throw handled failures; but only the first three within the timeslice.
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // Adjust SystemClock so that timeslice (just) expires; fourth exception thrown in following timeslice.
         SystemClock.UtcNow = () => time.Add(samplingDuration);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
-
     }
 
     [Fact]
     public void Should_not_open_circuit_if_failure_threshold_exceeded_but_throughput_threshold_not_met_before_timeslice_expires_even_if_error_occurring_just_at_the_end_of_the_duration()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var samplingDuration = TimeSpan.FromSeconds(10);
@@ -596,34 +529,29 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         // Four of four actions in this test throw handled failures; but only the first three within the original timeslice.
 
         // Two actions at the start of the original timeslice.
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // Creates a new window right at the end of the original timeslice.
         SystemClock.UtcNow = () => time.AddTicks(samplingDuration.Ticks - 1);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // Adjust SystemClock so that timeslice (just) expires; fourth exception thrown in following timeslice.  If timeslice/window rollover is precisely defined, this should cause first two actions to be forgotten from statistics (rolled out of the window of relevance), and thus the circuit not to break.
         SystemClock.UtcNow = () => time.Add(samplingDuration);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
-
     }
 
     [Fact]
     public void Should_open_circuit_with_the_last_raised_exception_if_failure_threshold_equalled_and_throughput_threshold_equalled_even_if_only_just_within_timeslice()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var samplingDuration = TimeSpan.FromSeconds(10);
@@ -637,37 +565,31 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
         // Four of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // Adjust SystemClock so that timeslice doesn't quite expire; fourth exception thrown in same timeslice.
         SystemClock.UtcNow = () => time.AddTicks(samplingDuration.Ticks - 1);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<BrokenCircuitException>()
-            .WithMessage("The circuit is now open and is not allowing calls.")
-            .WithInnerException<DivideByZeroException>();
+        var ex = Should.Throw<BrokenCircuitException>(() => breaker.RaiseException<DivideByZeroException>());
+        ex.Message.ShouldBe("The circuit is now open and is not allowing calls.");
+        ex.InnerException.ShouldBeOfType<DivideByZeroException>();
         breaker.CircuitState.ShouldBe(CircuitState.Open);
-
     }
 
     [Fact]
     public void Should_not_open_circuit_if_failure_threshold_not_met_and_throughput_threshold_not_met()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         CircuitBreakerPolicy breaker = Policy
@@ -679,25 +601,20 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
         // One of three actions in this test throw handled failures.
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
-
-        // No adjustment to SystemClock.UtcNow, so all exceptions were raised within same timeslice
     }
 
     [Fact]
     public void Should_not_open_circuit_if_failure_threshold_not_met_but_throughput_threshold_met_before_timeslice_expires()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         CircuitBreakerPolicy breaker = Policy
@@ -709,29 +626,23 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
         // One of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
-
-        // No adjustment to SystemClock.UtcNow, so all exceptions were raised within same timeslice
     }
 
     [Fact]
     public void Should_open_circuit_if_failures_at_end_of_last_timeslice_below_failure_threshold_and_failures_in_beginning_of_new_timeslice_where_total_equals_failure_threshold()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var samplingDuration = TimeSpan.FromSeconds(10);
@@ -746,8 +657,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
 
         // Executing a single invocation to ensure timeslice is created
         // This invocation is not be counted against the threshold
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // The time is set to just at the end of the sampling duration ensuring
@@ -755,16 +665,13 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         SystemClock.UtcNow = () => time.AddTicks(samplingDuration.Ticks - 1);
 
         // Three of four actions in this test occur within the first timeslice.
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // Setting the time to just barely into the new timeslice
@@ -773,15 +680,14 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         // This failure opens the circuit, because it is the second failure of four calls
         // equalling the failure threshold. The minimum threshold within the defined
         // sampling duration is met, when using rolling windows.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
     }
 
     [Fact]
     public void Should_not_open_circuit_if_failures_at_end_of_last_timeslice_and_failures_in_beginning_of_new_timeslice_when_below_minimum_throughput_threshold()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var samplingDuration = TimeSpan.FromSeconds(10);
@@ -796,8 +702,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
 
         // Executing a single invocation to ensure timeslice is created
         // This invocation is not be counted against the threshold
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // The time is set to just at the end of the sampling duration ensuring
@@ -805,12 +710,10 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         SystemClock.UtcNow = () => time.AddTicks(samplingDuration.Ticks - 1);
 
         // Two of three actions in this test occur within the first timeslice.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // Setting the time to just barely into the new timeslice
@@ -819,15 +722,14 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         // A third failure occurs just at the beginning of the new timeslice making
         // the number of failures above the failure threshold. However, the throughput is
         // below the minimum threshold as to open the circuit.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
     }
 
     [Fact]
     public void Should_open_circuit_if_failures_in_second_window_of_last_timeslice_and_failures_in_first_window_in_next_timeslice_exceeds_failure_threshold_and_minimum_threshold()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var samplingDuration = TimeSpan.FromSeconds(10);
@@ -843,31 +745,26 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
 
         // Executing a single invocation to ensure timeslice is created
         // This invocation is not be counted against the threshold
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // Setting the time to the second window in the rolling metrics
         SystemClock.UtcNow = () => time.AddSeconds(samplingDuration.Seconds / (double)numberOfWindowsDefinedInCircuitBreaker);
 
         // Three actions occur in the second window of the first timeslice
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // Setting the time to just barely into the new timeslice
         SystemClock.UtcNow = () => time.Add(samplingDuration);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
     }
 
@@ -884,7 +781,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
     [Fact]
     public void Should_open_circuit_with_the_last_raised_exception_if_failure_threshold_exceeded_and_throughput_threshold_equalled_within_timeslice_low_sampling_duration()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         CircuitBreakerPolicy breaker = Policy
@@ -896,36 +793,29 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
         // Four of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // No adjustment to SystemClock.UtcNow, so all exceptions raised within same timeslice
-
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<BrokenCircuitException>()
-            .WithMessage("The circuit is now open and is not allowing calls.")
-            .WithInnerException<DivideByZeroException>();
+        var ex = Should.Throw<BrokenCircuitException>(() => breaker.RaiseException<DivideByZeroException>());
+        ex.Message.ShouldBe("The circuit is now open and is not allowing calls.");
+        ex.InnerException.ShouldBeOfType<DivideByZeroException>();
         breaker.CircuitState.ShouldBe(CircuitState.Open);
-
     }
 
     [Fact]
     public void Should_open_circuit_with_the_last_raised_exception_if_failure_threshold_exceeded_though_not_all_are_failures_and_throughput_threshold_equalled_within_timeslice_low_sampling_duration()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         CircuitBreakerPolicy breaker = Policy
@@ -937,36 +827,29 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
         // Three of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         // No adjustment to SystemClock.UtcNow, so all exceptions were raised within same timeslice
-
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<BrokenCircuitException>()
-            .WithMessage("The circuit is now open and is not allowing calls.")
-            .WithInnerException<DivideByZeroException>();
+        var ex = Should.Throw<BrokenCircuitException>(() => breaker.RaiseException<DivideByZeroException>());
+        ex.Message.ShouldBe("The circuit is now open and is not allowing calls.");
+        ex.InnerException.ShouldBeOfType<DivideByZeroException>();
         breaker.CircuitState.ShouldBe(CircuitState.Open);
-
     }
 
     [Fact]
     public void Should_open_circuit_with_the_last_raised_exception_if_failure_threshold_equalled_and_throughput_threshold_equalled_within_timeslice_low_sampling_duration()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         CircuitBreakerPolicy breaker = Policy
@@ -978,36 +861,29 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
         // Two of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         // No adjustment to SystemClock.UtcNow, so all exceptions were raised within same timeslice
-
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<BrokenCircuitException>()
-            .WithMessage("The circuit is now open and is not allowing calls.")
-            .WithInnerException<DivideByZeroException>();
+        var ex = Should.Throw<BrokenCircuitException>(() => breaker.RaiseException<DivideByZeroException>());
+        ex.Message.ShouldBe("The circuit is now open and is not allowing calls.");
+        ex.InnerException.ShouldBeOfType<DivideByZeroException>();
         breaker.CircuitState.ShouldBe(CircuitState.Open);
-
     }
 
     [Fact]
     public void Should_not_open_circuit_if_failure_threshold_exceeded_but_throughput_threshold_not_met_before_timeslice_expires_low_sampling_duration()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var samplingDuration = TimeSpan.FromMilliseconds(199);
@@ -1021,31 +897,26 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
         // Four of four actions in this test throw handled failures; but only the first within the timeslice.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // Adjust SystemClock so that timeslice (clearly) expires; fourth exception thrown in next-recorded timeslice.
         SystemClock.UtcNow = () => time.Add(samplingDuration).Add(samplingDuration);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
-
     }
 
     [Fact]
     public void Should_not_open_circuit_if_failure_threshold_exceeded_but_throughput_threshold_not_met_before_timeslice_expires_even_if_timeslice_expires_only_exactly_low_sampling_duration()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var samplingDuration = TimeSpan.FromMilliseconds(199);
@@ -1059,31 +930,26 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
         // Two of four actions in this test throw handled failures; but only the first within the timeslice.
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // Adjust SystemClock so that timeslice (just) expires; fourth exception thrown in following timeslice.
         SystemClock.UtcNow = () => time.Add(samplingDuration);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
-
     }
 
     [Fact]
     public void Should_open_circuit_with_the_last_raised_exception_if_failure_threshold_equalled_and_throughput_threshold_equalled_even_if_only_just_within_timeslice_low_sampling_duration()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var samplingDuration = TimeSpan.FromMilliseconds(199);
@@ -1097,37 +963,31 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
         // Four of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // Adjust SystemClock so that timeslice doesn't quite expire; fourth exception thrown in same timeslice.
         SystemClock.UtcNow = () => time.AddTicks(samplingDuration.Ticks - 1);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<BrokenCircuitException>()
-            .WithMessage("The circuit is now open and is not allowing calls.")
-            .WithInnerException<DivideByZeroException>();
+        var ex = Should.Throw<BrokenCircuitException>(() => breaker.RaiseException<DivideByZeroException>());
+        ex.Message.ShouldBe("The circuit is now open and is not allowing calls.");
+        ex.InnerException.ShouldBeOfType<DivideByZeroException>();
         breaker.CircuitState.ShouldBe(CircuitState.Open);
-
     }
 
     [Fact]
     public void Should_not_open_circuit_if_failure_threshold_not_met_and_throughput_threshold_not_met_low_sampling_duration()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         CircuitBreakerPolicy breaker = Policy
@@ -1139,25 +999,20 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
         // One of three actions in this test throw handled failures.
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
-
-        // No adjustment to SystemClock.UtcNow, so all exceptions were raised within same timeslice
     }
 
     [Fact]
     public void Should_not_open_circuit_if_failure_threshold_not_met_but_throughput_threshold_met_before_timeslice_expires_low_sampling_duration()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         CircuitBreakerPolicy breaker = Policy
@@ -1169,29 +1024,23 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
         // One of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
-
-        // No adjustment to SystemClock.UtcNow, so all exceptions were raised within same timeslice
     }
 
     [Fact]
     public void Should_not_open_circuit_if_failures_at_end_of_last_timeslice_below_failure_threshold_and_failures_in_beginning_of_new_timeslice_where_total_equals_failure_threshold_low_sampling_duration()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var samplingDuration = TimeSpan.FromMilliseconds(199);
@@ -1206,8 +1055,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
 
         // Executing a single invocation to ensure timeslice is created
         // This invocation is not be counted against the threshold
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // The time is set to just at the end of the sampling duration ensuring
@@ -1215,16 +1063,13 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         SystemClock.UtcNow = () => time.AddTicks(samplingDuration.Ticks - 1);
 
         // Three of four actions in this test occur within the first timeslice.
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // Setting the time to just barely into the new timeslice
@@ -1232,8 +1077,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
 
         // This failure does not open the circuit, because a new duration should have
         // started and with such low sampling duration, windows should not be used.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
     }
 
@@ -1246,7 +1090,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
     [Fact]
     public void Should_halfopen_circuit_after_the_specified_duration_has_passed_with_failures_in_same_window()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var durationOfBreak = TimeSpan.FromSeconds(30);
@@ -1260,35 +1104,29 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: durationOfBreak);
 
         // Four of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
-
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         SystemClock.UtcNow = () => time.Add(durationOfBreak);
 
         // duration has passed, circuit now half open
         breaker.CircuitState.ShouldBe(CircuitState.HalfOpen);
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
     }
 
     [Fact]
     public void Should_halfopen_circuit_after_the_specified_duration_has_passed_with_failures_in_different_windows()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var durationOfBreak = TimeSpan.FromSeconds(30);
@@ -1303,16 +1141,13 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: durationOfBreak);
 
         // Four of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // Placing the rest of the invocations ('samplingDuration' / 2) + 1 seconds later
@@ -1321,9 +1156,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         var anotherWindowDuration = (samplingDuration.Seconds / 2d) + 1;
         SystemClock.UtcNow = () => time.AddSeconds(anotherWindowDuration);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
-
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         SystemClock.UtcNow = () => time.Add(durationOfBreak);
@@ -1335,14 +1168,13 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
 
         // duration has passed, circuit now half open
         breaker.CircuitState.ShouldBe(CircuitState.HalfOpen);
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
     }
 
     [Fact]
     public void Should_open_circuit_again_after_the_specified_duration_has_passed_if_the_next_call_raises_an_exception()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var durationOfBreak = TimeSpan.FromSeconds(30);
@@ -1356,21 +1188,16 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: durationOfBreak);
 
         // Four of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
-
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         SystemClock.UtcNow = () => time.Add(durationOfBreak);
@@ -1379,16 +1206,14 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         breaker.CircuitState.ShouldBe(CircuitState.HalfOpen);
 
         // first call after duration raises an exception, so circuit should open again
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
-
     }
 
     [Fact]
     public void Should_reset_circuit_after_the_specified_duration_has_passed_if_the_next_call_does_not_raise_an_exception()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var durationOfBreak = TimeSpan.FromSeconds(30);
@@ -1402,21 +1227,16 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: durationOfBreak);
 
         // Four of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
-
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         SystemClock.UtcNow = () => time.Add(durationOfBreak);
@@ -1432,7 +1252,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
     [Fact]
     public void Should_only_allow_single_execution_on_first_entering_halfopen_state__test_execution_permit_directly()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var durationOfBreak = TimeSpan.FromSeconds(30);
@@ -1445,10 +1265,8 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 minimumThroughput: 2,
                 durationOfBreak: durationOfBreak);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
 
         // exception raised, circuit is now open.
         breaker.CircuitState.ShouldBe(CircuitState.Open);
@@ -1458,18 +1276,18 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         breaker.CircuitState.ShouldBe(CircuitState.HalfOpen);
 
         // OnActionPreExecute() should permit first execution.
-        breaker.BreakerController.Invoking(c => c.OnActionPreExecute()).Should.NotThrow();
+        Should.NotThrow(() => breaker.BreakerController.OnActionPreExecute());
         breaker.CircuitState.ShouldBe(CircuitState.HalfOpen);
 
         // OnActionPreExecute() should reject a second execution.
-        breaker.BreakerController.Invoking(c => c.OnActionPreExecute()).Should.Throw<BrokenCircuitException>();
+        Should.Throw<BrokenCircuitException>(() => breaker.BreakerController.OnActionPreExecute());
         breaker.CircuitState.ShouldBe(CircuitState.HalfOpen);
     }
 
     [Fact]
     public void Should_allow_single_execution_per_break_duration_in_halfopen_state__test_execution_permit_directly()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var durationOfBreak = TimeSpan.FromSeconds(30);
@@ -1482,10 +1300,8 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 minimumThroughput: 2,
                 durationOfBreak: durationOfBreak);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
 
         // exception raised, circuit is now open.
         breaker.CircuitState.ShouldBe(CircuitState.Open);
@@ -1495,11 +1311,11 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         breaker.CircuitState.ShouldBe(CircuitState.HalfOpen);
 
         // OnActionPreExecute() should permit first execution.
-        breaker.BreakerController.Invoking(c => c.OnActionPreExecute()).Should.NotThrow();
+        Should.NotThrow(() => breaker.BreakerController.OnActionPreExecute());
         breaker.CircuitState.ShouldBe(CircuitState.HalfOpen);
 
         // OnActionPreExecute() should reject a second execution.
-        breaker.BreakerController.Invoking(c => c.OnActionPreExecute()).Should.Throw<BrokenCircuitException>();
+        Should.Throw<BrokenCircuitException>(() => breaker.BreakerController.OnActionPreExecute());
         breaker.CircuitState.ShouldBe(CircuitState.HalfOpen);
 
         // Allow another time window to pass (breaker should still be HalfOpen).
@@ -1507,14 +1323,14 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         breaker.CircuitState.ShouldBe(CircuitState.HalfOpen);
 
         // OnActionPreExecute() should now permit another trial execution.
-        breaker.BreakerController.Invoking(c => c.OnActionPreExecute()).Should.NotThrow();
+        Should.NotThrow(() => breaker.BreakerController.OnActionPreExecute());
         breaker.CircuitState.ShouldBe(CircuitState.HalfOpen);
     }
 
     [Fact]
     public void Should_only_allow_single_execution_on_first_entering_halfopen_state__integration_test()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var durationOfBreak = TimeSpan.FromSeconds(30);
@@ -1527,10 +1343,8 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 minimumThroughput: 2,
                 durationOfBreak: durationOfBreak);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
 
         // exceptions raised, circuit is now open.
         breaker.CircuitState.ShouldBe(CircuitState.Open);
@@ -1554,7 +1368,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         // First execution in HalfOpen state: we should be able to verify state is HalfOpen as it executes.
         Task firstExecution = Task.Factory.StartNew(() =>
         {
-            breaker.Invoking(x => x.Execute(() =>
+            Should.NotThrow(() => breaker.Execute(() =>
             {
                 firstDelegateExecutedInHalfOpenState = breaker.CircuitState == CircuitState.HalfOpen; // For readability of test results, we assert on this at test end rather than nested in Task and breaker here.
 
@@ -1566,7 +1380,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 permitFirstExecutionEnd.WaitOne(testTimeoutToExposeDeadlocks);
                 firstExecutionActive = false;
 
-            })).Should.NotThrow();
+            }));
         }, TaskCreationOptions.LongRunning);
 
         // Attempt a second execution, signalled by the first execution to ensure they overlap: we should be able to verify it doesn't execute, and is rejected by a breaker in a HalfOpen state.
@@ -1621,15 +1435,18 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         // - First execution should have been permitted and executed under a HalfOpen state
         // - Second overlapping execution in halfopen state should not have been permitted.
         // - Second execution attempt should have been rejected with HalfOpen state as cause.
-        firstDelegateExecutedInHalfOpenState.ShouldBeTrue();
-        secondDelegateExecutedInHalfOpenState.ShouldBeFalse();
-        secondDelegateRejectedInHalfOpenState.ShouldBeTrue();
+        firstDelegateExecutedInHalfOpenState.ShouldNotBeNull();
+        firstDelegateExecutedInHalfOpenState.Value.ShouldBeTrue();
+        secondDelegateExecutedInHalfOpenState.ShouldNotBeNull();
+        secondDelegateExecutedInHalfOpenState.Value.ShouldBeFalse();
+        secondDelegateRejectedInHalfOpenState.ShouldNotBeNull();
+        secondDelegateRejectedInHalfOpenState.Value.ShouldBeTrue();
     }
 
     [Fact]
     public void Should_allow_single_execution_per_break_duration_in_halfopen_state__integration_test()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var durationOfBreak = TimeSpan.FromSeconds(30);
@@ -1642,10 +1459,8 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 minimumThroughput: 2,
                 durationOfBreak: durationOfBreak);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
 
         // exception raised, circuit is now open.
         breaker.CircuitState.ShouldBe(CircuitState.Open);
@@ -1670,7 +1485,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         // First execution in HalfOpen state: we should be able to verify state is HalfOpen as it executes.
         Task firstExecution = Task.Factory.StartNew(() =>
         {
-            breaker.Invoking(x => x.Execute(() =>
+            Should.NotThrow(() => breaker.Execute(() =>
             {
                 firstDelegateExecutedInHalfOpenState = breaker.CircuitState == CircuitState.HalfOpen; // For readability of test results, we assert on this at test end rather than nested in Task and breaker here.
 
@@ -1682,7 +1497,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 permitFirstExecutionEnd.WaitOne(testTimeoutToExposeDeadlocks);
                 firstExecutionActive = false;
 
-            })).Should.NotThrow();
+            }));
         }, TaskCreationOptions.LongRunning);
 
         // Attempt a second execution, signalled by the first execution to ensure they overlap; start it one breakDuration later.  We should be able to verify it does execute, though the breaker is still in a HalfOpen state.
@@ -1738,9 +1553,12 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         // Assert:
         // - First execution should have been permitted and executed under a HalfOpen state
         // - Second overlapping execution in half-open state should have been permitted, one breakDuration later.
-        firstDelegateExecutedInHalfOpenState.ShouldBeTrue();
-        secondDelegateExecutedInHalfOpenState.ShouldBeTrue();
-        secondDelegateRejectedInHalfOpenState.ShouldBeFalse();
+        firstDelegateExecutedInHalfOpenState.ShouldNotBeNull();
+        firstDelegateExecutedInHalfOpenState.Value.ShouldBeTrue();
+        secondDelegateExecutedInHalfOpenState.ShouldNotBeNull();
+        secondDelegateExecutedInHalfOpenState.Value.ShouldBeTrue();
+        secondDelegateRejectedInHalfOpenState.ShouldNotBeNull();
+        secondDelegateRejectedInHalfOpenState.Value.ShouldBeFalse();
     }
 
     #endregion
@@ -1761,8 +1579,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
 
         // circuit manually broken: execution should be blocked; even non-exception-throwing executions should not reset circuit
         bool delegateExecutedWhenBroken = false;
-        breaker.Invoking(x => x.Execute(() => delegateExecutedWhenBroken = true))
-            .Should.Throw<IsolatedCircuitException>();
+        Should.Throw<IsolatedCircuitException>(() => breaker.Execute(() => delegateExecutedWhenBroken = true));
         breaker.CircuitState.ShouldBe(CircuitState.Isolated);
         breaker.LastException.ShouldBeOfType<IsolatedCircuitException>();
         delegateExecutedWhenBroken.ShouldBeFalse();
@@ -1771,7 +1588,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
     [Fact]
     public void Should_hold_circuit_open_despite_elapsed_time_if_manual_override_open()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var durationOfBreak = TimeSpan.FromSeconds(30);
@@ -1787,15 +1604,14 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         breaker.CircuitState.ShouldBe(CircuitState.Isolated);
 
         bool delegateExecutedWhenBroken = false;
-        breaker.Invoking(x => x.Execute(() => delegateExecutedWhenBroken = true))
-            .Should.Throw<IsolatedCircuitException>();
+        Should.Throw<IsolatedCircuitException>(() => breaker.Execute(() => delegateExecutedWhenBroken = true));
         delegateExecutedWhenBroken.ShouldBeFalse();
     }
 
     [Fact]
     public void Should_close_circuit_again_on_reset_after_manual_override()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var durationOfBreak = TimeSpan.FromSeconds(30);
@@ -1806,18 +1622,17 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
 
         breaker.Isolate();
         breaker.CircuitState.ShouldBe(CircuitState.Isolated);
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.Throw<IsolatedCircuitException>();
+        Should.Throw<IsolatedCircuitException>(() => breaker.Execute(() => { }));
 
         breaker.Reset();
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
-        breaker.Invoking(x => x.Execute(() => { })).Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
     }
 
     [Fact]
     public void Should_be_able_to_reset_automatically_opened_circuit_without_specified_duration_passing()
     {
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var durationOfBreak = TimeSpan.FromSeconds(30);
@@ -1831,27 +1646,23 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 durationOfBreak: durationOfBreak);
 
         // Four of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         // reset circuit, with no time having passed
         breaker.Reset();
         SystemClock.UtcNow().ShouldBe(time);
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
-        breaker.Invoking(x => x.Execute(() => { })).Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
     }
 
     #endregion
@@ -1863,7 +1674,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
     {
         Action<Exception, TimeSpan> onBreak = (_, _) => { };
         bool onResetCalled = false;
-        Action onReset = () => { onResetCalled = true; };
+        Action onReset = () => onResetCalled = true;
 
         var durationOfBreak = TimeSpan.FromSeconds(30);
         Policy
@@ -1877,10 +1688,10 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
     public void Should_call_onbreak_when_breaking_circuit_automatically()
     {
         bool onBreakCalled = false;
-        Action<Exception, TimeSpan> onBreak = (_, _) => { onBreakCalled = true; };
+        Action<Exception, TimeSpan> onBreak = (_, _) => onBreakCalled = true;
         Action onReset = () => { };
 
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         CircuitBreakerPolicy breaker = Policy
@@ -1894,22 +1705,17 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 onReset: onReset);
 
         // Four of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // No adjustment to SystemClock.UtcNow, so all exceptions raised within same timeslice
-
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         onBreakCalled.ShouldBeTrue();
@@ -1919,7 +1725,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
     public void Should_call_onbreak_when_breaking_circuit_manually()
     {
         bool onBreakCalled = false;
-        Action<Exception, TimeSpan> onBreak = (_, _) => { onBreakCalled = true; };
+        Action<Exception, TimeSpan> onBreak = (_, _) => onBreakCalled = true;
         Action onReset = () => { };
 
         var durationOfBreak = TimeSpan.FromSeconds(30);
@@ -1938,10 +1744,10 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
     public void Should_call_onbreak_when_breaking_circuit_first_time_but_not_for_subsequent_calls_placed_through_open_circuit()
     {
         int onBreakCalled = 0;
-        Action<Exception, TimeSpan> onBreak = (_, _) => { onBreakCalled++; };
+        Action<Exception, TimeSpan> onBreak = (_, _) => onBreakCalled++;
         Action onReset = () => { };
 
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         CircuitBreakerPolicy breaker = Policy
@@ -1955,32 +1761,26 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 onReset: onReset);
 
         // Four of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
         onBreakCalled.ShouldBe(0);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
         onBreakCalled.ShouldBe(0);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
         onBreakCalled.ShouldBe(0);
 
         // No adjustment to SystemClock.UtcNow, so all exceptions raised within same timeslice
-
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         onBreakCalled.ShouldBe(1);
 
         // call through circuit when already broken - should not retrigger onBreak
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<BrokenCircuitException>();
+        Should.Throw<BrokenCircuitException>(() => breaker.RaiseException<DivideByZeroException>());
 
         breaker.CircuitState.ShouldBe(CircuitState.Open);
         onBreakCalled.ShouldBe(1);
@@ -1990,7 +1790,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
     public void Should_call_onbreak_when_breaking_circuit_first_time_but_not_for_subsequent_call_failure_which_arrives_on_open_state_though_started_on_closed_state()
     {
         int onBreakCalled = 0;
-        Action<Exception, TimeSpan> onBreak = (_, _) => { onBreakCalled++; };
+        Action<Exception, TimeSpan> onBreak = (_, _) => onBreakCalled++;
         Action onReset = () => { };
 
         CircuitBreakerPolicy breaker = Policy
@@ -2011,7 +1811,8 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         {
             breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-            breaker.Invoking(x => x.Execute(() =>
+            // However, since execution started when circuit was closed, BrokenCircuitException will not have been thrown on entry; the original exception will still be thrown.
+            Should.Throw<DivideByZeroException>(() => breaker.Execute(() =>
             {
                 permitMainThreadToOpenCircuit.Set();
 
@@ -2022,7 +1823,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 breaker.CircuitState.ShouldBe(CircuitState.Open);
                 throw new DivideByZeroException();
 
-            })).Should.Throw<DivideByZeroException>(); // However, since execution started when circuit was closed, BrokenCircuitException will not have been thrown on entry; the original exception will still be thrown.
+            }));
         }, TaskCreationOptions.LongRunning);
 
         permitMainThreadToOpenCircuit.WaitOne(testTimeoutToExposeDeadlocks).ShouldBeTrue();
@@ -2030,10 +1831,8 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         // Break circuit in the normal manner: onBreak() should be called once.
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
         onBreakCalled.ShouldBe(0);
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
         onBreakCalled.ShouldBe(1);
 
@@ -2066,10 +1865,10 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
     {
         int onBreakCalled = 0;
         int onResetCalled = 0;
-        Action<Exception, TimeSpan> onBreak = (_, _) => { onBreakCalled++; };
-        Action onReset = () => { onResetCalled++; };
+        Action<Exception, TimeSpan> onBreak = (_, _) => onBreakCalled++;
+        Action onReset = () => onResetCalled++;
 
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var durationOfBreak = TimeSpan.FromSeconds(30);
@@ -2085,22 +1884,17 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 onReset: onReset);
 
         // Four of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         // No adjustment to SystemClock.UtcNow, so all exceptions raised within same timeslice
-
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         onBreakCalled.ShouldBe(1);
@@ -2124,7 +1918,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
     {
         Action<Exception, TimeSpan> onBreak = (_, _) => { };
         bool onResetCalled = false;
-        Action onReset = () => { onResetCalled = true; };
+        Action onReset = () => onResetCalled = true;
 
         var durationOfBreak = TimeSpan.FromSeconds(30);
         CircuitBreakerPolicy breaker = Policy
@@ -2148,11 +1942,11 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         int onBreakCalled = 0;
         int onResetCalled = 0;
         int onHalfOpenCalled = 0;
-        Action<Exception, TimeSpan> onBreak = (_, _) => { onBreakCalled++; };
-        Action onReset = () => { onResetCalled++; };
-        Action onHalfOpen = () => { onHalfOpenCalled++; };
+        Action<Exception, TimeSpan> onBreak = (_, _) => onBreakCalled++;
+        Action onReset = () => onResetCalled++;
+        Action onHalfOpen = () => onHalfOpenCalled++;
 
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var durationOfBreak = TimeSpan.FromSeconds(30);
@@ -2169,25 +1963,20 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 onHalfOpen: onHalfOpen);
 
         // Four of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
         onBreakCalled.ShouldBe(0);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
         onBreakCalled.ShouldBe(0);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
         onBreakCalled.ShouldBe(0);
 
         // No adjustment to SystemClock.UtcNow, so all exceptions raised within same timeslice
-
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         onBreakCalled.ShouldBe(1);
@@ -2210,11 +1999,11 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         int onBreakCalled = 0;
         int onResetCalled = 0;
         int onHalfOpenCalled = 0;
-        Action<Exception, TimeSpan> onBreak = (_, _) => { onBreakCalled++; };
-        Action onReset = () => { onResetCalled++; };
-        Action onHalfOpen = () => { onHalfOpenCalled++; };
+        Action<Exception, TimeSpan> onBreak = (_, _) => onBreakCalled++;
+        Action onReset = () => onResetCalled++;
+        Action onHalfOpen = () => onHalfOpenCalled++;
 
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var durationOfBreak = TimeSpan.FromSeconds(30);
@@ -2231,25 +2020,20 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 onHalfOpen: onHalfOpen);
 
         // Four of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
         onBreakCalled.ShouldBe(0);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
         onBreakCalled.ShouldBe(0);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
         onBreakCalled.ShouldBe(0);
 
         // No adjustment to SystemClock.UtcNow, so all exceptions raised within same timeslice
-
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         onBreakCalled.ShouldBe(1);
@@ -2267,10 +2051,10 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
     {
         int onBreakCalled = 0;
         int onResetCalled = 0;
-        Action<Exception, TimeSpan> onBreak = (_, _) => { onBreakCalled++; };
-        Action onReset = () => { onResetCalled++; };
+        Action<Exception, TimeSpan> onBreak = (_, _) => onBreakCalled++;
+        Action onReset = () => onResetCalled++;
 
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var durationOfBreak = TimeSpan.FromSeconds(30);
@@ -2283,15 +2067,14 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         onBreakCalled.ShouldBe(1);
 
         breaker.CircuitState.ShouldBe(CircuitState.Isolated);
-        breaker.Invoking(x => x.Execute(() => { }))
-            .Should.Throw<IsolatedCircuitException>();
+        Should.Throw<IsolatedCircuitException>(() => breaker.Execute(() => { }));
 
         onResetCalled.ShouldBe(0);
         breaker.Reset();
         onResetCalled.ShouldBe(1);
 
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
-        breaker.Invoking(x => x.Execute(() => { })).Should.NotThrow();
+        Should.NotThrow(() => breaker.Execute(() => { }));
     }
 
     #region Tests of supplied parameters to onBreak delegate
@@ -2301,7 +2084,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
     {
         Exception? passedException = null;
 
-        Action<Exception, TimeSpan, Context> onBreak = (exception, _, _) => { passedException = exception; };
+        Action<Exception, TimeSpan, Context> onBreak = (exception, _, _) => passedException = exception;
         Action<Context> onReset = _ => { };
 
         CircuitBreakerPolicy breaker = Policy
@@ -2314,20 +2097,16 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 onBreak: onBreak,
                 onReset: onReset);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         passedException?.ShouldBeOfType<DivideByZeroException>();
@@ -2338,7 +2117,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
     {
         CircuitState? transitionedState = null;
 
-        Action<Exception, CircuitState, TimeSpan, Context> onBreak = (_, state, _, _) => { transitionedState = state; };
+        Action<Exception, CircuitState, TimeSpan, Context> onBreak = (_, state, _, _) => transitionedState = state;
         Action<Context> onReset = _ => { };
         Action onHalfOpen = () => { };
 
@@ -2353,20 +2132,16 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 onReset: onReset,
                 onHalfOpen: onHalfOpen);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         transitionedState?.ShouldBe(CircuitState.Closed);
@@ -2381,7 +2156,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         Action<Context> onReset = _ => { };
         Action onHalfOpen = () => { };
 
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var durationOfBreak = TimeSpan.FromSeconds(30);
@@ -2398,21 +2173,16 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 onHalfOpen: onHalfOpen);
 
         // Four of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
-
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         SystemClock.UtcNow = () => time.Add(durationOfBreak);
@@ -2421,8 +2191,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         breaker.CircuitState.ShouldBe(CircuitState.HalfOpen);
 
         // first call after duration raises an exception, so circuit should open again
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         transitionedStates[0].ShouldBe(CircuitState.Closed);
@@ -2434,7 +2203,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
     {
         TimeSpan? passedBreakTimespan = null;
 
-        Action<Exception, TimeSpan, Context> onBreak = (_, timespan, _) => { passedBreakTimespan = timespan; };
+        Action<Exception, TimeSpan, Context> onBreak = (_, timespan, _) => passedBreakTimespan = timespan;
         Action<Context> onReset = _ => { };
 
         TimeSpan durationOfBreak = TimeSpan.FromSeconds(30);
@@ -2449,20 +2218,16 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 onBreak: onBreak,
                 onReset: onReset);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         passedBreakTimespan.ShouldBe(durationOfBreak);
@@ -2472,10 +2237,10 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
     public void Should_open_circuit_with_timespan_maxvalue_if_manual_override_open()
     {
         TimeSpan? passedBreakTimespan = null;
-        Action<Exception, TimeSpan, Context> onBreak = (_, timespan, _) => { passedBreakTimespan = timespan; };
+        Action<Exception, TimeSpan, Context> onBreak = (_, timespan, _) => passedBreakTimespan = timespan;
         Action<Context> onReset = _ => { };
 
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         CircuitBreakerPolicy breaker = Policy
@@ -2505,10 +2270,10 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
     {
         IDictionary<string, object>? contextData = null;
 
-        Action<Exception, TimeSpan, Context> onBreak = (_, _, context) => { contextData = context; };
+        Action<Exception, TimeSpan, Context> onBreak = (_, _, context) => contextData = context;
         Action<Context> onReset = _ => { };
 
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         CircuitBreakerPolicy breaker = Policy
@@ -2522,25 +2287,24 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 onReset: onReset);
 
         // Four of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>(
-            CreateDictionary("key1", "value1", "key2", "value2"))).Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(
+            () =>
+                breaker.RaiseException<DivideByZeroException>(
+                    CreateDictionary("key1", "value1", "key2", "value2")));
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
-        contextData.Should()
-            .ContainKeys("key1", "key2").And
-            .ContainValues("value1", "value2");
+        contextData.ShouldNotBeNull();
+        contextData.ShouldContainKeyAndValue("key1", "value1");
+        contextData.ShouldContainKeyAndValue("key2", "value2");
     }
 
     [Fact]
@@ -2549,9 +2313,9 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         IDictionary<string, object>? contextData = null;
 
         Action<Exception, TimeSpan, Context> onBreak = (_, _, _) => { };
-        Action<Context> onReset = context => { contextData = context; };
+        Action<Context> onReset = context => contextData = context;
 
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var durationOfBreak = TimeSpan.FromSeconds(30);
@@ -2567,21 +2331,16 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 onReset: onReset);
 
         // Four of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
-
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         SystemClock.UtcNow = () => time.Add(durationOfBreak);
@@ -2591,9 +2350,9 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         breaker.Execute(_ => { }, CreateDictionary("key1", "value1", "key2", "value2"));
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        contextData.Should()
-            .ContainKeys("key1", "key2").And
-            .ContainValues("value1", "value2");
+        contextData.ShouldNotBeNull();
+        contextData.ShouldContainKeyAndValue("key1", "value1");
+        contextData.ShouldContainKeyAndValue("key2", "value2");
     }
 
     [Fact]
@@ -2601,10 +2360,10 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
     {
         IDictionary<string, object> contextData = CreateDictionary("key1", "value1", "key2", "value2");
 
-        Action<Exception, TimeSpan, Context> onBreak = (_, _, context) => { contextData = context; };
+        Action<Exception, TimeSpan, Context> onBreak = (_, _, context) => contextData = context;
         Action<Context> onReset = _ => { };
 
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         CircuitBreakerPolicy breaker = Policy
@@ -2618,21 +2377,16 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 onReset: onReset);
 
         // Four of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
-
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         contextData.ShouldBeEmpty();
@@ -2648,7 +2402,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         Action<Context> onReset =
             context => { contextValue = context.ContainsKey("key") ? context["key"].ToString() : null; };
 
-        var time = 1.January(2000);
+        var time = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         SystemClock.UtcNow = () => time;
 
         var durationOfBreak = TimeSpan.FromSeconds(30);
@@ -2664,20 +2418,16 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 onReset: onReset);
 
         // Four of four actions in this test throw handled failures.
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>(CreateDictionary("key", "original_value")))
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>(CreateDictionary("key", "original_value")));
         breaker.CircuitState.ShouldBe(CircuitState.Open);
         contextValue.ShouldBe("original_value");
 
@@ -2725,8 +2475,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 minimumThroughput: 2,
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
         breaker.LastException.ShouldBeOfType<DivideByZeroException>();
@@ -2743,12 +2492,10 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 minimumThroughput: 2,
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         breaker.LastException.ShouldBeOfType<DivideByZeroException>();
@@ -2765,12 +2512,10 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
                 minimumThroughput: 2,
                 durationOfBreak: TimeSpan.FromSeconds(30));
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Closed);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
         breaker.CircuitState.ShouldBe(CircuitState.Open);
 
         breaker.LastException.ShouldBeOfType<DivideByZeroException>();
@@ -2803,8 +2548,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
 
         using (var cancellationTokenSource = new CancellationTokenSource())
         {
-            breaker.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-                .Should.NotThrow();
+            Should.NotThrow(() => breaker.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute));
         }
 
         attemptsInvoked.ShouldBe(1);
@@ -2832,8 +2576,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
             CancellationToken cancellationToken = cancellationTokenSource.Token;
             cancellationTokenSource.Cancel();
 
-            breaker.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-                .Should.Throw<OperationCanceledException>()
+            Should.Throw<OperationCanceledException>(() => breaker.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
                 .CancellationToken.ShouldBe(cancellationToken);
         }
 
@@ -2862,8 +2605,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         {
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
-            breaker.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-                .Should.Throw<OperationCanceledException>()
+            Should.Throw<OperationCanceledException>(() => breaker.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
                 .CancellationToken.ShouldBe(cancellationToken);
         }
 
@@ -2892,8 +2634,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         {
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
-            breaker.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-                .Should.Throw<OperationCanceledException>()
+            Should.Throw<OperationCanceledException>(() => breaker.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
                 .CancellationToken.ShouldBe(cancellationToken);
         }
 
@@ -2920,8 +2661,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
 
         using (var cancellationTokenSource = new CancellationTokenSource())
         {
-            breaker.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-                .Should.Throw<DivideByZeroException>();
+            Should.Throw<DivideByZeroException>(() => breaker.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute));
         }
 
         attemptsInvoked.ShouldBe(1);
@@ -2935,19 +2675,14 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
             .Handle<DivideByZeroException>()
             .AdvancedCircuitBreaker(0.5, TimeSpan.FromSeconds(10), 2, durationOfBreak);
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
+        Should.Throw<DivideByZeroException>(() => breaker.RaiseException<DivideByZeroException>());
 
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<DivideByZeroException>();
-
-        breaker.Invoking(x => x.RaiseException<DivideByZeroException>())
-            .Should.Throw<BrokenCircuitException>()
-            .WithMessage("The circuit is now open and is not allowing calls.")
-            .WithInnerException<DivideByZeroException>();
+        var ex = Should.Throw<BrokenCircuitException>(() => breaker.RaiseException<DivideByZeroException>());
+        ex.Message.ShouldBe("The circuit is now open and is not allowing calls.");
+        ex.InnerException.ShouldBeOfType<DivideByZeroException>();
 
         // Circuit is now broken.
-
         int attemptsInvoked = 0;
         Action onExecute = () => attemptsInvoked++;
 
@@ -2963,8 +2698,7 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
             CancellationToken cancellationToken = cancellationTokenSource.Token;
             cancellationTokenSource.Cancel();
 
-            breaker.Invoking(x => x.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
-                .Should.Throw<OperationCanceledException>()
+            Should.Throw<OperationCanceledException>(() => breaker.RaiseExceptionAndOrCancellation<DivideByZeroException>(scenario, cancellationTokenSource, onExecute))
                 .CancellationToken.ShouldBe(cancellationToken);
         }
 
@@ -2991,12 +2725,11 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
 
             implicitlyCapturedActionCancellationTokenSource.Cancel();
 
-            breaker.Invoking(x => x.Execute(_ =>
+            Should.Throw<OperationCanceledException>(() => breaker.Execute(_ =>
             {
                 attemptsInvoked++;
                 implicitlyCapturedActionCancellationToken.ThrowIfCancellationRequested();
             }, policyCancellationToken))
-                .Should.Throw<OperationCanceledException>()
                 .CancellationToken.ShouldBe(implicitlyCapturedActionCancellationToken);
         }
 
@@ -3025,11 +2758,11 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         {
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
-            breaker.Invoking(x => result = x.RaiseExceptionAndOrCancellation<DivideByZeroException, bool>(scenario, cancellationTokenSource, onExecute, true))
-                .Should.NotThrow();
+            Should.NotThrow(() => result = breaker.RaiseExceptionAndOrCancellation<DivideByZeroException, bool>(scenario, cancellationTokenSource, onExecute, true));
         }
 
-        result.ShouldBeTrue();
+        result.ShouldNotBeNull();
+        result.Value.ShouldBeTrue();
 
         attemptsInvoked.ShouldBe(1);
     }
@@ -3058,11 +2791,11 @@ public class AdvancedCircuitBreakerSpecs : IDisposable
         {
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
-            breaker.Invoking(x => result = x.RaiseExceptionAndOrCancellation<DivideByZeroException, bool>(scenario, cancellationTokenSource, onExecute, true))
-                .Should.Throw<OperationCanceledException>().CancellationToken.ShouldBe(cancellationToken);
+            Should.Throw<OperationCanceledException>(() => result = breaker.RaiseExceptionAndOrCancellation<DivideByZeroException, bool>(scenario, cancellationTokenSource, onExecute, true))
+                .CancellationToken.ShouldBe(cancellationToken);
         }
 
-        result.ShouldBe(null);
+        result.ShouldBeNull();
 
         attemptsInvoked.ShouldBe(1);
     }
